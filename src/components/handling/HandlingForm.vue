@@ -229,7 +229,7 @@
               fab
               small
               v-if="index !== 0"
-              @click="onDeleteTaskHandler(task.id)"
+              @click="onDeleteTaskHandler(task._id)"
             >
               <v-icon>mdi-minus</v-icon>
             </v-btn>

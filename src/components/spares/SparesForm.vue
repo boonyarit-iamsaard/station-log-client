@@ -572,7 +572,7 @@ export default {
       this.formData.store = this.$route.query.store;
     }
 
-    this.ssetStaffsListHandler();
+    this.setStaffsListHandler();
   },
 };
 </script>
