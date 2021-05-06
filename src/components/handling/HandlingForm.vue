@@ -301,7 +301,7 @@
 
 <script>
 import { format } from 'date-fns';
-// import { v4 as uuidv4 } from 'uuid';
+import staffs from '@/staffs.js';
 import { defaultData } from '@/components/handling/constants';
 
 import SharedDialog from '@/components/shared/SharedDialog.vue';
@@ -341,7 +341,7 @@ export default {
         { text: '10DY', value: '10DY' },
         { text: 'Other', value: 'Other' },
       ],
-      engineers: ['Anusara', 'Amnuay', 'Chanon', 'Tanakorn', 'Srisuphan'],
+      engineers: [],
       formData: { ...defaultData, tasks: [...defaultData.tasks] },
       formRules: {},
       modal: false,
@@ -462,6 +462,18 @@ export default {
       return format(new Date(date), 'dd MMMM yyyy');
     },
 
+    setEngineerListHandler() {
+      const list = [];
+
+      staffs.map(staff => {
+        if (staff.position === 'Engineer') {
+          list.push(staff.name);
+        }
+      });
+
+      this.engineers = list;
+    },
+
     setUpperCaseTextHandler(name) {
       this.formData[name] = this.formData[name].toUpperCase();
     },
@@ -485,6 +497,8 @@ export default {
     if (this.$route.params.id) {
       this.fetchCurrentHandlingRecordHandler(this.$route.params.id);
     }
+
+    this.setEngineerListHandler();
   },
 };
 </script>

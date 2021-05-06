@@ -1,3 +1,5 @@
+const URL = 'https://station-log-api.herokuapp.com/api/spares/';
+
 export default {
   namespaced: true,
   state() {
@@ -37,7 +39,7 @@ export default {
       //   }
       // );
 
-      await fetch('http://localhost:5000/api/spares', {
+      const response = await fetch(URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,11 +47,13 @@ export default {
         body: JSON.stringify(payload),
       });
 
-      context.commit('ADD_SPARE', payload);
+      const responseData = await response.json();
+
+      context.commit('ADD_SPARE', responseData.spare);
     },
 
     async fetchSpares(context) {
-      const response = await fetch('http://localhost:5000/api/spares');
+      const response = await fetch(URL);
 
       const responseData = await response.json();
 
@@ -64,9 +68,7 @@ export default {
     },
 
     async fetchSpareByID(context, payload) {
-      const response = await fetch(
-        `http://localhost:5000/api/spares/${payload}`
-      );
+      const response = await fetch(URL.concat(payload));
 
       const responseData = await response.json();
 
@@ -74,16 +76,13 @@ export default {
     },
 
     async updateSpare(context, payload) {
-      const response = await fetch(
-        `http://localhost:5000/api/spares/${payload._id}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const response = await fetch(URL.concat(payload._id), {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
       const responseData = await response.json();
 
@@ -93,7 +92,7 @@ export default {
     async deleteSpare(context, payload) {
       const id = payload;
 
-      await fetch(`http://localhost:5000/api/spares/${id}`, {
+      await fetch(URL.concat(id), {
         method: 'DELETE',
       });
 

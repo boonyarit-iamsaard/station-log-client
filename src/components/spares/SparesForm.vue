@@ -368,6 +368,7 @@
 <script>
 import { format } from 'date-fns';
 import { defaultData } from './constants';
+import staffs from '@/staffs.js';
 import SharedDialog from '../shared/SharedDialog.vue';
 
 export default {
@@ -378,7 +379,7 @@ export default {
   data() {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
-      staffs: ['Boonyarit', 'Chanon', 'Theerapong', 'Totsapon', 'Vitsanu'],
+      staffs: [],
       stores: ['BKK', 'BKK306'],
       types: ['Consumable', 'Fluid', 'Return'],
       formData: { ...defaultData },
@@ -444,11 +445,11 @@ export default {
     },
 
     async onDeleteSpare() {
-      this.isLoading = true;
+      await this.$store.dispatch('setIsLoading');
 
       await this.$store.dispatch('spares/deleteSpare', this.$route.params.id);
 
-      this.isLoading = false;
+      await this.$store.dispatch('setIsLoading');
       await this.$router.replace('/spares');
     },
 
@@ -527,6 +528,16 @@ export default {
         } else return 'Pending';
       }
     },
+
+    setStaffsListHandler() {
+      const list = [];
+
+      staffs.map(staff => {
+        list.push(staff.name);
+      });
+
+      this.staffs = list;
+    },
   },
 
   computed: {
@@ -560,6 +571,8 @@ export default {
       this.formData.type = this.$route.query.type;
       this.formData.store = this.$route.query.store;
     }
+
+    this.ssetStaffsListHandler();
   },
 };
 </script>
