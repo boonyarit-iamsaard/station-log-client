@@ -4,17 +4,26 @@
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-    <HandlingListDesktop :handlingRecords="handlingRecords" v-if="!isLoading" />
+    <HandlingListMobile
+      :handlingRecords="handlingRecords"
+      v-if="!isLoading && isMobile"
+    />
+
+    <HandlingListDesktop
+      :handlingRecords="handlingRecords"
+      v-if="!isLoading && !isMobile"
+    />
   </div>
 </template>
 
 <script>
 import HandlingListDesktop from '@/components/handling/HandlingListDesktop';
+import HandlingListMobile from '@/components/handling/HandlingListMobile.vue';
 
 export default {
   name: 'HandlingList',
 
-  components: { HandlingListDesktop },
+  components: { HandlingListDesktop, HandlingListMobile },
 
   methods: {
     async fetchHandlingRecordsHandler() {
