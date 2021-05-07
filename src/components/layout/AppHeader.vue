@@ -42,15 +42,15 @@ export default {
         case '/spares':
           return 'Spares Movement';
         case '/handling':
-          return 'Third-Party Handling Record';
+          return '3rd Party Handling Record';
         case '/handling/create':
-          return 'Third-Party Handling Form';
+          return '3rd Party Handling Form';
         case '/spares/create':
           return 'Spares Movement Form';
         case `/spares/edit/${this.$route.params.id}`:
           return 'Spares Movement Form';
         case `/handling/edit/${this.$route.params.id}`:
-          return 'Third-Party Handling Form';
+          return '3rd Party Handling Form';
         default:
           return this.$vuetify.breakpoint.smAndUp
             ? 'Bangkok Engineering - Station Log'

@@ -31,14 +31,6 @@ export default {
     },
 
     async addSpare(context, payload) {
-      // await fetch(
-      //   'https://station-log-6fae6-default-rtdb.firebaseio.com/spares.json',
-      //   {
-      //     method: 'POST',
-      //     body: JSON.stringify(payload),
-      //   }
-      // );
-
       const response = await fetch(URL, {
         method: 'POST',
         headers: {

@@ -103,18 +103,13 @@ export default {
     },
 
     UPDATE_HANDLING_RECORD(state, payload) {
-      // const index = state.handlingRecords.findIndex(
-      //   record => record._id === payload._id
-      // );
+      const index = state.handlingRecords.findIndex(
+        record => record._id === payload._id
+      );
 
-      // if (index !== -1) {
-      //   state.handlingRecords.splice(index, 1, payload);
-      // }
-      state.handlingRecords.map(record => {
-        if (record._id === payload._id) {
-          record = { ...payload, tasks: [...payload.tasks] };
-        }
-      });
+      if (index !== -1) {
+        state.handlingRecords.splice(index, 1, payload);
+      }
     },
   },
 };

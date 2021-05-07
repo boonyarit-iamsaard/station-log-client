@@ -49,7 +49,7 @@ export default {
           path: '/spares',
         },
         {
-          title: '3rd Handling',
+          title: '3rd Party Handling',
           icon: 'mdi-airplane',
           src: require('../assets/images/third-party.jpg'),
           path: '/handling',
