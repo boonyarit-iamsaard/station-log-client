@@ -65,9 +65,10 @@ export default {
   computed: {
     shouldShow() {
       const spares = this.$route.path === '/spares' && this.isMobile;
+      const flights = this.$route.path === '/flights' && this.isMobile;
       const handling = this.$route.path === '/handling' && this.isMobile;
 
-      return spares || handling;
+      return spares || flights || handling;
     },
 
     isLoading() {

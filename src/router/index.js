@@ -1,5 +1,8 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+
+import store from '@/store';
+
 import Home from '@/views/HomePage';
 
 Vue.use(VueRouter);
@@ -11,8 +14,8 @@ const routes = [
     component: Home,
   },
   {
-    path: '/signin',
-    component: () => import('@/views/SigninPage'),
+    path: '/login',
+    component: () => import('@/views/LoginPage'),
   },
   {
     path: '/admin/signup',
@@ -42,6 +45,13 @@ const routes = [
         component: () => import('@/components/spares/SparesForm'),
       },
     ],
+    beforeEnter(to, from, next) {
+      if (store.state.token) {
+        next();
+      } else {
+        next('/login');
+      }
+    },
   },
   {
     path: '/handling',

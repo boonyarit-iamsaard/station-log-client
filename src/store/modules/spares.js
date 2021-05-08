@@ -1,4 +1,5 @@
-const URL = 'https://station-log-api.herokuapp.com/api/spares/';
+// const URL = 'https://station-log-api.herokuapp.com/api/spares/';
+const URL = 'http://localhost:5000/api/spares/';
 
 export default {
   namespaced: true,
@@ -45,7 +46,11 @@ export default {
     },
 
     async fetchSpares(context) {
-      const response = await fetch(URL);
+      const response = await fetch(URL, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      });
 
       const responseData = await response.json();
 
@@ -60,7 +65,11 @@ export default {
     },
 
     async fetchSpareByID(context, payload) {
-      const response = await fetch(URL.concat(payload));
+      const response = await fetch(URL.concat(payload), {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      });
 
       const responseData = await response.json();
 
