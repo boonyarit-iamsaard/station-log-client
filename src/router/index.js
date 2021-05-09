@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import store from '@/store';
+import store from '../store';
 
 import Home from '@/views/HomePage';
 
@@ -12,6 +12,9 @@ const routes = [
     path: '/',
     name: 'HomePage',
     component: Home,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/login',
@@ -20,10 +23,16 @@ const routes = [
   {
     path: '/admin/signup',
     component: () => import('@/views/SignupPage'),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/flights',
     component: () => import('@/views/FlightsPage'),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/spares',
@@ -45,12 +54,8 @@ const routes = [
         component: () => import('@/components/spares/SparesForm'),
       },
     ],
-    beforeEnter(to, from, next) {
-      if (store.state.token) {
-        next();
-      } else {
-        next('/login');
-      }
+    meta: {
+      requiresAuth: true,
     },
   },
   {
@@ -71,6 +76,9 @@ const routes = [
         component: () => import('@/components/handling/HandlingForm'),
       },
     ],
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -78,6 +86,18 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (localStorage.getItem('token') === null || store.state.user === null) {
+      next('/login');
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
 });
 
 export default router;

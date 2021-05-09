@@ -215,7 +215,7 @@
               dense
               label="Issued?"
               v-model="formData.issued.status"
-              :disabled="formData.returned.status"
+              :disabled="formData.returned.status || !isAdmin"
               @change="onActionChangeHandler('issued')"
             ></v-checkbox>
           </v-col>
@@ -226,7 +226,7 @@
               label="IS No."
               outlined
               v-model="formData.issued.number"
-              :disabled="formData.returned.status"
+              :disabled="formData.returned.status || !isAdmin"
               :rules="formRules.issuedNumber"
               @keyup="setUpperCaseTextHandler('issued')"
             ></v-text-field>
@@ -238,7 +238,7 @@
               label="By"
               outlined
               v-model="formData.issued.by"
-              :disabled="formData.returned.status"
+              :disabled="formData.returned.status || !isAdmin"
               :items="staffs"
               :rules="formRules.issuedBy"
             ></v-select>
@@ -254,7 +254,7 @@
               dense
               label="Returned?"
               v-model="formData.returned.status"
-              :disabled="formData.transferred.status"
+              :disabled="formData.transferred.status || !isAdmin"
               @change="onActionChangeHandler('returned')"
             ></v-checkbox>
           </v-col>
@@ -265,7 +265,7 @@
               label="IR No."
               outlined
               v-model="formData.returned.number"
-              :disabled="formData.transferred.status"
+              :disabled="formData.transferred.status || !isAdmin"
               :rules="formRules.returnedNumber"
               @keyup="setUpperCaseTextHandler('returned')"
             ></v-text-field>
@@ -277,7 +277,7 @@
               label="By"
               outlined
               v-model="formData.returned.by"
-              :disabled="formData.transferred.status"
+              :disabled="formData.transferred.status || !isAdmin"
               :items="staffs"
               :rules="formRules.returnedBy"
             ></v-select>
@@ -297,6 +297,7 @@
               dense
               label="Transferred?"
               v-model="formData.transferred.status"
+              :disabled="!isAdmin"
               @change="onActionChangeHandler('transferred')"
             ></v-checkbox>
           </v-col>
@@ -307,6 +308,7 @@
               label="TX No."
               outlined
               v-model="formData.transferred.number"
+              :disabled="!isAdmin"
               :rules="formRules.transferredNumber"
               @keyup="setUpperCaseTextHandler('transferred')"
             ></v-text-field>
@@ -318,6 +320,7 @@
               label="By"
               outlined
               v-model="formData.transferred.by"
+              :disabled="!isAdmin"
               :items="staffs"
               :rules="formRules.transferredBy"
             ></v-select>
@@ -345,6 +348,7 @@
               block
               color="error"
               depressed
+              :disabled="!isAdmin"
               @click="$refs.confirmDeleteDialog.dialog = true"
               v-if="$route.params.id"
             >
@@ -543,6 +547,10 @@ export default {
   computed: {
     currentSpare() {
       return this.$store.getters['spares/getCurrentSpare'];
+    },
+
+    isAdmin() {
+      return this.$store.getters['getIsAdmin'];
     },
 
     isLoading() {

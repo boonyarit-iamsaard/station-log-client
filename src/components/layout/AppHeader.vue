@@ -2,13 +2,13 @@
   <v-app-bar app color="white" flat>
     <v-app-bar-nav-icon
       class="hidden-lg-and-up"
-      @click="$emit('open')"
       v-if="$route.path !== '/login'"
+      @click="$emit('open')"
     ></v-app-bar-nav-icon>
 
     <v-toolbar-items class="d-flex align-center">
       <v-img
-        alt="Vuetify Logo"
+        alt="Company Logo"
         class="shrink"
         contain
         src="../../assets/logo.png"
@@ -22,36 +22,17 @@
 
     <v-spacer></v-spacer>
 
-    <div class="d-flex" v-if="!isMobile">
-      <v-btn class="mr-2" text exact link to="/">
-        <v-icon left>mdi-home</v-icon>
-        Home
+    <div class="d-flex align-center" v-if="user">
+      <v-btn rounded text v-if="!isMobile">
+        <v-icon left> mdi-account-circle </v-icon>
+        {{ name }}
       </v-btn>
 
-      <v-btn class="mr-2" text exact link to="/flights">
-        <v-icon left>mdi-airplane</v-icon>
-        Flights
-      </v-btn>
-
-      <v-btn class="mr-2" text exact link to="/spares">
-        <v-icon left>mdi-cog</v-icon>
-        Spares
-      </v-btn>
-
-      <v-btn text exact link to="/handling">
-        <v-icon left>mdi-cog</v-icon>
-        3rd Party Handling
-      </v-btn>
-
-      <v-btn text exact link to="/handling">
-        <v-icon left>mdi-cog</v-icon>
-        3rd Party Handling
+      <v-btn rounded text @click="logout">
+        <v-icon left>mdi-logout-variant</v-icon>
+        Logout
       </v-btn>
     </div>
-
-    <v-spacer v-if="user"></v-spacer>
-
-    <v-toolbar-title v-if="user">{{ user.firstname }}</v-toolbar-title>
   </v-app-bar>
 </template>
 
@@ -66,10 +47,27 @@ export default {
     },
   },
 
+  methods: {
+    logout() {
+      this.$store
+        .dispatch('logout')
+        .then(() => this.$router.push('/login'))
+        .catch(err => console.log(err));
+    },
+  },
+
   computed: {
     user() {
       return this.$store.getters['getUser'];
     },
+
+    name() {
+      if (this.user) {
+        return `${this.user.firstname} ${this.user.lastname}`;
+      }
+      return null;
+    },
+
     title() {
       switch (this.$route.path) {
         case '/flights':

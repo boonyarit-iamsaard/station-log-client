@@ -87,7 +87,7 @@ export default {
             this.onUpdateFiltersHandler(value, this.filters.store),
         },
         {
-          text: 'Statue',
+          text: 'Status',
           value: 'status',
           filter: value =>
             this.onUpdateFiltersHandler(value, this.filters.status),

@@ -35,6 +35,7 @@ export default {
       const response = await fetch(URL, {
         method: 'POST',
         headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -80,6 +81,7 @@ export default {
       const response = await fetch(URL.concat(payload._id), {
         method: 'PUT',
         headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -94,6 +96,9 @@ export default {
       const id = payload;
 
       await fetch(URL.concat(id), {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
         method: 'DELETE',
       });
 

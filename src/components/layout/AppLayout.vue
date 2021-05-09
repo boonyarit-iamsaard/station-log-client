@@ -5,12 +5,22 @@
       @open="$refs.drawer.drawer = !$refs.drawer.drawer"
     />
 
-    <AppDrawer ref="drawer" v-if="isMobile" />
+    <AppDrawer ref="drawer" v-if="user" />
 
     <v-main class="blue-grey lighten-5">
-      <v-container
-        :class="$route.path === '/login' ? 'pa-4 fill-height' : 'pa-4'"
-      >
+      <v-container class="pa-4">
+        <v-dialog :value="isError">
+          <v-alert
+            class="mb-0"
+            dismissible
+            type="error"
+            v-if="isError"
+            @click="acknowledgeError"
+          >
+            {{ errorMessage }}
+          </v-alert>
+        </v-dialog>
+
         <slot></slot>
       </v-container>
 
@@ -59,16 +69,24 @@ export default {
   data() {
     return {
       fab: false,
+      dialog: true,
     };
   },
 
-  computed: {
-    shouldShow() {
-      const spares = this.$route.path === '/spares' && this.isMobile;
-      const flights = this.$route.path === '/flights' && this.isMobile;
-      const handling = this.$route.path === '/handling' && this.isMobile;
+  methods: {
+    acknowledgeError() {
+      this.$store.dispatch('error/setIsError');
+      this.$store.dispatch('error/setErrorMessage', null);
+    },
+  },
 
-      return spares || flights || handling;
+  computed: {
+    errorMessage() {
+      return this.$store.getters['error/getErrorMessage'];
+    },
+
+    isError() {
+      return this.$store.getters['error/getIsError'];
     },
 
     isLoading() {
@@ -77,6 +95,18 @@ export default {
 
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
+    },
+
+    shouldShow() {
+      const spares = this.$route.path === '/spares' && this.isMobile;
+      const flights = this.$route.path === '/flights' && this.isMobile;
+      const handling = this.$route.path === '/handling' && this.isMobile;
+
+      return spares || flights || handling;
+    },
+
+    user() {
+      return this.$store.getters['getUser'];
     },
   },
 };

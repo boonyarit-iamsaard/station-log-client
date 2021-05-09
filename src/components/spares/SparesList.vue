@@ -21,15 +21,28 @@ export default {
 
   methods: {
     async fetchSpares() {
-      await this.$store.dispatch('setIsLoading');
+      this.$store.dispatch('setIsLoading');
 
       try {
         await this.$store.dispatch('spares/fetchSpares');
-      } catch (error) {
-        console.log(error.message || 'Something went wrong!');
+
+        this.$store.dispatch('setIsLoading');
+      } catch (err) {
+        this.$store.dispatch('setIsLoading');
+
+        this.$store.dispatch('error/setIsError');
+        this.$store.dispatch('error/setErrorMessage', err);
       }
 
-      await this.$store.dispatch('setIsLoading');
+      // await this.$store
+      //   .dispatch('spares/fetchSpares')
+      //   .then(() => this.$store.dispatch('setIsLoading'))
+      //   .catch(err => {
+      //     this.$store.dispatch('setIsLoading');
+
+      //     this.$store.dispatch('setIsError');
+      //     this.$store.dispatch('setErrorMessage', err);
+      //   });
     },
   },
 

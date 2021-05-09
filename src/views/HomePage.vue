@@ -24,7 +24,7 @@
           </v-card>
         </v-col>
       </v-row>
-      <p class="text-center title mt-8">Dashboard is comming soon.....</p>
+      <p class="text-center title mt-8">Dashboard is coming soon.....</p>
     </div>
   </v-container>
 </template>

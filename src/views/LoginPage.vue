@@ -54,11 +54,16 @@ export default {
     async onFormSubmitHandler() {
       await this.$store.dispatch('setIsLoading');
 
-      await this.$store.dispatch('login', this.formData);
+      await this.$store
+        .dispatch('login', this.formData)
+        .then(() => this.$store.dispatch('setIsLoading'))
+        .then(() => this.$router.replace('/'))
+        .catch(err => {
+          this.$store.dispatch('setIsLoading');
 
-      await this.$store.dispatch('setIsLoading');
-
-      await this.$router.replace('/');
+          this.$store.dispatch('error/setIsError');
+          this.$store.dispatch('error/setErrorMessage', err);
+        });
     },
   },
 

@@ -1,10 +1,17 @@
 <template>
   <v-form ref="form" @submit.prevent="onFormSubmitHandler">
     <SharedDialog
-      ref="confirmDeleteDialog"
+      ref="confirmDeleteRecord"
       :title="'Do you want to proceed?'"
       :subtitle="'This record would be deleted!'"
-      @action="onDeleteHandlingRecordHandler"
+      @action="deleteRecord"
+    />
+
+    <SharedDialog
+      ref="confirmDeleteTask"
+      :title="'Do you want to proceed?'"
+      :subtitle="'This task would be deleted!'"
+      @action="deleteTask"
     />
 
     <v-overlay absolute :value="isLoading">
@@ -164,7 +171,7 @@
           </v-col>
         </v-row>
 
-        <v-row v-for="(task, index) in formData.tasks" :key="task.id">
+        <v-row v-for="(task, index) in formData.tasks" :key="task._id">
           <v-col cols="12" sm="2">
             <v-text-field
               dense
@@ -229,7 +236,10 @@
               fab
               small
               v-if="index !== 0"
-              @click="onDeleteTaskHandler(task._id)"
+              @click="
+                $refs.confirmDeleteTask.dialog = true;
+                deleteTaskID = task._id;
+              "
             >
               <v-icon>mdi-minus</v-icon>
             </v-btn>
@@ -279,7 +289,8 @@
               block
               color="error"
               depressed
-              @click="$refs.confirmDeleteDialog.dialog = true"
+              :disabled="!isAdmin"
+              @click="$refs.confirmDeleteRecord.dialog = true"
               v-if="$route.params.id"
             >
               <v-icon left>mdi-delete</v-icon>
@@ -301,8 +312,8 @@
 
 <script>
 import { format } from 'date-fns';
-import staffs from '@/staffs.js';
 import { defaultData } from '@/components/handling/constants';
+import staffs from '@/staffs.js';
 
 import SharedDialog from '@/components/shared/SharedDialog.vue';
 
@@ -341,6 +352,8 @@ export default {
         { text: '10DY', value: '10DY' },
         { text: 'Other', value: 'Other' },
       ],
+      deleteTaskDialog: false,
+      deleteTaskID: '',
       engineers: [],
       formData: { ...defaultData, tasks: [...defaultData.tasks] },
       formRules: {},
@@ -402,7 +415,7 @@ export default {
       });
     },
 
-    async onDeleteHandlingRecordHandler() {
+    async deleteRecord() {
       await this.$store.dispatch('setIsLoading');
 
       await this.$store.dispatch(
@@ -444,7 +457,7 @@ export default {
 
     onAddTaskHandler() {
       this.formData.tasks.push({
-        // id: uuidv4(),
+        _id: this.mongoObjectId(),
         taskNo: '',
         taskDetails: '',
         hour: {
@@ -454,8 +467,16 @@ export default {
       });
     },
 
-    onDeleteTaskHandler(id) {
-      this.formData.tasks = this.formData.tasks.filter(task => task._id !== id);
+    deleteTask() {
+      this.formData.tasks = this.formData.tasks.filter(
+        task => task._id !== this.deleteTaskID
+      );
+    },
+
+    openDeleteTaskDialog(id) {
+      console.log(id);
+      this.$refs.confirmDeleteTask.dialog = true;
+      this.deleteTaskID = id;
     },
 
     setDateFormatHandler(date) {
@@ -477,11 +498,27 @@ export default {
     setUpperCaseTextHandler(name) {
       this.formData[name] = this.formData[name].toUpperCase();
     },
+
+    mongoObjectId() {
+      const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+      return (
+        timestamp +
+        'xxxxxxxxxxxxxxxx'
+          .replace(/[x]/g, function () {
+            return ((Math.random() * 16) | 0).toString(16);
+          })
+          .toLowerCase()
+      );
+    },
   },
 
   computed: {
     currentHandlingRecord() {
       return this.$store.getters['handling/getCurrentHandlingRecord'];
+    },
+
+    isAdmin() {
+      return this.$store.getters['getIsAdmin'];
     },
 
     isLoading() {

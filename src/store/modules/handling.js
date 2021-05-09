@@ -1,5 +1,5 @@
-const URL = 'https://station-log-api.herokuapp.com/api/handling/';
-// const URL = 'http://localhost:5000/api/handling/';
+// const URL = 'https://station-log-api.herokuapp.com/api/handling/';
+const URL = 'http://localhost:5000/api/handling/';
 
 export default {
   namespaced: true,
@@ -22,6 +22,7 @@ export default {
       const response = await fetch(URL, {
         method: 'POST',
         headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -36,6 +37,7 @@ export default {
       const response = await fetch(URL.concat(payload._id), {
         method: 'PUT',
         headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(payload),
@@ -51,13 +53,20 @@ export default {
 
       await fetch(URL.concat(id), {
         method: 'DELETE',
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
       });
 
       context.commit('DELETE_HANDLING_RECORD', id);
     },
 
     async fetchHandlingRecords(context) {
-      const response = await fetch(URL);
+      const response = await fetch(URL, {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      });
 
       const responseData = await response.json();
 
@@ -73,7 +82,11 @@ export default {
 
     async fetchCurrentHandlingRecord(context, payload) {
       const id = payload;
-      const response = await fetch(URL.concat(id));
+      const response = await fetch(URL.concat(id), {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      });
 
       const responseData = await response.json();
 
