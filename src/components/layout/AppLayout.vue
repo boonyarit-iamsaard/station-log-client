@@ -5,11 +5,11 @@
       @open="$refs.drawer.drawer = !$refs.drawer.drawer"
     />
 
-    <AppDrawer ref="drawer" />
+    <AppDrawer ref="drawer" v-if="isMobile" />
 
     <v-main class="blue-grey lighten-5">
       <v-container
-        :class="$route.path === '/signin' ? 'pa-4 fill-height' : 'pa-4'"
+        :class="$route.path === '/login' ? 'pa-4 fill-height' : 'pa-4'"
       >
         <slot></slot>
       </v-container>

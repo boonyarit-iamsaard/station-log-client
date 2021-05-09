@@ -3,6 +3,7 @@
     <v-app-bar-nav-icon
       class="hidden-lg-and-up"
       @click="$emit('open')"
+      v-if="$route.path !== '/login'"
     ></v-app-bar-nav-icon>
 
     <v-toolbar-items class="d-flex align-center">
@@ -20,6 +21,37 @@
     <v-toolbar-title class="ml-4"> {{ title }} </v-toolbar-title>
 
     <v-spacer></v-spacer>
+
+    <div class="d-flex" v-if="!isMobile">
+      <v-btn class="mr-2" text exact link to="/">
+        <v-icon left>mdi-home</v-icon>
+        Home
+      </v-btn>
+
+      <v-btn class="mr-2" text exact link to="/flights">
+        <v-icon left>mdi-airplane</v-icon>
+        Flights
+      </v-btn>
+
+      <v-btn class="mr-2" text exact link to="/spares">
+        <v-icon left>mdi-cog</v-icon>
+        Spares
+      </v-btn>
+
+      <v-btn text exact link to="/handling">
+        <v-icon left>mdi-cog</v-icon>
+        3rd Party Handling
+      </v-btn>
+
+      <v-btn text exact link to="/handling">
+        <v-icon left>mdi-cog</v-icon>
+        3rd Party Handling
+      </v-btn>
+    </div>
+
+    <v-spacer v-if="user"></v-spacer>
+
+    <v-toolbar-title v-if="user">{{ user.firstname }}</v-toolbar-title>
   </v-app-bar>
 </template>
 
@@ -35,6 +67,9 @@ export default {
   },
 
   computed: {
+    user() {
+      return this.$store.getters['getUser'];
+    },
     title() {
       switch (this.$route.path) {
         case '/flights':

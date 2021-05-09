@@ -1,14 +1,14 @@
 <template>
-  <v-form ref="signinForm" @submit.prevent="onFormSubmitHandler">
+  <v-row>
     <v-overlay absolute :value="isLoading">
       <v-progress-circular indeterminate size="64"></v-progress-circular>
     </v-overlay>
 
-    <v-row>
-      <v-col cols="12" sm="6" md="4" class="mx-auto">
+    <v-col cols="12" sm="6" md="4" class="mx-auto">
+      <v-form ref="signinForm" @submit.prevent="onFormSubmitHandler">
         <v-card outlined>
           <v-card-title class="d-flex justify-center pa-4">
-            <span>Login</span>
+            <span>Please Login</span>
           </v-card-title>
 
           <v-card-text class="pa-4">
@@ -31,9 +31,9 @@
             <v-btn block color="primary" depressed type="submint">Login</v-btn>
           </v-card-actions>
         </v-card>
-      </v-col>
-    </v-row>
-  </v-form>
+      </v-form>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

@@ -12,8 +12,8 @@ export default new Vuex.Store({
   state() {
     return {
       isLoading: false,
-      token: null,
-      userID: null,
+      token: localStorage.getItem('token') || null,
+      userID: localStorage.getItem('userID') || null,
       user: null,
     };
   },
@@ -34,9 +34,8 @@ export default new Vuex.Store({
     },
 
     SET_USER(state, payload) {
-      state.token = payload.token;
-      state.userID = payload.userID;
-      state.user = payload.user;
+      console.log(payload);
+      state.user = payload;
     },
 
     SET_IS_LOADING(state) {
@@ -59,16 +58,14 @@ export default new Vuex.Store({
 
       const responseData = await response.json();
 
-      const { token, userID, ...rest } = responseData.user;
+      const { token, user } = responseData;
 
       localStorage.setItem('token', token);
-      localStorage.setItem('userID', userID);
+      localStorage.setItem('userID', user.userID);
 
-      context.commit('SET_USER', {
-        token: token,
-        userID: responseData.userID,
-        user: rest,
-      });
+      console.log(user);
+
+      context.commit('SET_USER', user);
     },
   },
   modules: {
