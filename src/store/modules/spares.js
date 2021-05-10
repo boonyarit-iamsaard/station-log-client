@@ -1,6 +1,8 @@
 // const URL = 'https://station-log-api.herokuapp.com/api/spares/';
 const URL = 'http://localhost:5000/api/spares/';
 
+import { getSpares, getSpareByID } from '@/api/spares-api';
+
 export default {
   namespaced: true,
   state() {
@@ -47,34 +49,27 @@ export default {
     },
 
     async fetchSpares(context) {
-      const response = await fetch(URL, {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      });
+      try {
+        const response = await getSpares();
 
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        const error = new Error(
-          responseData.message || 'Failed to fetch spares.'
-        );
-        throw error;
+        context.commit('SET_SPARES', response.data.spares);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        }
       }
-
-      context.commit('SET_SPARES', responseData.spares);
     },
 
     async fetchSpareByID(context, payload) {
-      const response = await fetch(URL.concat(payload), {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      });
+      try {
+        const response = await getSpareByID(payload);
 
-      const responseData = await response.json();
-
-      context.commit('SET_CURRENT_SPARE', responseData.spare);
+        context.commit('SET_CURRENT_SPARE', response.data.spare);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        }
+      }
     },
 
     async updateSpare(context, payload) {

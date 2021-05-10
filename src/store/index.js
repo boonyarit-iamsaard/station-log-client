@@ -6,7 +6,9 @@ import errorModule from '@/store/modules/error';
 import sparesModule from '@/store/modules/spares';
 import handlingModule from '@/store/modules/handling';
 
-const BASE_URL = 'http://localhost:5000/api/users/';
+import { login } from '@/api/users-api';
+
+// const BASE_URL = 'http://localhost:5000/api/users/';
 // const BASE_URL = 'http://station-log-api.herokuapp.com/api/users/';
 
 Vue.use(Vuex);
@@ -64,33 +66,26 @@ export default new Vuex.Store({
     },
 
     async login(context, payload) {
-      const response = await fetch(BASE_URL.concat('login'), {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      await login(payload)
+        .then(response => {
+          const { token, user } = response.data;
 
-      const responseData = await response.json();
+          localStorage.setItem('token', token);
+          localStorage.setItem('userID', user.userID);
 
-      if (!response.ok) {
-        const error = new Error(responseData.message || 'Failed to login.');
-        throw error;
-      }
+          user.roles.forEach(role => {
+            if (role === 'admin') {
+              context.commit('SET_IS_ADMIN', true);
+            }
+          });
 
-      const { token, user } = responseData;
-
-      localStorage.setItem('token', token);
-      localStorage.setItem('userID', user.userID);
-
-      user.roles.forEach(role => {
-        if (role === 'admin') {
-          context.commit('SET_IS_ADMIN', true);
-        }
-      });
-
-      context.commit('SET_USER', user);
+          context.commit('SET_USER', user);
+        })
+        .catch(error => {
+          if (error.response) {
+            throw new Error(error.response.data.message || 'Failed to login.');
+          }
+        });
     },
 
     logout(context) {

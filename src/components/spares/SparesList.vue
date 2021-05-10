@@ -31,7 +31,7 @@ export default {
         this.$store.dispatch('setIsLoading');
 
         this.$store.dispatch('error/setIsError');
-        this.$store.dispatch('error/setErrorMessage', err);
+        this.$store.dispatch('error/setErrorMessage', err.message);
       }
 
       // await this.$store

@@ -9,7 +9,7 @@
 
     <v-main class="blue-grey lighten-5">
       <v-container class="pa-4">
-        <v-dialog :value="isError">
+        <v-dialog :value="isError" max-width="400">
           <v-alert
             class="mb-0"
             dismissible
