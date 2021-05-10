@@ -33,16 +33,6 @@ export default {
         this.$store.dispatch('error/setIsError');
         this.$store.dispatch('error/setErrorMessage', err.message);
       }
-
-      // await this.$store
-      //   .dispatch('spares/fetchSpares')
-      //   .then(() => this.$store.dispatch('setIsLoading'))
-      //   .catch(err => {
-      //     this.$store.dispatch('setIsLoading');
-
-      //     this.$store.dispatch('setIsError');
-      //     this.$store.dispatch('setErrorMessage', err);
-      //   });
     },
   },
 
@@ -61,7 +51,9 @@ export default {
   },
 
   created() {
-    this.fetchSpares();
+    console.log('SparesList created', new Date());
+
+    // this.fetchSpares();
   },
 };
 </script>

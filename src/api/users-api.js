@@ -1,7 +1,9 @@
 import HTTP from './http-common';
 
-const END_POINT = '/users';
+const END_POINT = '/users/';
 
-const login = payload => HTTP.post(END_POINT + '/login', payload);
+const login = payload => HTTP.post(END_POINT + 'login', payload);
 
-export { login };
+const signup = payload => HTTP.post(END_POINT + 'signup', payload);
+
+export { login, signup };

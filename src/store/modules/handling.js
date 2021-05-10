@@ -1,5 +1,10 @@
-// const URL = 'https://station-log-api.herokuapp.com/api/handling/';
-const URL = 'http://localhost:5000/api/handling/';
+import {
+  createHandling,
+  deleteHandling,
+  getHandlings,
+  getHandlingByID,
+  updateHandling,
+} from '@/api/handling-api';
 
 export default {
   namespaced: true,
@@ -19,81 +24,66 @@ export default {
   },
   actions: {
     async addHandlingRecord(context, payload) {
-      const response = await fetch(URL, {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      try {
+        const response = await createHandling(payload);
 
-      const responseData = await response.json();
-
-      context.commit('ADD_HANDLING_RECORD', responseData.handlingRecord);
+        context.commit('ADD_HANDLING_RECORD', response.data.handlingRecord);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
 
     async updateHandlingRecord(context, payload) {
-      const response = await fetch(URL.concat(payload._id), {
-        method: 'PUT',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      try {
+        const response = await updateHandling(payload);
 
-      const responseData = await response.json();
-
-      context.commit('UPDATE_HANDLING_RECORD', responseData.handlingRecord);
+        context.commit('UPDATE_HANDLING_RECORD', response.data.handlingRecord);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
 
     async deleteHandlingRecord(context, payload) {
-      const id = payload;
+      try {
+        await deleteHandling(payload);
 
-      await fetch(URL.concat(id), {
-        method: 'DELETE',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      });
-
-      context.commit('DELETE_HANDLING_RECORD', id);
+        context.commit('DELETE_HANDLING_RECORD', payload);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
 
     async fetchHandlingRecords(context) {
-      const response = await fetch(URL, {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      });
+      try {
+        const response = await getHandlings();
 
-      const responseData = await response.json();
-
-      if (!response.ok) {
-        const error = new Error(
-          responseData.message || 'Failed to fetch handlingRecords.'
-        );
-        throw error;
+        context.commit('SET_HANDLING_RECORDS', response.data.handlingRecords);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
       }
-
-      context.commit('SET_HANDLING_RECORDS', responseData.handlingRecords);
     },
 
     async fetchCurrentHandlingRecord(context, payload) {
-      const id = payload;
-      const response = await fetch(URL.concat(id), {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      });
+      try {
+        const response = await getHandlingByID(payload);
 
-      const responseData = await response.json();
-
-      context.commit(
-        'SET_CURRENT_HANDLING_RECORD',
-        responseData.handlingRecord
-      );
+        context.commit(
+          'SET_CURRENT_HANDLING_RECORD',
+          response.data.handlingRecord
+        );
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
   },
   mutations: {

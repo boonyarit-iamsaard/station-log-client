@@ -109,6 +109,10 @@ export default {
       return this.$store.getters['getUser'];
     },
   },
+
+  created() {
+    console.log('AppLayout created', new Date());
+  },
 };
 </script>
 

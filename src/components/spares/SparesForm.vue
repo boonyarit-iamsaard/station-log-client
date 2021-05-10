@@ -384,7 +384,7 @@ export default {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
       staffs: [],
-      stores: ['BKK', 'BKK306'],
+      stores: ['BKK', 'BKK306', 'BKKAHK'],
       types: ['Consumable', 'Fluid', 'Return'],
       formData: { ...defaultData },
       formRules: {},
@@ -540,7 +540,7 @@ export default {
         list.push(staff.name);
       });
 
-      this.staffs = list;
+      this.staffs = list.sort();
     },
   },
 

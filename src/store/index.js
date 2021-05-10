@@ -6,10 +6,7 @@ import errorModule from '@/store/modules/error';
 import sparesModule from '@/store/modules/spares';
 import handlingModule from '@/store/modules/handling';
 
-import { login } from '@/api/users-api';
-
-// const BASE_URL = 'http://localhost:5000/api/users/';
-// const BASE_URL = 'http://station-log-api.herokuapp.com/api/users/';
+import { login, signup } from '@/api/users-api';
 
 Vue.use(Vuex);
 
@@ -84,6 +81,30 @@ export default new Vuex.Store({
         .catch(error => {
           if (error.response) {
             throw new Error(error.response.data.message || 'Failed to login.');
+          }
+        });
+    },
+
+    async signup(context, payload) {
+      await signup(payload)
+        .then(response => {
+          console.log(response);
+          // const { token, user } = response.data;
+
+          // localStorage.setItem('token', token);
+          // localStorage.setItem('userID', user.userID);
+
+          // user.roles.forEach(role => {
+          //   if (role === 'admin') {
+          //     context.commit('SET_IS_ADMIN', true);
+          //   }
+          // });
+
+          // context.commit('SET_USER', user);
+        })
+        .catch(error => {
+          if (error.response) {
+            throw new Error(error.response.data.message || 'Failed to signup.');
           }
         });
     },

@@ -1,7 +1,10 @@
-// const URL = 'https://station-log-api.herokuapp.com/api/spares/';
-const URL = 'http://localhost:5000/api/spares/';
-
-import { getSpares, getSpareByID } from '@/api/spares-api';
+import {
+  createSpare,
+  deleteSpare,
+  getSpares,
+  getSpareByID,
+  updateSpare,
+} from '@/api/spares-api';
 
 export default {
   namespaced: true,
@@ -34,18 +37,15 @@ export default {
     },
 
     async addSpare(context, payload) {
-      const response = await fetch(URL, {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      try {
+        const response = await createSpare(payload);
 
-      const responseData = await response.json();
-
-      context.commit('ADD_SPARE', responseData.spare);
+        context.commit('ADD_SPARE', response.data.spare);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
 
     async fetchSpares(context) {
@@ -56,7 +56,7 @@ export default {
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
-        }
+        } else console.log(error);
       }
     },
 
@@ -68,36 +68,32 @@ export default {
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
-        }
+        } else console.log(error);
       }
     },
 
     async updateSpare(context, payload) {
-      const response = await fetch(URL.concat(payload._id), {
-        method: 'PUT',
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+      try {
+        const response = await updateSpare(payload);
 
-      const responseData = await response.json();
-
-      context.commit('UPDATE_SPARE', responseData.spare);
+        context.commit('UPDATE_SPARE', response.data.spare);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
 
     async deleteSpare(context, payload) {
-      const id = payload;
+      try {
+        await deleteSpare(payload);
 
-      await fetch(URL.concat(id), {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-        method: 'DELETE',
-      });
-
-      context.commit('DELETE_SPARE', id);
+        context.commit('DELETE_SPARE', payload);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.message);
+        } else console.log(error);
+      }
     },
   },
   mutations: {
