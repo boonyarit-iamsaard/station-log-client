@@ -91,7 +91,15 @@ export default {
       await this.$store
         .dispatch('signup', this.formData)
         .then(() => this.$store.dispatch('setIsLoading'))
-        .then(() => this.$router.replace('/'))
+        .then(() => {
+          this.formData = {
+            firstname: '',
+            lastname: '',
+            username: '',
+            password: '',
+            roles: [],
+          };
+        })
         .catch(err => {
           this.formData = {
             firstname: '',

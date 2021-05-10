@@ -89,18 +89,6 @@ export default new Vuex.Store({
       await signup(payload)
         .then(response => {
           console.log(response);
-          // const { token, user } = response.data;
-
-          // localStorage.setItem('token', token);
-          // localStorage.setItem('userID', user.userID);
-
-          // user.roles.forEach(role => {
-          //   if (role === 'admin') {
-          //     context.commit('SET_IS_ADMIN', true);
-          //   }
-          // });
-
-          // context.commit('SET_USER', user);
         })
         .catch(error => {
           if (error.response) {

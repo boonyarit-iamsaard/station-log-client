@@ -30,12 +30,6 @@ export default {
       }
     },
   },
-
-  created() {
-    console.log('App created', new Date());
-
-    this.fetchInitialState();
-  },
 };
 </script>
 

@@ -51,9 +51,7 @@ export default {
   },
 
   created() {
-    console.log('SparesList created', new Date());
-
-    // this.fetchSpares();
+    this.fetchSpares();
   },
 };
 </script>
