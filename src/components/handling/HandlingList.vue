@@ -23,11 +23,17 @@ import HandlingListMobile from '@/components/handling/HandlingListMobile.vue';
 export default {
   name: 'HandlingList',
 
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
+
   components: { HandlingListDesktop, HandlingListMobile },
 
   methods: {
     async fetchHandlingRecordsHandler() {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       try {
         await this.$store.dispatch('handling/fetchHandlingRecords');
@@ -35,15 +41,11 @@ export default {
         console.log(error.message || 'Something went wrong!');
       }
 
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = false;
     },
   },
 
   computed: {
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
-    },
-
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     },

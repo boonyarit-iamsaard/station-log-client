@@ -47,29 +47,24 @@ export default {
         password: '',
       },
       formRules: {},
+      isLoading: false,
     };
   },
 
   methods: {
     async onFormSubmitHandler() {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       await this.$store
         .dispatch('login', this.formData)
-        .then(() => this.$store.dispatch('setIsLoading'))
-        .then(() => this.$router.replace('/'))
+        .then(() => (this.isLoading = false))
+        .then(() => this.$router.push('/'))
         .catch(err => {
-          this.$store.dispatch('setIsLoading');
+          this.isLoading = false;
 
           this.$store.dispatch('error/setIsError');
           this.$store.dispatch('error/setErrorMessage', err.message);
         });
-    },
-  },
-
-  computed: {
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
     },
   },
 };

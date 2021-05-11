@@ -14,10 +14,8 @@ export default new Vuex.Store({
   state() {
     return {
       isAdmin: false,
-      isLoading: false,
+      isLoggedIn: null,
       isStoreAdmin: false,
-      token: localStorage.getItem('token') || null,
-      userID: localStorage.getItem('userID') || null,
       user: null,
     };
   },
@@ -26,8 +24,8 @@ export default new Vuex.Store({
       return state.isAdmin;
     },
 
-    getIsLoading(state) {
-      return state.isLoading;
+    getIsLoggedIn(state) {
+      return state.isLoggedIn;
     },
 
     getUser(state) {
@@ -38,6 +36,7 @@ export default new Vuex.Store({
     CLEAR_USER(state) {
       state.user = null;
       state.isAdmin = false;
+      state.isLoggedIn = null;
       state.isStoreAdmin = false;
     },
 
@@ -45,12 +44,12 @@ export default new Vuex.Store({
       state.isAdmin = payload;
     },
 
-    SET_IS_LOADING(state) {
-      state.isLoading = !state.isLoading;
-    },
-
     SET_IS_STORE_ADMIN(state) {
       state.isStoreAdmin = !state.isStoreAdmin;
+    },
+
+    SET_IS_LOGGED_IN(state, payload) {
+      state.isLoggedIn = payload;
     },
 
     SET_USER(state, payload) {
@@ -58,17 +57,22 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    setIsLoading(context) {
-      context.commit('SET_IS_LOADING');
+    setLogoutTimer(context, expirationTime) {
+      setTimeout(() => {
+        context.commit('CLEAR_USER');
+      }, expirationTime * 1000);
     },
 
     async login(context, payload) {
       await login(payload)
         .then(response => {
-          const { token, user } = response.data;
+          const { expiresIn, token, user } = response.data;
+
+          const now = new Date();
+          const expirationDate = new Date(now.getTime() + expiresIn * 1000);
 
           localStorage.setItem('token', token);
-          localStorage.setItem('userID', user.userID);
+          localStorage.setItem('expirationDate', expirationDate);
 
           user.roles.forEach(role => {
             if (role === 'admin') {
@@ -76,7 +80,9 @@ export default new Vuex.Store({
             }
           });
 
+          context.dispatch('setLogoutTimer', expiresIn);
           context.commit('SET_USER', user);
+          context.commit('SET_IS_LOGGED_IN', token);
         })
         .catch(error => {
           if (error.response) {
@@ -99,7 +105,7 @@ export default new Vuex.Store({
 
     logout(context) {
       localStorage.removeItem('token');
-      localStorage.removeItem('userID');
+      localStorage.removeItem('expirationDate');
 
       context.commit('CLEAR_USER');
     },

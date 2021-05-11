@@ -357,6 +357,7 @@ export default {
       engineers: [],
       formData: { ...defaultData, tasks: [...defaultData.tasks] },
       formRules: {},
+      isLoading: false,
       modal: false,
       otherAirline: '',
       otherCheck: '',
@@ -365,7 +366,7 @@ export default {
 
   methods: {
     async fetchCurrentHandlingRecordHandler(id) {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       try {
         await this.$store
@@ -377,7 +378,7 @@ export default {
         console.log(error.message || 'Something went wrong!');
       }
 
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = false;
     },
 
     onFormSubmitHandler() {
@@ -387,7 +388,7 @@ export default {
 
       this.$nextTick(() => {
         if (this.$refs.form.validate()) {
-          this.$store.dispatch('setIsLoading');
+          this.isLoading = true;
 
           this.formData.acreg = this.formData.prefix.concat(this.formData.tail);
 
@@ -399,7 +400,7 @@ export default {
             this.$store.dispatch('handling/addHandlingRecord', handlingData);
           }
 
-          this.$store.dispatch('setIsLoading');
+          this.isLoading = false;
 
           this.onFormResetHandler();
         }
@@ -416,14 +417,14 @@ export default {
     },
 
     async deleteRecord() {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       await this.$store.dispatch(
         'handling/deleteHandlingRecord',
         this.$route.params.id
       );
 
-      this.$store.dispatch('setIsLoading');
+      this.isLoading = false;
 
       await this.$router.replace('/handling');
     },
@@ -474,7 +475,6 @@ export default {
     },
 
     openDeleteTaskDialog(id) {
-      console.log(id);
       this.$refs.confirmDeleteTask.dialog = true;
       this.deleteTaskID = id;
     },
@@ -519,10 +519,6 @@ export default {
 
     isAdmin() {
       return this.$store.getters['getIsAdmin'];
-    },
-
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
     },
 
     isMobile() {

@@ -17,18 +17,24 @@ import SparesListMobile from '@/components/spares/SparesListMobile';
 export default {
   name: 'SparesList',
 
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
+
   components: { SparesListMobile, SparesListDesktop },
 
   methods: {
     async fetchSpares() {
-      this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       try {
         await this.$store.dispatch('spares/fetchSpares');
 
-        this.$store.dispatch('setIsLoading');
+        this.isLoading = false;
       } catch (err) {
-        this.$store.dispatch('setIsLoading');
+        this.isLoading = false;
 
         this.$store.dispatch('error/setIsError');
         this.$store.dispatch('error/setErrorMessage', err.message);
@@ -39,10 +45,6 @@ export default {
   computed: {
     spares() {
       return this.$store.getters['spares/getSpares'];
-    },
-
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
     },
 
     isMobile() {

@@ -80,17 +80,18 @@ export default {
         roles: [],
       },
       formRules: {},
+      isLoading: false,
       roles: ['admin', 'common', 'engineer', 'store'],
     };
   },
 
   methods: {
     async onFormSubmitHandler() {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       await this.$store
         .dispatch('signup', this.formData)
-        .then(() => this.$store.dispatch('setIsLoading'))
+        .then(() => (this.isLoading = false))
         .then(() => {
           this.formData = {
             firstname: '',
@@ -108,17 +109,11 @@ export default {
             password: '',
             roles: [],
           };
-          this.$store.dispatch('setIsLoading');
+          this.isLoading = false;
 
           this.$store.dispatch('error/setIsError');
           this.$store.dispatch('error/setErrorMessage', err.message);
         });
-    },
-  },
-
-  computed: {
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
     },
   },
 };

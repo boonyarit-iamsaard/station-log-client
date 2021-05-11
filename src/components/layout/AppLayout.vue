@@ -89,10 +89,6 @@ export default {
       return this.$store.getters['error/getIsError'];
     },
 
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
-    },
-
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
     },
@@ -108,10 +104,6 @@ export default {
     user() {
       return this.$store.getters['getUser'];
     },
-  },
-
-  created() {
-    console.log('AppLayout created', new Date());
   },
 };
 </script>

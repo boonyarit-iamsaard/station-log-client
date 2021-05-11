@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import store from '../store';
+import store from '@/store';
 
 import Home from '@/views/HomePage';
 
@@ -90,8 +90,11 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (localStorage.getItem('token') === null || store.state.user === null) {
-      next('/login');
+    if (store.getters['getIsLoggedIn'] === null) {
+      next({
+        path: '/login',
+        params: { nextUrl: to.fullPath },
+      });
     } else {
       next();
     }

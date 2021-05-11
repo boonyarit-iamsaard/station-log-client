@@ -383,12 +383,13 @@ export default {
   data() {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
+      formData: { ...defaultData },
+      formRules: {},
+      isLoading: false,
+      modal: false,
       staffs: [],
       stores: ['BKK', 'BKK306', 'BKKAHK'],
       types: ['Consumable', 'Fluid', 'Return'],
-      formData: { ...defaultData },
-      formRules: {},
-      modal: false,
     };
   },
 
@@ -419,7 +420,7 @@ export default {
 
       this.$nextTick(() => {
         if (this.$refs.form.validate()) {
-          this.$store.dispatch('setIsLoading');
+          this.isLoading = true;
 
           this.formData.acreg = this.formData.prefix.concat(this.formData.tail);
           this.formData.status = this.setSpareStatusHandler();
@@ -432,7 +433,7 @@ export default {
             this.$store.dispatch('spares/addSpare', spareData);
           }
 
-          this.$store.dispatch('setIsLoading');
+          this.isLoading = false;
 
           this.onFormReset();
         }
@@ -449,16 +450,16 @@ export default {
     },
 
     async onDeleteSpare() {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       await this.$store.dispatch('spares/deleteSpare', this.$route.params.id);
 
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = false;
       await this.$router.replace('/spares');
     },
 
     async fetchSpareByID(id) {
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = true;
 
       try {
         await this.$store.dispatch('spares/fetchSpareByID', id).then(() => {
@@ -468,7 +469,7 @@ export default {
         console.log(error.message || 'Something went wrong!');
       }
 
-      await this.$store.dispatch('setIsLoading');
+      this.isLoading = false;
     },
 
     setDateFormatHandler(date) {
@@ -551,10 +552,6 @@ export default {
 
     isAdmin() {
       return this.$store.getters['getIsAdmin'];
-    },
-
-    isLoading() {
-      return this.$store.getters['getIsLoading'];
     },
 
     isMobile() {
