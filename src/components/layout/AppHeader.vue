@@ -2,7 +2,7 @@
   <v-app-bar app color="white" flat>
     <v-app-bar-nav-icon
       class="hidden-lg-and-up"
-      v-if="$route.path !== '/login'"
+      v-if="user"
       @click="$emit('open')"
     ></v-app-bar-nav-icon>
 

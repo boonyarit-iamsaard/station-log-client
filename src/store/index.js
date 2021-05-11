@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import createPersistedState from 'vuex-persistedstate';
+// import createPersistedState from 'vuex-persistedstate';
+
+import router from '@/router';
 
 import errorModule from '@/store/modules/error';
 import sparesModule from '@/store/modules/spares';
@@ -14,8 +16,8 @@ export default new Vuex.Store({
   state() {
     return {
       isAdmin: false,
-      isLoggedIn: null,
       isStoreAdmin: false,
+      token: null,
       user: null,
     };
   },
@@ -24,8 +26,8 @@ export default new Vuex.Store({
       return state.isAdmin;
     },
 
-    getIsLoggedIn(state) {
-      return state.isLoggedIn;
+    getIsAuthenticated(state) {
+      return state.token !== null;
     },
 
     getUser(state) {
@@ -35,8 +37,8 @@ export default new Vuex.Store({
   mutations: {
     CLEAR_USER(state) {
       state.user = null;
+      state.token = null;
       state.isAdmin = false;
-      state.isLoggedIn = null;
       state.isStoreAdmin = false;
     },
 
@@ -48,8 +50,8 @@ export default new Vuex.Store({
       state.isStoreAdmin = !state.isStoreAdmin;
     },
 
-    SET_IS_LOGGED_IN(state, payload) {
-      state.isLoggedIn = payload;
+    SET_TOKEN(state, token) {
+      state.token = token;
     },
 
     SET_USER(state, payload) {
@@ -64,27 +66,33 @@ export default new Vuex.Store({
     },
 
     async login(context, payload) {
-      try {
-        return await login(payload).then(response => {
+      await login(payload)
+        .then(response => {
           const { expiresIn, token, user } = response.data;
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresIn * 1000);
+
           localStorage.setItem('token', token);
+          localStorage.setItem('user', JSON.stringify(user));
           localStorage.setItem('expirationDate', expirationDate);
+
           user.roles.forEach(role => {
             if (role === 'admin') {
               context.commit('SET_IS_ADMIN', true);
             }
           });
+
           context.dispatch('setLogoutTimer', expiresIn);
           context.commit('SET_USER', user);
-          context.commit('SET_IS_LOGGED_IN', token);
+          context.commit('SET_TOKEN', token);
+
+          router.replace('/');
+        })
+        .catch(error => {
+          if (error.response) {
+            throw new Error(error.response.data.message || 'Failed to login.');
+          }
         });
-      } catch (error) {
-        if (error.response) {
-          throw new Error(error.response.data.message || 'Failed to login.');
-        }
-      }
     },
 
     async signup(context, payload) {
@@ -99,11 +107,38 @@ export default new Vuex.Store({
         });
     },
 
-    logout(context) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('expirationDate');
+    tryAutoLogin(context) {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        return;
+      }
 
+      const expirationDate = localStorage.getItem('expirationDate');
+      const now = new Date();
+      if (now >= expirationDate) {
+        return;
+      }
+
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      user.roles.forEach(role => {
+        if (role === 'admin') {
+          context.commit('SET_IS_ADMIN', true);
+        }
+      });
+
+      context.commit('SET_USER', user);
+      context.commit('SET_TOKEN', token);
+
+      router.push('/');
+    },
+
+    logout(context) {
       context.commit('CLEAR_USER');
+
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('expirationDate');
     },
   },
   modules: {
@@ -111,9 +146,9 @@ export default new Vuex.Store({
     spares: sparesModule,
     handling: handlingModule,
   },
-  plugins: [
-    createPersistedState({
-      storage: window.sessionStorage,
-    }),
-  ],
+  // plugins: [
+  //   createPersistedState({
+  //     storage: window.sessionStorage,
+  //   }),
+  // ],
 });
