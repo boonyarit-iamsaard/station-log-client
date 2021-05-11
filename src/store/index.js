@@ -64,31 +64,27 @@ export default new Vuex.Store({
     },
 
     async login(context, payload) {
-      await login(payload)
-        .then(response => {
+      try {
+        return await login(payload).then(response => {
           const { expiresIn, token, user } = response.data;
-
           const now = new Date();
           const expirationDate = new Date(now.getTime() + expiresIn * 1000);
-
           localStorage.setItem('token', token);
           localStorage.setItem('expirationDate', expirationDate);
-
           user.roles.forEach(role => {
             if (role === 'admin') {
               context.commit('SET_IS_ADMIN', true);
             }
           });
-
           context.dispatch('setLogoutTimer', expiresIn);
           context.commit('SET_USER', user);
           context.commit('SET_IS_LOGGED_IN', token);
-        })
-        .catch(error => {
-          if (error.response) {
-            throw new Error(error.response.data.message || 'Failed to login.');
-          }
         });
+      } catch (error) {
+        if (error.response) {
+          throw new Error(error.response.data.message || 'Failed to login.');
+        }
+      }
     },
 
     async signup(context, payload) {
