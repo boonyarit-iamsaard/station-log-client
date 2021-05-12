@@ -120,6 +120,9 @@ export default new Vuex.Store({
       }
 
       const user = JSON.parse(localStorage.getItem('user'));
+      if (!user) {
+        return;
+      }
 
       user.roles.forEach(role => {
         if (role === 'admin') {
