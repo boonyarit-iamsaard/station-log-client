@@ -5,7 +5,7 @@ const HTTP = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 5000,
+  timeout: 15000,
 });
 
 const authInterceptor = config => {
