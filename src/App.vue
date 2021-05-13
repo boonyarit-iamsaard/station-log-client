@@ -12,27 +12,12 @@ export default {
 
   components: { AppLayout },
 
-  methods: {
-    async fetchInitialState() {
-      this.$store.dispatch('setIsLoading');
-
-      try {
-        await this.$store.dispatch('spares/fetchSpares');
-
-        await this.$store.dispatch('handling/fetchHandlingRecords');
-
-        this.$store.dispatch('setIsLoading');
-      } catch (err) {
-        this.$store.dispatch('setIsLoading');
-
-        this.$store.dispatch('error/setIsError');
-        this.$store.dispatch('error/setErrorMessage', err.message);
-      }
-    },
-  },
-
   created() {
     this.$store.dispatch('tryAutoLogin');
+
+    if (this.$store.getters.getIsAuthenticated) {
+      this.$store.dispatch('setLogoutTimer');
+    }
   },
 };
 </script>

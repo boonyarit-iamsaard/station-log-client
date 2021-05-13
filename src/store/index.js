@@ -59,14 +59,18 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    setLogoutTimer(context, expirationTime) {
+    setLogoutTimer(context) {
+      const now = new Date();
+      const expirationDate = new Date(localStorage.getItem('expirationDate'));
+      const expirationTime = expirationDate.getTime() - now.getTime();
+
       setTimeout(() => {
-        context.commit('CLEAR_USER');
-      }, expirationTime * 1000);
+        context.dispatch('logout').then(() => router.replace('/login'));
+      }, expirationTime);
     },
 
     async login(context, payload) {
-      await login(payload)
+      return await login(payload)
         .then(response => {
           const { expiresIn, token, user } = response.data;
           const now = new Date();
@@ -82,11 +86,9 @@ export default new Vuex.Store({
             }
           });
 
-          context.dispatch('setLogoutTimer', expiresIn);
+          context.dispatch('setLogoutTimer');
           context.commit('SET_USER', user);
           context.commit('SET_TOKEN', token);
-
-          router.replace('/');
         })
         .catch(error => {
           if (error.response) {
@@ -113,7 +115,7 @@ export default new Vuex.Store({
         return;
       }
 
-      const expirationDate = localStorage.getItem('expirationDate');
+      const expirationDate = new Date(localStorage.getItem('expirationDate'));
       const now = new Date();
       if (now >= expirationDate) {
         return;
@@ -133,7 +135,7 @@ export default new Vuex.Store({
       context.commit('SET_USER', user);
       context.commit('SET_TOKEN', token);
 
-      router.push('/');
+      router.replace('/');
     },
 
     logout(context) {

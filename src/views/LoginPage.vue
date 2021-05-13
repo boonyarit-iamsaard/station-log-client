@@ -58,6 +58,7 @@ export default {
       await this.$store
         .dispatch('login', this.formData)
         .then(() => (this.isLoading = false))
+        .then(() => this.$router.replace('/'))
         .catch(err => {
           this.isLoading = false;
 
