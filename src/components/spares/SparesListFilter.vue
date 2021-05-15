@@ -108,7 +108,7 @@ export default {
       },
       airlines: ['ALL', 'ASL', 'CX', 'KA', 'LD', 'PR'],
       statuses: ['ALL', 'Pending', 'Issued', 'Returned', 'Transferred'],
-      stores: ['ALL', 'BKK', 'BKK306'],
+      stores: ['ALL', 'BKK', 'BKKAHK', 'BKK306'],
       types: ['ALL', 'Consumable', 'Fluid', 'Return'],
       modal: false,
     };
