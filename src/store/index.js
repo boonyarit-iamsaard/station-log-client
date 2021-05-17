@@ -97,8 +97,8 @@ export default new Vuex.Store({
         });
     },
 
-    async signup(context, payload) {
-      await signup(payload)
+    signup(context, payload) {
+      return signup(payload)
         .then(response => {
           console.log(response);
         })
