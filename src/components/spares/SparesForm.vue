@@ -1,15 +1,13 @@
 <template>
   <v-form ref="form" @submit.prevent="onFormSubmit">
-    <SharedDialog
+    <ConfirmDialog
       ref="confirmDeleteDialog"
       :title="'Do you want to proceed?'"
       :subtitle="'This record would be deleted!'"
       @action="onDeleteSpare"
     />
 
-    <v-overlay absolute :value="isLoading">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <Progress :isLoading="isLoading" />
 
     <v-card
       class="mx-auto"
@@ -372,13 +370,15 @@
 <script>
 import { format } from 'date-fns';
 import { defaultData } from './constants';
-import staffs from '@/staffs.js';
-import SharedDialog from '../shared/SharedDialog.vue';
+import { staffsList } from '@/utils/staffs';
+
+import ConfirmDialog from '../shared/ConfirmDialog.vue';
+import Progress from '../shared/Progress.vue';
 
 export default {
   name: 'SparesForm',
 
-  components: { SharedDialog },
+  components: { ConfirmDialog, Progress },
 
   data() {
     return {
@@ -387,7 +387,7 @@ export default {
       formRules: {},
       isLoading: false,
       modal: false,
-      staffs: [],
+      staffs: staffsList(),
       stores: ['BKK', 'BKK306', 'BKKAHK'],
       types: ['Consumable', 'Fluid', 'Return'],
     };
@@ -533,16 +533,6 @@ export default {
         } else return 'Pending';
       }
     },
-
-    setStaffsListHandler() {
-      const list = [];
-
-      staffs.map(staff => {
-        list.push(staff.name);
-      });
-
-      this.staffs = list.sort();
-    },
   },
 
   computed: {
@@ -576,8 +566,6 @@ export default {
       this.formData.type = this.$route.query.type;
       this.formData.store = this.$route.query.store;
     }
-
-    this.setStaffsListHandler();
   },
 };
 </script>

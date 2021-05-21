@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'SharedDialog',
+  name: 'ConfirmDialog',
 
   props: {
     title: {

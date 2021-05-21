@@ -1,8 +1,6 @@
 <template>
   <v-row>
-    <v-overlay absolute :value="isLoading">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <Progress :isLoading="isLoading" />
 
     <v-col cols="12" sm="6" md="4" class="mx-auto">
       <v-form ref="signupForm" @submit.prevent="onFormSubmitHandler">
@@ -67,7 +65,9 @@
 </template>
 
 <script>
+import Progress from '../components/shared/Progress.vue';
 export default {
+  components: { Progress },
   name: 'SignupPage',
 
   data() {

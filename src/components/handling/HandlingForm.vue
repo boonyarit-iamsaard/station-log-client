@@ -1,35 +1,19 @@
 <template>
-  <v-form ref="form" @submit.prevent="onFormSubmitHandler">
-    <SharedDialog
-      ref="confirmDeleteRecord"
-      :title="'Do you want to proceed?'"
-      :subtitle="'This record would be deleted!'"
-      @action="deleteRecord"
+  <v-form ref="form" @submit.prevent="submitFormHandler">
+    <ConfirmDialog
+      ref="confirmDialog"
+      :title="confirmDialogTitle"
+      :subtitle="confirmDialogSubtitle"
+      @action="confirmDialogAction"
     />
 
-    <SharedDialog
-      ref="confirmDeleteTask"
-      :title="'Do you want to proceed?'"
-      :subtitle="'This task would be deleted!'"
-      @action="deleteTask"
-    />
+    <Progress :isLoading="isLoading" />
 
-    <v-overlay absolute :value="isLoading">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
-
-    <v-card
-      class="mx-auto"
-      max-width="959"
-      :flat="$vuetify.breakpoint.smAndDown"
-      :outlined="$vuetify.breakpoint.mdAndUp"
-    >
+    <v-card class="mx-auto" max-width="959" outlined>
       <v-card-text>
-        <v-row class="mt-0">
+        <v-row class="my-0">
           <v-col cols="12">
-            <span>Flight Details</span>
-
-            <v-divider class="mb-4"></v-divider>
+            <span class="subtitle-2">Flight Details</span>
           </v-col>
 
           <v-col cols="12" sm="4">
@@ -70,22 +54,20 @@
 
           <v-col cols="12" sm="2">
             <v-select
+              :items="airlines"
+              @change="setPrefixHandler"
               dense
-              item-text="text"
-              item-value="value"
               label="Airline"
               outlined
               v-model="formData.airline"
-              :items="airlines"
-              @change="setPrefixHandler"
             ></v-select>
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="formData.airline === 'Other'">
             <v-text-field
               dense
-              hint="*"
               label="Other airline"
               outlined
-              persistent-hint
-              v-if="formData.airline === 'Other'"
               v-model="formData.otherAirline"
               :rules="formRules.required"
               @keyup="
@@ -94,161 +76,63 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="2">
             <v-text-field
               dense
-              hint="*Required."
               label="Flt No."
               outlined
-              persistent-hint
               v-model="formData.fltno"
               :rules="formRules.required"
               @keyup="setUpperCaseTextHandler('fltno')"
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="2">
             <v-text-field
               dense
-              hint="*Required."
               label="Reg."
               outlined
-              persistent-hint
               v-model="formData.tail"
               :prefix="formData.prefix"
               :rules="formRules.required"
               @keyup="setUpperCaseTextHandler('tail')"
             ></v-text-field>
           </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12">
-            <span>Action Details</span>
-
-            <v-divider class="mb-4"></v-divider>
-          </v-col>
 
           <v-col cols="12" sm="2">
             <v-select
+              :items="aircraftTypes"
+              :menu-props="menuPropsMaxHeight"
+              :rules="formRules.required"
               dense
-              hint="*Required"
               label="A/C Type"
               outlined
-              persistent-hint
               v-model="formData.aircraftType"
-              :items="aircraftTypes"
-              :rules="formRules.required"
             ></v-select>
           </v-col>
 
           <v-col cols="12" sm="2">
             <v-autocomplete
+              :items="checks"
+              :menu-props="menuPropsMaxHeight"
+              :rules="formRules.required"
+              @change="setOtherCheckHandler"
               dense
-              item-text="text"
-              item-value="value"
               label="Check"
               outlined
               v-model="formData.check"
-              :items="checks"
-              :rules="formRules.required"
-              @change="setOtherCheckHandler"
             ></v-autocomplete>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" v-if="formData.check === 'Other'">
             <v-text-field
               dense
-              hint="*Required."
               label="Check"
               outlined
-              persistent-hint
-              v-if="formData.check === 'Other'"
               v-model="formData.otherCheck"
               :rules="formRules.required"
               @keyup="formData.otherCheck = formData.otherCheck.toUpperCase()"
             ></v-text-field>
-          </v-col>
-        </v-row>
-
-        <v-row v-for="(task, index) in formData.tasks" :key="task._id">
-          <v-col cols="12" sm="2">
-            <v-text-field
-              dense
-              hint="*optional"
-              label="WO/TASK"
-              outlined
-              persistent-hint
-              v-model="task.taskNo"
-              @keyup="task.taskNo = task.taskNo.toUpperCase()"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" sm="4">
-            <v-textarea
-              hint="*Required"
-              label="Details"
-              outlined
-              persistent-hint
-              rows="2"
-              v-model="task.taskDetails"
-              :rules="formRules.required"
-              @keyup="task.taskDetails = task.taskDetails.toUpperCase()"
-            ></v-textarea>
-          </v-col>
-
-          <v-col cols="12" sm="2">
-            <v-text-field
-              dense
-              label="ENG"
-              outlined
-              type="number"
-              v-model="task.hour.eng"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" sm="2">
-            <v-text-field
-              dense
-              label="MECH"
-              outlined
-              type="number"
-              v-model="task.hour.mech"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" sm="2">
-            <v-btn
-              class="mr-2"
-              color="primary"
-              depressed
-              fab
-              small
-              v-if="index === formData.tasks.length - 1"
-              @click="onAddTaskHandler"
-            >
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
-
-            <v-btn
-              color="error"
-              depressed
-              fab
-              small
-              v-if="index !== 0"
-              @click="
-                $refs.confirmDeleteTask.dialog = true;
-                deleteTaskID = task._id;
-              "
-            >
-              <v-icon>mdi-minus</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12">
-            <v-divider class="mb-4"></v-divider>
           </v-col>
 
           <v-col cols="12" sm="4">
@@ -258,8 +142,251 @@
               outlined
               v-model="formData.eic"
               :items="engineers"
+              :menu-props="menuPropsMaxHeight"
               :rules="formRules.required"
             ></v-autocomplete>
+          </v-col>
+        </v-row>
+
+        <v-row class="my-0">
+          <v-col cols="12">
+            <v-icon
+              @click="addTaskHandler"
+              class="mr-2"
+              color="primary"
+              v-if="formData.tasks.length === 0"
+              large
+              >mdi-plus-circle-outline</v-icon
+            >
+            <span class="subtitle-2">WO/TASK</span>
+          </v-col>
+        </v-row>
+
+        <v-row
+          :key="task._id"
+          class="my-0"
+          v-for="(task, index) in formData.tasks"
+        >
+          <v-col cols="12" sm="6">
+            <v-text-field
+              @keyup="task.taskNo = task.taskNo.toUpperCase()"
+              dense
+              label="WO/TASK"
+              outlined
+              v-model="task.taskNo"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="12" sm="2">
+            <v-text-field
+              dense
+              label="eng (hr.)"
+              outlined
+              type="number"
+              v-model="task.hour.eng"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="12" sm="2">
+            <v-text-field
+              dense
+              label="mech (hr.)"
+              outlined
+              type="number"
+              v-model="task.hour.mech"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="$vuetify.breakpoint.smAndUp">
+            <v-icon
+              @click="addTaskHandler"
+              class="mr-2"
+              color="primary"
+              v-if="index === formData.tasks.length - 1"
+              large
+            >
+              mdi-plus-circle-outline
+            </v-icon>
+
+            <v-icon
+              @click="clickDeleteTaskHandler(task._id)"
+              color="error"
+              large
+            >
+              mdi-minus-circle-outline
+            </v-icon>
+          </v-col>
+
+          <v-col cols="12" sm="10">
+            <v-textarea
+              :rules="formRules.required"
+              @keyup="task.taskDetails = task.taskDetails.toUpperCase()"
+              label="Details"
+              outlined
+              rows="2"
+              v-model="task.taskDetails"
+            />
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="$vuetify.breakpoint.xs">
+            <v-icon
+              @click="addTaskHandler"
+              class="mr-2"
+              color="primary"
+              large
+              v-if="index === formData.tasks.length - 1"
+            >
+              mdi-plus-circle-outline
+            </v-icon>
+
+            <v-icon
+              @click="clickDeleteTaskHandler(task._id)"
+              color="error"
+              large
+            >
+              mdi-minus-circle-outline
+            </v-icon>
+          </v-col>
+        </v-row>
+
+        <v-row class="my-0">
+          <v-col cols="12">
+            <v-icon
+              @click="addServiceHandler"
+              class="mr-2"
+              color="primary"
+              large
+              v-if="formData.services.length === 0"
+            >
+              mdi-plus-circle-outline
+            </v-icon>
+            <span class="subtitle-2">Equipment & Tooling</span>
+          </v-col>
+        </v-row>
+
+        <v-row
+          class="my-0"
+          v-for="(service, index) in formData.services"
+          :key="service._id"
+        >
+          <v-col cols="12" sm="4">
+            <v-select
+              :items="serviceNames"
+              :menu-props="menuPropsMaxHeight"
+              dense
+              label="Service"
+              outlined
+              v-model="service.service"
+            />
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="2"
+            v-if="exclusivePerHour().includes(service.service)"
+          >
+            <v-text-field
+              dense
+              label="usage (hr.)"
+              outlined
+              type="number"
+              v-model="service.usage"
+            />
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="2"
+            v-if="exclusivePerService().includes(service.service)"
+          >
+            <v-text-field
+              dense
+              label="eng (hr.)"
+              outlined
+              type="number"
+              v-model="service.hour.eng"
+            />
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="2"
+            v-if="exclusivePerService().includes(service.service)"
+          >
+            <v-text-field
+              dense
+              label="mech  (hr.)"
+              outlined
+              type="number"
+              v-model="service.hour.mech"
+            />
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="!isMobile">
+            <v-icon
+              @click="addServiceHandler"
+              class="mr-2"
+              color="primary"
+              v-if="index === formData.services.length - 1"
+              large
+            >
+              mdi-plus-circle-outline
+            </v-icon>
+
+            <v-icon
+              @click="clickDeleteServiceHandler(service._id)"
+              color="error"
+              large
+            >
+              mdi-minus-circle-outline
+            </v-icon>
+          </v-col>
+        </v-row>
+
+        <v-row class="my-0">
+          <v-col cols="12" sm="4">
+            <v-icon
+              @click="formData.hasBrakeCooling = true"
+              class="mr-2"
+              color="primary"
+              large
+              v-if="!formData.hasBrakeCooling"
+            >
+              mdi-plus-circle-outline
+            </v-icon>
+
+            <v-icon
+              @click="clickDeleteBrakeCoolingHandler"
+              class="mr-2"
+              color="error"
+              large
+              v-if="formData.hasBrakeCooling"
+            >
+              mdi-minus-circle-outline
+            </v-icon>
+
+            <span class="subtitle-2">Brake Cooling</span>
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="formData.hasBrakeCooling">
+            <v-text-field
+              dense
+              outlined
+              label="Amount"
+              type="number"
+              v-model="formData.brakeCooling"
+            />
+          </v-col>
+        </v-row>
+
+        <v-row class="my-0">
+          <v-col cols="12" sm="10">
+            <v-textarea
+              @keyup="setUpperCaseTextHandler('remark')"
+              label="Remark"
+              outlined
+              v-model="formData.remark"
+            />
           </v-col>
         </v-row>
       </v-card-text>
@@ -267,12 +394,7 @@
       <v-card-actions class="px-4 pt-0 pb-4">
         <v-row class="ma-0">
           <v-col cols="12" sm="2" :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0'">
-            <v-btn
-              block
-              color="secondary"
-              depressed
-              @click="onFormResetHandler"
-            >
+            <v-btn block color="secondary" depressed @click="resetFormHandler">
               <v-icon left>mdi-close</v-icon>
               CANCEL
             </v-btn>
@@ -286,11 +408,11 @@
             :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0 mr-4'"
           >
             <v-btn
+              :disabled="!isAdmin"
+              @click="clickDeleteRecordHandler"
               block
               color="error"
               depressed
-              :disabled="!isAdmin"
-              @click="$refs.confirmDeleteRecord.dialog = true"
               v-if="$route.params.id"
             >
               <v-icon left>mdi-delete</v-icon>
@@ -312,55 +434,51 @@
 
 <script>
 import { format } from 'date-fns';
-import { defaultData } from '@/components/handling/constants';
-import staffs from '@/staffs.js';
+import { cloneDeep } from 'lodash';
+import { generateObjectID } from '@/utils/object-id';
+import { engineersList } from '@/utils/staffs';
+import {
+  aircraftTypes,
+  airlines,
+  checks,
+  exclusivePerHour,
+  exclusivePerService,
+  handlingData,
+  service,
+  serviceNames,
+  task,
+} from '@/components/handling/constants';
 
-import SharedDialog from '@/components/shared/SharedDialog.vue';
+import ConfirmDialog from '@/components/shared/ConfirmDialog.vue';
+import Progress from '../shared/Progress.vue';
 
 export default {
   name: 'HandlingForm',
 
-  components: { SharedDialog },
+  components: { ConfirmDialog, Progress },
 
   data() {
     return {
-      aircraftTypes: [
-        'A320',
-        'A321',
-        'A306',
-        'A330',
-        'A33F',
-        'A350',
-        'B777',
-        'Other',
-      ],
-      airlines: [
-        { text: 'ASL', value: 'ASL' },
-        { text: 'CX', value: 'CX' },
-        { text: 'KA', value: 'KA' },
-        { text: 'LD', value: 'LD' },
-        { text: 'PR', value: 'PR' },
-        { text: 'Other', value: 'Other' },
-      ],
-      checks: [
-        { text: 'ETR', value: 'ETR' },
-        { text: 'OCT', value: 'OCT' },
-        { text: 'TR', value: 'TR' },
-        { text: '36H', value: '36H' },
-        { text: '72H', value: '72H' },
-        { text: 'WY', value: 'WY' },
-        { text: '10DY', value: '10DY' },
-        { text: 'Other', value: 'Other' },
-      ],
+      aircraftTypes,
+      airlines,
+      checks,
+      confirmDialogAction: () => {},
+      confirmDialogSubtitle: '',
+      confirmDialogTitle: '',
       deleteTaskDialog: false,
-      deleteTaskID: '',
-      engineers: [],
-      formData: { ...defaultData, tasks: [...defaultData.tasks] },
+      engineers: engineersList(),
+      exclusivePerHour,
+      exclusivePerService,
+      formData: cloneDeep(handlingData),
       formRules: {},
       isLoading: false,
+      menuPropsMaxHeight: { maxHeight: 500 },
       modal: false,
       otherAirline: '',
       otherCheck: '',
+      serviceID: '',
+      serviceNames: serviceNames(),
+      taskID: '',
     };
   },
 
@@ -372,7 +490,7 @@ export default {
         await this.$store
           .dispatch('handling/fetchCurrentHandlingRecord', id)
           .then(() => {
-            this.formData = this.currentHandlingRecord;
+            this.formData = cloneDeep(this.currentHandlingRecord);
           });
       } catch (error) {
         console.log(error.message || 'Something went wrong!');
@@ -381,9 +499,9 @@ export default {
       this.isLoading = false;
     },
 
-    onFormSubmitHandler() {
+    submitFormHandler() {
       this.formRules = {
-        required: [v => !!v || '*Required.'],
+        required: [v => !!v || 'Required.'],
       };
 
       this.$nextTick(() => {
@@ -394,6 +512,8 @@ export default {
 
           const handlingData = this.formData;
 
+          console.log(JSON.stringify(handlingData, null, 2));
+
           if (this.$route.params.id) {
             this.$store.dispatch('handling/updateHandlingRecord', handlingData);
           } else {
@@ -402,21 +522,75 @@ export default {
 
           this.isLoading = false;
 
-          this.onFormResetHandler();
+          this.resetFormHandler();
         }
       });
     },
 
-    onFormResetHandler() {
+    resetFormHandler() {
       this.formRules = {};
-      this.formData = { ...defaultData, tasks: [...defaultData.tasks] };
+      this.formData = cloneDeep(handlingData);
 
       this.$nextTick(() => {
         this.$router.replace('/handling');
       });
     },
 
-    async deleteRecord() {
+    clickDeleteBrakeCoolingHandler() {
+      this.formData.hasBrakeCooling = false;
+      this.formData.brakeCooling = 0;
+    },
+
+    clickDeleteTaskHandler(id) {
+      this.$refs.confirmDialog.dialog = true;
+      this.confirmDialogAction = this.deleteTaskHandler;
+      this.confirmDialogSubtitle = 'This WO/TASK will be deleted.';
+      this.confirmDialogTitle = 'Delete WO/TASK?';
+      this.taskID = id;
+    },
+
+    clickDeleteServiceHandler(id) {
+      this.$refs.confirmDialog.dialog = true;
+      this.confirmDialogAction = this.deleteServiceHandler;
+      this.confirmDialogSubtitle = 'This service will be deleted.';
+      this.confirmDialogTitle = 'Delete Service?';
+      this.serviceID = id;
+    },
+
+    clickDeleteRecordHandler() {
+      this.$refs.confirmDialog.dialog = true;
+      this.confirmDialogAction = this.deleteRecordHandler;
+      this.confirmDialogTitle = 'Delete Record?';
+      this.confirmDialogSubtitle = 'This record will be deleted.';
+    },
+
+    addTaskHandler() {
+      this.formData.tasks.push({
+        _id: generateObjectID(),
+        ...task,
+      });
+    },
+
+    addServiceHandler() {
+      this.formData.services.push({
+        _id: generateObjectID(),
+        ...service,
+      });
+    },
+
+    deleteTaskHandler() {
+      this.formData.tasks = this.formData.tasks.filter(
+        task => task._id !== this.taskID
+      );
+    },
+
+    deleteServiceHandler() {
+      this.formData.services = this.formData.services.filter(
+        service => service._id !== this.serviceID
+      );
+    },
+
+    async deleteRecordHandler() {
       this.isLoading = true;
 
       await this.$store.dispatch(
@@ -451,64 +625,15 @@ export default {
     },
 
     setOtherCheckHandler() {
-      this.formData.check !== 'Other'
-        ? (this.formData.otherCheck = '')
-        : (this.formData.otherCheck = '');
-    },
-
-    onAddTaskHandler() {
-      this.formData.tasks.push({
-        _id: this.mongoObjectId(),
-        taskNo: '',
-        taskDetails: '',
-        hour: {
-          eng: 0,
-          mech: 0,
-        },
-      });
-    },
-
-    deleteTask() {
-      this.formData.tasks = this.formData.tasks.filter(
-        task => task._id !== this.deleteTaskID
-      );
-    },
-
-    openDeleteTaskDialog(id) {
-      this.$refs.confirmDeleteTask.dialog = true;
-      this.deleteTaskID = id;
+      this.formData.otherCheck = '';
     },
 
     setDateFormatHandler(date) {
       return format(new Date(date), 'dd MMMM yyyy');
     },
 
-    setEngineerListHandler() {
-      const list = [];
-
-      staffs.map(staff => {
-        if (staff.position === 'Engineer') {
-          list.push(staff.name);
-        }
-      });
-
-      this.engineers = list;
-    },
-
     setUpperCaseTextHandler(name) {
       this.formData[name] = this.formData[name].toUpperCase();
-    },
-
-    mongoObjectId() {
-      const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
-      return (
-        timestamp +
-        'xxxxxxxxxxxxxxxx'
-          .replace(/[x]/g, function () {
-            return ((Math.random() * 16) | 0).toString(16);
-          })
-          .toLowerCase()
-      );
     },
   },
 
@@ -530,17 +655,18 @@ export default {
     if (this.$route.params.id) {
       this.fetchCurrentHandlingRecordHandler(this.$route.params.id);
     }
-
-    this.setEngineerListHandler();
   },
 };
 </script>
 
 <style lang="scss" scoped>
+::v-deep .row {
+  margin: -8px;
+}
 ::v-deep .col-12,
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 4px 12px;
+  padding: 8px;
 }
 </style>

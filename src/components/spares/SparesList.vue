@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-overlay :value="isLoading" absolute>
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <Progress :isLoading="isLoading" />
 
     <SparesListMobile :spares="spares" v-if="!isLoading && isMobile" />
 
@@ -13,6 +11,7 @@
 <script>
 import SparesListDesktop from '@/components/spares/SparesListDesktop';
 import SparesListMobile from '@/components/spares/SparesListMobile';
+import Progress from '../shared/Progress.vue';
 
 export default {
   name: 'SparesList',
@@ -23,7 +22,7 @@ export default {
     };
   },
 
-  components: { SparesListMobile, SparesListDesktop },
+  components: { SparesListMobile, SparesListDesktop, Progress },
 
   methods: {
     async fetchSpares() {
