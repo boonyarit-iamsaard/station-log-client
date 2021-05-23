@@ -346,11 +346,11 @@
         <v-row class="my-0">
           <v-col cols="12" sm="4">
             <v-icon
-              @click="formData.hasBrakeCooling = true"
+              @click="hasBrakeCooling = true"
               class="mr-2"
               color="primary"
               large
-              v-if="!formData.hasBrakeCooling"
+              v-if="!hasBrakeCooling"
             >
               mdi-plus-circle-outline
             </v-icon>
@@ -360,7 +360,7 @@
               class="mr-2"
               color="error"
               large
-              v-if="formData.hasBrakeCooling"
+              v-if="hasBrakeCooling"
             >
               mdi-minus-circle-outline
             </v-icon>
@@ -368,7 +368,7 @@
             <span class="subtitle-2">Brake Cooling</span>
           </v-col>
 
-          <v-col cols="12" sm="2" v-if="formData.hasBrakeCooling">
+          <v-col cols="12" sm="2" v-if="hasBrakeCooling">
             <v-text-field
               dense
               outlined
@@ -471,6 +471,7 @@ export default {
       exclusivePerService,
       formData: cloneDeep(handlingData),
       formRules: {},
+      hasBrakeCooling: false,
       isLoading: false,
       menuPropsMaxHeight: { maxHeight: 500 },
       modal: false,
@@ -491,6 +492,10 @@ export default {
           .dispatch('handling/fetchCurrentHandlingRecord', id)
           .then(() => {
             this.formData = cloneDeep(this.currentHandlingRecord);
+
+            if (this.formData.brakeCooling > 0) {
+              this.hasBrakeCooling = true;
+            }
           });
       } catch (error) {
         console.log(error.message || 'Something went wrong!');
@@ -537,7 +542,7 @@ export default {
     },
 
     clickDeleteBrakeCoolingHandler() {
-      this.formData.hasBrakeCooling = false;
+      this.hasBrakeCooling = false;
       this.formData.brakeCooling = 0;
     },
 

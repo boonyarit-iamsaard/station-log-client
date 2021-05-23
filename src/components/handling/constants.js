@@ -22,7 +22,6 @@ const handlingData = {
   date: new Date().toISOString().substr(0, 10),
   eic: '',
   fltno: '',
-  hasBrakeCooling: false,
   otherAirline: '',
   otherCheck: '',
   prefix: 'B-',
