@@ -273,6 +273,7 @@
             <v-select
               :items="serviceNames"
               :menu-props="menuPropsMaxHeight"
+              :rules="formRules.service"
               dense
               label="Service"
               outlined
@@ -374,7 +375,27 @@
               outlined
               label="Amount"
               type="number"
-              v-model="formData.brakeCooling"
+              v-model="formData.brakeCooling.fan"
+            />
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="hasBrakeCooling">
+            <v-text-field
+              dense
+              label="eng (hour)"
+              outlined
+              type="number"
+              v-model="formData.brakeCooling.hour.eng"
+            />
+          </v-col>
+
+          <v-col cols="12" sm="2" v-if="hasBrakeCooling">
+            <v-text-field
+              dense
+              label="mech (hour)"
+              outlined
+              type="number"
+              v-model="formData.brakeCooling.hour.mech"
             />
           </v-col>
         </v-row>
@@ -493,7 +514,7 @@ export default {
           .then(() => {
             this.formData = cloneDeep(this.currentHandlingRecord);
 
-            if (this.formData.brakeCooling > 0) {
+            if (this.formData.brakeCooling.fan > 0) {
               this.hasBrakeCooling = true;
             }
           });
@@ -507,6 +528,7 @@ export default {
     submitFormHandler() {
       this.formRules = {
         required: [v => !!v || 'Required.'],
+        service: [v => v !== 'Please select' || 'Please select.'],
       };
 
       this.$nextTick(() => {
@@ -543,7 +565,11 @@ export default {
 
     clickDeleteBrakeCoolingHandler() {
       this.hasBrakeCooling = false;
-      this.formData.brakeCooling = 0;
+      this.formData.brakeCooling.fan = 0;
+      this.formData.brakeCooling.hour = {
+        eng: 0,
+        mech: 0,
+      };
     },
 
     clickDeleteTaskHandler(id) {
@@ -571,15 +597,17 @@ export default {
 
     addTaskHandler() {
       this.formData.tasks.push({
-        _id: generateObjectID(),
         ...task,
+        _id: generateObjectID(),
+        hour: { ...task.hour },
       });
     },
 
     addServiceHandler() {
       this.formData.services.push({
-        _id: generateObjectID(),
         ...service,
+        _id: generateObjectID(),
+        hour: { ...service.hour },
       });
     },
 

@@ -17,7 +17,13 @@ const handlingData = {
   acreg: '',
   aircraftType: '',
   airline: 'LD',
-  brakeCooling: 0,
+  brakeCooling: {
+    fan: 0,
+    hour: {
+      mech: 0,
+      eng: 0,
+    },
+  },
   check: '',
   date: new Date().toISOString().substr(0, 10),
   eic: '',
@@ -77,12 +83,12 @@ const servicesList = [
     type: 'per service',
   },
   {
-    name: 'Maintenance Lift Stand (CX-04)',
+    name: 'Hi-Lift (CX-04)',
     inclusive: false,
     type: 'per hour',
   },
   {
-    name: 'Maintenance Lift Stand (CX-stand)',
+    name: 'CX Stands',
     inclusive: false,
     type: 'per hour',
   },
