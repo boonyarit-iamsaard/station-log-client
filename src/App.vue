@@ -1,6 +1,6 @@
 <template>
   <AppLayout>
-    <router-view></router-view>
+    <router-view />
   </AppLayout>
 </template>
 
@@ -13,10 +13,8 @@ export default {
   components: { AppLayout },
 
   created() {
-    this.$store.dispatch('tryAutoLogin');
-
-    if (this.$store.getters.getIsAuthenticated) {
-      this.$store.dispatch('setLogoutTimer');
+    if (this.$store.getters['auth/getIsAuthenticated']) {
+      this.$store.dispatch('auth/setLogoutTimer');
     }
   },
 };

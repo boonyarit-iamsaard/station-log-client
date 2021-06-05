@@ -1,0 +1,77 @@
+[
+  {
+    "name": "Please select",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Aircraft Chocks, Oil/Fuel Service Stands",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Axle Jack",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Brake Cooling",
+    "inclusive": false,
+    "type": "per hour"
+  },
+  {
+    "name": "Compress Nitrogen (strut/door)",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Compress Nitrogen (tyre)",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Hi-Lift (CX-04)",
+    "inclusive": false,
+    "type": "per hour"
+  },
+  {
+    "name": "CX Stands",
+    "inclusive": false,
+    "type": "per hour"
+  },
+  {
+    "name": "Pump for oil servicing",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Temp gauge for brake",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Torque Wrench",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Tyre Change",
+    "inclusive": true,
+    "type": "per service"
+  },
+  {
+    "name": "Tyre Pressure Gauge",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Wheel Change Dolly",
+    "inclusive": false,
+    "type": "per service"
+  },
+  {
+    "name": "Wheel Change Toolkit (exclude N2 charge)",
+    "inclusive": false,
+    "type": "per service"
+  }
+]

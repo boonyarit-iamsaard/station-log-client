@@ -4,7 +4,7 @@ import {
   getSpares,
   getSpareByID,
   updateSpare,
-} from '@/api/spares-api';
+} from '@/http/spares-api';
 
 export default {
   namespaced: true,
@@ -39,8 +39,11 @@ export default {
     async addSpare(context, payload) {
       try {
         const response = await createSpare(payload);
+        const { spare } = response.data;
 
-        context.commit('ADD_SPARE', response.data.spare);
+        context.commit('ADD_SPARE', spare);
+
+        return spare;
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -63,8 +66,9 @@ export default {
     async fetchSpareByID(context, payload) {
       try {
         const response = await getSpareByID(payload);
+        const { spare } = response.data;
 
-        context.commit('SET_CURRENT_SPARE', response.data.spare);
+        context.commit('SET_CURRENT_SPARE', spare);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -75,8 +79,9 @@ export default {
     async updateSpare(context, payload) {
       try {
         const response = await updateSpare(payload);
+        const { spare } = response.data;
 
-        context.commit('UPDATE_SPARE', response.data.spare);
+        context.commit('UPDATE_SPARE', spare);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);

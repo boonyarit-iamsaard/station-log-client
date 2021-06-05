@@ -2,10 +2,10 @@
   <v-app>
     <AppHeader
       :isMobile="isMobile"
-      @open="$refs.drawer.drawer = !$refs.drawer.drawer"
+      @open="$refs.sidenav.drawer = !$refs.sidenav.drawer"
     />
 
-    <AppDrawer ref="drawer" v-if="user" />
+    <AppDrawer ref="sidenav" v-if="user" />
 
     <v-main class="blue-grey lighten-5">
       <v-container class="pa-4">
@@ -102,7 +102,7 @@ export default {
     },
 
     user() {
-      return this.$store.getters['getUser'];
+      return this.$store.getters['auth/getUser'];
     },
   },
 };

@@ -1,3 +1,5 @@
+import chargeableItems from '@/assets/static-data/chargeable-items.json';
+
 const aircraftTypes = [
   'A320',
   'A321',
@@ -56,82 +58,9 @@ const service = {
   },
 };
 
-const servicesList = [
-  {
-    name: 'Please select',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Aircraft Chocks, Oil/Fuel Service Stands',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Axle Jack',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Compress Nitrogen (strut/door)',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Compress Nitrogen (tyre)',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Hi-Lift (CX-04)',
-    inclusive: false,
-    type: 'per hour',
-  },
-  {
-    name: 'CX Stands',
-    inclusive: false,
-    type: 'per hour',
-  },
-  {
-    name: 'Pump for oil servicing',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Temp gauge for brake',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Torque Wrench',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Tyre Change',
-    inclusive: true,
-    type: 'per service',
-  },
-  {
-    name: 'Tyre Pressure Gauge',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Wheel Change Dolly',
-    inclusive: false,
-    type: 'per service',
-  },
-  {
-    name: 'Wheel Change Toolkit (exclude N2 charge)',
-    inclusive: false,
-    type: 'per service',
-  },
-];
-
-const exclusivePerHour = () => {
+const getChargeablePerHourItems = () => {
   let items = [];
-  servicesList.forEach(service => {
+  chargeableItems.forEach(service => {
     if (service.type === 'per hour') {
       items.push(service.name);
     }
@@ -140,9 +69,9 @@ const exclusivePerHour = () => {
   return items;
 };
 
-const exclusivePerService = () => {
+const getChargeablePerServiceItems = () => {
   let items = [];
-  servicesList.forEach(service => {
+  chargeableItems.forEach(service => {
     if (service.inclusive === false) {
       items.push(service.name);
     }
@@ -151,9 +80,9 @@ const exclusivePerService = () => {
   return items;
 };
 
-const serviceNames = () => {
+const getChargeableItems = () => {
   let items = [];
-  servicesList.forEach(service => items.push(service.name));
+  chargeableItems.forEach(service => items.push(service.name));
 
   return items;
 };
@@ -162,10 +91,10 @@ export {
   aircraftTypes,
   airlines,
   checks,
-  exclusivePerHour,
-  exclusivePerService,
+  getChargeablePerHourItems,
+  getChargeablePerServiceItems,
   handlingData,
   service,
-  serviceNames,
+  getChargeableItems,
   task,
 };

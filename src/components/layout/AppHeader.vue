@@ -50,7 +50,7 @@ export default {
   methods: {
     logout() {
       this.$store
-        .dispatch('logout')
+        .dispatch('auth/logout')
         .then(() => this.$router.push('/login'))
         .catch(err => console.log(err));
     },
@@ -58,7 +58,7 @@ export default {
 
   computed: {
     user() {
-      return this.$store.getters['getUser'];
+      return this.$store.getters['auth/getUser'];
     },
 
     name() {

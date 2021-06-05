@@ -208,7 +208,7 @@
           </v-col>
 
           <!-- Issued -->
-          <v-col cols="12" :sm="formData.issued.status ? 4 : 12">
+          <v-col cols="12" :sm="formData.issued.status ? 3 : 12">
             <v-checkbox
               dense
               label="Issued?"
@@ -218,7 +218,7 @@
             ></v-checkbox>
           </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.issued.status">
+          <v-col cols="12" sm="3" v-if="formData.issued.status">
             <v-text-field
               dense
               label="IS No."
@@ -230,7 +230,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.issued.status">
+          <v-col cols="12" sm="3" v-if="formData.issued.status">
             <v-select
               dense
               label="By"
@@ -242,10 +242,14 @@
             ></v-select>
           </v-col>
 
+          <v-col cols="12" sm="3" v-if="formData.issued.status">
+            <DatePicker ref="issuedDate" :disabled="formData.returned.status" />
+          </v-col>
+
           <!-- Returned -->
           <v-col
             cols="12"
-            :sm="formData.returned.status ? 4 : 12"
+            :sm="formData.returned.status ? 3 : 12"
             v-if="formData.type === 'Return' && formData.issued.status"
           >
             <v-checkbox
@@ -257,7 +261,7 @@
             ></v-checkbox>
           </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.returned.status">
+          <v-col cols="12" sm="3" v-if="formData.returned.status">
             <v-text-field
               dense
               label="IR No."
@@ -269,7 +273,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.returned.status">
+          <v-col cols="12" sm="3" v-if="formData.returned.status">
             <v-select
               dense
               label="By"
@@ -281,10 +285,17 @@
             ></v-select>
           </v-col>
 
+          <v-col cols="12" sm="3" v-if="formData.returned.status">
+            <DatePicker
+              ref="returnedDate"
+              :disabled="formData.transferred.status"
+            />
+          </v-col>
+
           <!-- Transferred -->
           <v-col
             cols="12"
-            :sm="formData.transferred.status ? 4 : 12"
+            :sm="formData.transferred.status ? 3 : 12"
             v-if="
               formData.type === 'Return' &&
               formData.issued.status &&
@@ -300,7 +311,7 @@
             ></v-checkbox>
           </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.transferred.status">
+          <v-col cols="12" sm="3" v-if="formData.transferred.status">
             <v-text-field
               dense
               label="TX No."
@@ -312,7 +323,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.transferred.status">
+          <v-col cols="12" sm="3" v-if="formData.transferred.status">
             <v-select
               dense
               label="By"
@@ -322,6 +333,10 @@
               :items="staffs"
               :rules="formRules.transferredBy"
             ></v-select>
+          </v-col>
+
+          <v-col cols="12" sm="3" v-if="formData.transferred.status">
+            <DatePicker ref="transferredDate" />
           </v-col>
         </v-row>
       </v-card-text>
@@ -368,22 +383,24 @@
 </template>
 
 <script>
+import { cloneDeep } from 'lodash';
 import { format } from 'date-fns';
-import { defaultData } from './constants';
 import { staffsList } from '@/utils/staffs';
 
 import ConfirmDialog from '../shared/ConfirmDialog.vue';
+import DatePicker from '@/components/shared/DatePicker';
 import Progress from '../shared/Progress.vue';
+import { spareData } from '@/components/spares/default-values';
 
 export default {
   name: 'SparesForm',
 
-  components: { ConfirmDialog, Progress },
+  components: { DatePicker, ConfirmDialog, Progress },
 
   data() {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
-      formData: { ...defaultData },
+      formData: cloneDeep(spareData),
       formRules: {},
       isLoading: false,
       modal: false,
@@ -425,12 +442,28 @@ export default {
           this.formData.acreg = this.formData.prefix.concat(this.formData.tail);
           this.formData.status = this.setSpareStatusHandler();
 
-          const spareData = this.formData;
+          if (this.formData.issued.status) {
+            this.formData.issued.date = this.$refs.issuedDate.selectedDate;
+          }
+
+          if (this.formData.returned.status) {
+            this.formData.returned.date = this.$refs.returnedDate.selectedDate;
+          }
+
+          if (this.formData.transferred.status) {
+            this.formData.transferred.date = this.$refs.transferredDate.selectedDate;
+          }
+
+          const submitData = this.formData;
+
+          // console.log(JSON.stringify(submitData, null, 2));
 
           if (this.$route.params.id) {
-            this.$store.dispatch('spares/updateSpare', spareData);
+            this.$store.dispatch('spares/updateSpare', submitData);
           } else {
-            this.$store.dispatch('spares/addSpare', spareData);
+            this.$store
+              .dispatch('spares/addSpare', submitData)
+              .then(() => (this.isLoading = false));
           }
 
           this.isLoading = false;
@@ -442,7 +475,7 @@ export default {
 
     onFormReset() {
       this.formRules = {};
-      this.formData = { ...defaultData };
+      this.formData = cloneDeep(spareData);
 
       this.$nextTick(() => {
         this.$router.replace('/spares');
@@ -463,7 +496,7 @@ export default {
 
       try {
         await this.$store.dispatch('spares/fetchSpareByID', id).then(() => {
-          this.formData = this.currentSpare;
+          this.formData = cloneDeep(this.currentSpare);
         });
       } catch (error) {
         console.log(error.message || 'Something went wrong!');
@@ -541,7 +574,7 @@ export default {
     },
 
     isAdmin() {
-      return this.$store.getters['getIsAdmin'];
+      return this.$store.getters['auth/getIsAdmin'];
     },
 
     isMobile() {
