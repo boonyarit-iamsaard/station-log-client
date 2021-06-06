@@ -9,7 +9,7 @@
           col="12"
           sm="4"
         >
-          <v-card link :to="item.path">
+          <v-card outlined link :to="item.path">
             <v-img
               class="white--text align-end"
               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
@@ -24,7 +24,6 @@
           </v-card>
         </v-col>
       </v-row>
-      <p class="text-center title mt-8">Dashboard is coming soon.....</p>
     </div>
   </v-container>
 </template>
@@ -49,7 +48,7 @@ export default {
           path: '/spares',
         },
         {
-          title: '3rd Party Handling',
+          title: 'Customer Handling',
           icon: 'mdi-airplane',
           src: require('../assets/images/third-party.jpg'),
           path: '/handling',

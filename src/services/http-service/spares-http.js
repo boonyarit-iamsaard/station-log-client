@@ -1,4 +1,4 @@
-import HTTP from './http-common';
+import HTTP from '@/services/http-service';
 
 const END_POINT = '/spares/';
 

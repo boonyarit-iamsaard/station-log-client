@@ -1,4 +1,4 @@
-import { login } from '@/http/users-api';
+import { login } from '@/services/http-service/users-http';
 import router from '@/router';
 
 const isAdmin = localStorage.getItem('isAdmin')

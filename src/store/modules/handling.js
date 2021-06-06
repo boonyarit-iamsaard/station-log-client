@@ -4,7 +4,7 @@ import {
   getHandlingRecords,
   getHandlingRecordByID,
   updateHandlingRecord,
-} from '@/http/handling-api';
+} from '@/services/http-service/handling-http';
 
 export default {
   namespaced: true,

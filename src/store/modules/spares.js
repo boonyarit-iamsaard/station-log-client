@@ -4,7 +4,7 @@ import {
   getSpares,
   getSpareByID,
   updateSpare,
-} from '@/http/spares-api';
+} from '@/services/http-service/spares-http';
 
 export default {
   namespaced: true,

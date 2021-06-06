@@ -30,6 +30,18 @@ const routes = [
   {
     path: '/flights',
     component: () => import('@/views/FlightsPage'),
+    children: [
+      {
+        path: '',
+        name: 'flights',
+        component: () => import('@/components/flights/FlightsList'),
+      },
+      {
+        path: 'create',
+        name: 'flightCreate',
+        component: () => import('@/components/flights/FlightsForm'),
+      },
+    ],
     meta: {
       requiresAuth: true,
     },

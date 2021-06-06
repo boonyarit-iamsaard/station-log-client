@@ -243,7 +243,15 @@
           </v-col>
 
           <v-col cols="12" sm="3" v-if="formData.issued.status">
-            <DatePicker ref="issuedDate" :disabled="formData.returned.status" />
+            <DatePicker
+              ref="issuedDate"
+              :disabled="formData.returned.status"
+              :provided-date="
+                formData.issued.date
+                  ? formData.issued.date
+                  : new Date().toISOString().substr(0, 10)
+              "
+            />
           </v-col>
 
           <!-- Returned -->
@@ -456,7 +464,7 @@ export default {
 
           const submitData = this.formData;
 
-          // console.log(JSON.stringify(submitData, null, 2));
+          console.log(JSON.stringify(submitData, null, 2));
 
           if (this.$route.params.id) {
             this.$store.dispatch('spares/updateSpare', submitData);
@@ -524,6 +532,7 @@ export default {
 
     onActionChangeHandler(name) {
       if (!this.formData[name].status) {
+        delete this.formData[name].date;
         this.formData[name].number = '';
         this.formData[name].by = '';
       }

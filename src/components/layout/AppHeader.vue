@@ -76,10 +76,12 @@ export default {
           return 'Spares Movement';
         case '/handling':
           return '3rd Party Handling Record';
+        case '/flights/create':
+          return 'Flight Movement Form';
         case '/handling/create':
           return '3rd Party Handling Form';
         case '/spares/create':
-          return 'Spares Movement Form';
+          return 'Spare Movement Form';
         case `/spares/edit/${this.$route.params.id}`:
           return 'Spares Movement Form';
         case `/handling/edit/${this.$route.params.id}`:

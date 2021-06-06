@@ -18,7 +18,7 @@
     </template>
 
     <template v-slot:item.type="{ item }">
-      <v-avatar :color="setSpareTypeColorHandler(item.type)" size="24">
+      <v-avatar :color="setSpareTypeColorHandler(item.type)" size="32">
         <span class="white--text">{{ item.type.substr(0, 1) }}</span>
       </v-avatar>
     </template>

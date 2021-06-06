@@ -6,7 +6,7 @@
       <v-form ref="loginForm" @submit.prevent="onFormSubmitHandler">
         <v-card outlined>
           <v-card-title class="d-flex justify-center pa-4">
-            <span>Please Login</span>
+            <span>Login</span>
           </v-card-title>
 
           <v-card-text class="pa-4">

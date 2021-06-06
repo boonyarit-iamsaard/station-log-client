@@ -8,10 +8,10 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
-        :value="setDateFormatHandler(selectedDate)"
+        :disabled="disabled"
+        :value="formattedDate"
         append-icon="mdi-calendar"
         dense
-        :disabled="disabled"
         label="Date"
         outlined
         readonly
@@ -22,9 +22,7 @@
     <v-date-picker v-model="selectedDate" scrollable>
       <v-spacer></v-spacer>
       <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
-      <v-btn text color="primary" @click="$refs.dialog.save(selectedDate)">
-        OK
-      </v-btn>
+      <v-btn text color="primary" @click="clickSaveDate"> SAVE </v-btn>
     </v-date-picker>
   </v-dialog>
 </template>
@@ -40,6 +38,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    providedDate: {
+      type: String,
+      default: () => new Date().toISOString().substr(0, 10),
+    },
   },
 
   data() {
@@ -50,9 +52,21 @@ export default {
   },
 
   methods: {
-    setDateFormatHandler(date) {
-      return format(new Date(date), 'dd MMMM yyyy');
+    clickSaveDate() {
+      this.$refs.dialog.save(this.selectedDate);
+      this.$emit('getSelectedDate', this.selectedDate);
+      console.log(this.selectedDate);
     },
+  },
+
+  computed: {
+    formattedDate() {
+      return format(new Date(this.selectedDate), 'dd MMMM yyyy');
+    },
+  },
+
+  created() {
+    this.selectedDate = this.providedDate;
   },
 };
 </script>

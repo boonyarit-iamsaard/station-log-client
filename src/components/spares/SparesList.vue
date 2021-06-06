@@ -35,8 +35,8 @@ export default {
       } catch (err) {
         this.isLoading = false;
 
-        this.$store.dispatch('error/setIsError');
-        this.$store.dispatch('error/setErrorMessage', err.message);
+        await this.$store.dispatch('error/setIsError');
+        await this.$store.dispatch('error/setErrorMessage', err.message);
       }
     },
   },
