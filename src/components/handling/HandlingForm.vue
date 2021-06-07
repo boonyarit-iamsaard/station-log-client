@@ -14,6 +14,8 @@
         <v-row class="my-0">
           <v-col cols="12">
             <span class="subtitle-2">Flight Details</span>
+
+            <v-divider class="mb-4"></v-divider>
           </v-col>
 
           <v-col cols="12" sm="4">
@@ -159,6 +161,11 @@
               >mdi-plus-circle-outline</v-icon
             >
             <span class="subtitle-2">WO/TASK</span>
+
+            <v-divider
+              class="mb-4"
+              v-if="formData.tasks.length > 0"
+            ></v-divider>
           </v-col>
         </v-row>
 
@@ -261,6 +268,11 @@
               mdi-plus-circle-outline
             </v-icon>
             <span class="subtitle-2">Equipment & Tooling</span>
+
+            <v-divider
+              class="mb-4"
+              v-if="formData.services.length > 0"
+            ></v-divider>
           </v-col>
         </v-row>
 
@@ -288,7 +300,11 @@
           >
             <v-text-field
               dense
-              label="usage (hr.)"
+              :label="
+                service.service === 'Brake Cooling'
+                  ? 'usage (fan)'
+                  : 'usage (hr.)'
+              "
               outlined
               type="number"
               v-model="service.usage"
@@ -316,7 +332,7 @@
           >
             <v-text-field
               dense
-              label="mech  (hr.)"
+              label="mech (hr.)"
               outlined
               type="number"
               v-model="service.hour.mech"
@@ -472,6 +488,7 @@ import {
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog.vue';
 import Progress from '../shared/Progress.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'HandlingForm',
@@ -538,8 +555,6 @@ export default {
           this.formData.acreg = this.formData.prefix.concat(this.formData.tail);
 
           const handlingData = this.formData;
-
-          console.log(JSON.stringify(handlingData, null, 2));
 
           if (this.$route.params.id) {
             this.$store.dispatch('handling/updateHandlingRecord', handlingData);
@@ -671,13 +686,10 @@ export default {
   },
 
   computed: {
-    currentHandlingRecord() {
-      return this.$store.getters['handling/getCurrentHandlingRecord'];
-    },
-
-    isAdmin() {
-      return this.$store.getters['getIsAdmin'];
-    },
+    ...mapGetters({
+      isAdmin: 'auth/getIsAdmin',
+      currentHandlingRecord: 'handling/getCurrentHandlingRecord',
+    }),
 
     isMobile() {
       return this.$vuetify.breakpoint.xs;
@@ -700,6 +712,6 @@ export default {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 8px;
+  padding: 7px 8px;
 }
 </style>

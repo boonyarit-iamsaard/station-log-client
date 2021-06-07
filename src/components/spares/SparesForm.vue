@@ -19,7 +19,7 @@
         <!-- Flight details -->
         <v-row class="mt-0">
           <v-col cols="12">
-            <span>Flight Details</span>
+            <span class="subtitle-2">Flight Details</span>
 
             <v-divider class="mb-4"></v-divider>
           </v-col>
@@ -97,7 +97,7 @@
         <!-- Spare details -->
         <v-row>
           <v-col cols="12">
-            <span>Spare Details</span>
+            <span class="subtitle-2">Spare Details</span>
 
             <v-divider class="mb-4"></v-divider>
           </v-col>
@@ -202,7 +202,7 @@
         <!-- Spare actions -->
         <v-row>
           <v-col cols="12">
-            <span>Spare Actions</span>
+            <span class="subtitle-2">Spare Actions</span>
 
             <v-divider class="mb-4"></v-divider>
           </v-col>
@@ -613,10 +613,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+::v-deep .row {
+  margin: -8px;
+}
+
 ::v-deep .col-12,
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 4px 12px;
+  padding: 7px 8px;
 }
 </style>

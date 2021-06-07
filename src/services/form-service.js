@@ -13,7 +13,7 @@ const aircraftTypes = [
 
 const airlines = ['ASL', 'CX', 'KA', 'LD', 'PR', 'Other'];
 
-const checks = ['ETR', 'OCT', 'TR', '36H', '72H', 'WY', '10DY', 'Other'];
+const checks = ['ETR', 'OCT', 'TR', '36H', '72H', 'WY', '10DY', 'RTB', 'Other'];
 
 const getEngineersList = () => {
   let list = [];

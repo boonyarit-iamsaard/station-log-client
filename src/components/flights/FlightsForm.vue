@@ -1,54 +1,169 @@
 <template>
   <v-form ref="flightForm" @submit.prevent="validateFlightData">
     <v-card class="mx-auto" max-width="959" outlined>
-      <FlightDetails
-        ref="flightDetailsForm"
-        :getFlightDetails="getFlightDetails"
-      />
-
-      <v-card-actions class="px-4 pt-0 pb-4">
-        <v-row class="ma-0">
-          <v-col cols="12" sm="2" :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0'">
-            <v-btn block color="primary" depressed outlined>
-              <v-icon left>mdi-close</v-icon>
-              CANCEL
-            </v-btn>
-          </v-col>
-
-          <v-spacer v-if="!isMobile"></v-spacer>
-
-          <v-col
-            cols="12"
-            sm="2"
-            :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0 mr-4'"
+      <v-stepper
+        :alt-labels="$vuetify.breakpoint.mdAndUp"
+        class="elevation-0"
+        v-model="stepper"
+      >
+        <v-stepper-header class="elevation-0">
+          <v-stepper-step
+            :complete="stepper > 1"
+            :rules="[() => isFlightDetailsValid]"
+            step="1"
           >
-            <v-btn
-              :disabled="!isAdmin"
-              block
-              color="error"
-              depressed
-              v-if="$route.params.id"
-            >
-              <v-icon left>mdi-delete</v-icon>
-              DELETE
-            </v-btn>
-          </v-col>
+            <small> Flight Details </small>
+          </v-stepper-step>
 
-          <v-col cols="12" sm="2" class="pa-0">
-            <v-btn block color="primary" depressed type="submit">
-              <v-icon left>mdi-check</v-icon>
-              SAVE
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-actions>
+          <v-divider></v-divider>
+
+          <v-stepper-step :complete="stepper > 2" step="2">
+            <small> Servicing Details </small>
+          </v-stepper-step>
+
+          <v-divider></v-divider>
+
+          <v-stepper-step :complete="stepper > 3" step="3">
+            <small>ADDs</small>
+          </v-stepper-step>
+
+          <v-divider></v-divider>
+
+          <v-stepper-step :complete="stepper > 4" step="4">
+            <small>ADDs and Work packages</small>
+          </v-stepper-step>
+        </v-stepper-header>
+
+        <v-stepper-items>
+          <v-stepper-content class="pa-4" step="1">
+            <FlightDetails
+              ref="flightDetailsForm"
+              :getFlightDetails="getFlightDetails"
+            />
+
+            <div class="d-flex justify-space-between">
+              <v-btn color="primary" outlined> Cancel</v-btn>
+
+              <v-btn color="primary" @click="stepper = 2"> Continue</v-btn>
+            </div>
+          </v-stepper-content>
+
+          <v-stepper-content class="pa-4" step="2">
+            <v-row class="mb-0">
+              <v-col cols="12">
+                <span class="subtitle-2">Service Details</span>
+
+                <v-divider class="mb-4"></v-divider>
+              </v-col>
+
+              <v-col cols="12" sm="3">
+                <v-text-field
+                  dense
+                  hint="minutes"
+                  label="400Hz"
+                  outlined
+                  persistent-hint
+                  type="number"
+                  v-model="flightData.services.afac"
+                ></v-text-field>
+                <v-checkbox class="mt-0" label="Water"></v-checkbox>
+                <v-checkbox class="mt-0" label="Lavatory"></v-checkbox>
+                <v-checkbox class="mt-0" label="Disinfection"></v-checkbox>
+              </v-col>
+            </v-row>
+
+            <div class="d-flex justify-space-between">
+              <v-btn outlined color="primary" @click="stepper = 1"> BACK</v-btn>
+
+              <v-btn color="primary" @click="stepper = 3">CONTINUE</v-btn>
+            </div>
+          </v-stepper-content>
+
+          <v-stepper-content class="pa-4" step="3">
+            <v-card>
+              <v-card-text class="pa-0">
+                <v-row class="mb-0">
+                  <v-col cols="12">
+                    <v-icon
+                      class="mr-2"
+                      color="primary"
+                      large
+                      v-if="!hasDoneDeferrals"
+                      @click="clickAddDeferral"
+                    >
+                      mdi-plus-circle-outline
+                    </v-icon>
+
+                    <v-icon
+                      class="mr-2"
+                      color="error"
+                      large
+                      v-if="hasDoneDeferrals"
+                      @click="hasDoneDeferrals = false"
+                    >
+                      mdi-minus-circle-outline
+                    </v-icon>
+
+                    <span class="subtitle-2"> ADDs </span>
+
+                    <v-divider class="mb-4"></v-divider>
+                  </v-col>
+                </v-row>
+
+                <v-row v-if="flightData.deferrals.length > 0">
+                  <v-col
+                    cols="6"
+                    v-for="deferral in flightData.deferrals"
+                    :key="deferral._id"
+                  >
+                    <v-select
+                      dense
+                      outlined
+                      label="ADD type"
+                      v-model="deferral.type"
+                      :items="deferralTypes"
+                    ></v-select>
+
+                    <v-text-field
+                      dense
+                      outlined
+                      label="amounts"
+                      type="number"
+                      v-model="deferral.amount"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+
+              <v-card-actions class="pa-0 d-flex justify-space-between">
+                <v-btn outlined color="primary" @click="stepper = 2">
+                  BACK
+                </v-btn>
+
+                <v-btn color="primary" @click="validateFlightData">
+                  SAVE
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-stepper-content>
+
+          <v-stepper-content class="pa-4" step="4">
+            <div class="d-flex justify-space-between">
+              <v-btn outlined color="primary" @click="stepper = 3"> BACK</v-btn>
+
+              <v-btn color="primary" @click="validateFlightData">SAVE</v-btn>
+            </div>
+          </v-stepper-content>
+        </v-stepper-items>
+      </v-stepper>
     </v-card>
   </v-form>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
 import FlightDetails from '@/components/shared/FlightDetails';
+import { generateObjectID } from '@/utils/object-id';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'FlightsForm',
@@ -57,17 +172,36 @@ export default {
 
   data() {
     return {
+      deferral: {
+        _id: generateObjectID(),
+        type: '',
+        amount: 0,
+      },
+      deferralTypes: ['P', 'S', 'A', 'Z', 'Z', 'W'],
       flightData: {
         date: new Date().toISOString().substr(0, 10),
         handOver: '',
+        services: {
+          afac: 0,
+          water: false,
+          lavatory: false,
+          disinfection: false,
+        },
+        deferrals: [],
       },
       flightDataRules: {},
-      isFlightDataValid: false,
-      isFlightDetailsValid: false,
+      hasDoneDeferrals: false,
+      isFlightDetailsValid: true,
+      stepper: 3,
     };
   },
 
   methods: {
+    clickAddDeferral() {
+      this.hasDoneDeferrals = true;
+      this.flightData.deferrals.push(this.deferral);
+    },
+
     getFlightDetails(flightDetails) {
       Object.keys(flightDetails).forEach(key => {
         this.flightData[key] = flightDetails[key];
@@ -85,11 +219,10 @@ export default {
 
       flightDetailsForm.$nextTick(() => {
         if (flightDetailsForm.$refs.form.validate()) {
+          this.isFlightDetailsValid = true;
           const flightDetails = flightDetailsForm.flightDetails;
 
-          Object.keys(flightDetails).forEach(key => {
-            this.flightData[key] = flightDetails[key];
-          });
+          this.getFlightDetails(flightDetails);
 
           this.flightDataRules = {
             required: [v => !!v || 'Required.'],
@@ -100,7 +233,7 @@ export default {
               this.submitFlightData();
             }
           });
-        }
+        } else this.isFlightDetailsValid = false;
       });
     },
   },

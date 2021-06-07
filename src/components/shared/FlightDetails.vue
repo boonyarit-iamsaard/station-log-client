@@ -1,143 +1,147 @@
 <template>
   <v-form ref="form" @submit.prevent="validateFlightDetails">
-    <v-card-text>
-      <v-row class="my-0">
-        <v-col cols="12">
-          <span class="subtitle-2">Flight Details</span>
-        </v-col>
+    <v-row class="my-0">
+      <v-col cols="12">
+        <span class="subtitle-2">Flight Details</span>
 
-        <v-col cols="12" sm="4">
-          <DatePicker
-            :provided-date="flightDetails.date"
-            @getSelectedDate="getSelectedDate"
-          />
-        </v-col>
+        <v-divider class="mb-4"></v-divider>
+      </v-col>
 
-        <v-col cols="12" sm="2">
-          <v-select
-            :items="airlines"
-            @change="setPrefixHandler"
-            dense
-            label="Airline"
-            outlined
-            v-model="flightDetails.airline"
-          ></v-select>
-        </v-col>
+      <v-col cols="12" sm="4">
+        <DatePicker
+          :provided-date="flightDetails.date"
+          @getSelectedDate="getSelectedDate"
+        />
+      </v-col>
 
-        <v-col cols="12" sm="2" v-if="flightDetails.airline === 'Other'">
-          <v-text-field
-            :rules="flightDetailsRules.required"
-            @keyup="setUpperCaseTextHandler('otherAirline')"
-            dense
-            label="Other airline"
-            outlined
-            v-model="flightDetails.otherAirline"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" sm="2">
+        <v-select
+          :items="airlines"
+          @change="setPrefixHandler"
+          dense
+          label="Airline"
+          outlined
+          v-model="flightDetails.airline"
+        ></v-select>
+      </v-col>
 
-        <v-col cols="12" :sm="flightDetails.airline === 'Other' ? 2 : 3">
-          <v-text-field
-            dense
-            label="Flt No."
-            outlined
-            v-model="flightDetails.fltno"
-            :rules="flightDetailsRules.required"
-            @keyup="setUpperCaseTextHandler('fltno')"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" sm="2" v-if="isOtherAirline">
+        <v-text-field
+          :rules="flightDetailsRules.required"
+          @keyup="setUpperCaseTextHandler('otherAirline')"
+          dense
+          label="Other airline"
+          outlined
+          v-model="flightDetails.otherAirline"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" :sm="flightDetails.airline === 'Other' ? 2 : 3">
-          <v-text-field
-            dense
-            label="Reg."
-            outlined
-            v-model="flightDetails.tail"
-            :prefix="flightDetails.prefix"
-            :rules="flightDetailsRules.required"
-            @keyup="setUpperCaseTextHandler('tail')"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" :sm="isOtherAirline ? 2 : 3">
+        <v-text-field
+          dense
+          label="Flt No."
+          outlined
+          v-model="flightDetails.fltno"
+          :rules="flightDetailsRules.required"
+          @keyup="setUpperCaseTextHandler('fltno')"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" sm="2">
-          <v-text-field
-            dense
-            label="ATA"
-            v-mask="'##:##'"
-            outlined
-            v-model="flightDetails.ata"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" :sm="isOtherAirline ? 2 : 3">
+        <v-text-field
+          dense
+          label="Reg."
+          outlined
+          v-model="flightDetails.tail"
+          :prefix="flightDetails.prefix"
+          :rules="flightDetailsRules.required"
+          @keyup="setUpperCaseTextHandler('tail')"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" sm="2">
-          <v-text-field
-            dense
-            label="ATD"
-            outlined
-            v-mask="'##:##'"
-            v-model="flightDetails.atd"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" sm="2">
+        <v-text-field
+          dense
+          hint="HH:mm"
+          label="ATA"
+          outlined
+          persistent-hint
+          v-mask="'##:##'"
+          v-model="flightDetails.ata"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" sm="2">
-          <v-text-field
-            dense
-            label="Bay"
-            outlined
-            v-model="flightDetails.bay"
-            :rules="flightDetailsRules.required"
-            @keyup="setUpperCaseTextHandler('bay')"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" sm="2">
+        <v-text-field
+          dense
+          hint="HH:mm"
+          label="ATD"
+          outlined
+          persistent-hint
+          v-mask="'##:##'"
+          v-model="flightDetails.atd"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" :sm="flightDetails.check === 'Other' ? 2 : 3">
-          <v-select
-            :items="aircraftTypes"
-            :menu-props="menuPropsMaxHeight"
-            :rules="flightDetailsRules.required"
-            dense
-            label="A/C Type"
-            outlined
-            v-model="flightDetails.aircraftType"
-          ></v-select>
-        </v-col>
+      <v-col cols="12" sm="2">
+        <v-text-field
+          dense
+          label="Bay"
+          outlined
+          v-model="flightDetails.bay"
+          :rules="flightDetailsRules.required"
+          @keyup="setUpperCaseTextHandler('bay')"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" :sm="flightDetails.check === 'Other' ? 2 : 3">
-          <v-autocomplete
-            :items="checks"
-            :menu-props="menuPropsMaxHeight"
-            :rules="flightDetailsRules.required"
-            @change="setOtherCheckHandler"
-            dense
-            label="Check"
-            outlined
-            v-model="flightDetails.check"
-          ></v-autocomplete>
-        </v-col>
+      <v-col cols="12" sm="3">
+        <v-select
+          :items="checks"
+          :menu-props="menuPropsMaxHeight"
+          :rules="flightDetailsRules.required"
+          @change="setOtherCheckHandler"
+          dense
+          label="Check"
+          outlined
+          v-model="flightDetails.check"
+        ></v-select>
+      </v-col>
 
-        <v-col cols="12" sm="2" v-if="flightDetails.check === 'Other'">
-          <v-text-field
-            dense
-            label="Other Check"
-            outlined
-            v-model="flightDetails.otherCheck"
-            :rules="flightDetailsRules.required"
-            @keyup="setUpperCaseTextHandler('otherCheck')"
-          ></v-text-field>
-        </v-col>
+      <v-col cols="12" sm="3" v-if="isOtherCheck">
+        <v-text-field
+          dense
+          label="Other Check"
+          outlined
+          v-model="flightDetails.otherCheck"
+          :rules="flightDetailsRules.required"
+          @keyup="setUpperCaseTextHandler('otherCheck')"
+        ></v-text-field>
+      </v-col>
 
-        <v-col cols="12" sm="4">
-          <v-autocomplete
-            :items="engineers"
-            :menu-props="menuPropsMaxHeight"
-            :rules="flightDetailsRules.required"
-            dense
-            label="EIC"
-            outlined
-            v-model="flightDetails.eic"
-          ></v-autocomplete>
-        </v-col>
-      </v-row>
-    </v-card-text>
+      <v-col cols="12" :sm="isOtherCheck ? 2 : 3">
+        <v-select
+          :items="aircraftTypes"
+          :menu-props="menuPropsMaxHeight"
+          :rules="flightDetailsRules.required"
+          dense
+          label="A/C Type"
+          outlined
+          v-model="flightDetails.aircraftType"
+        ></v-select>
+      </v-col>
+
+      <v-col cols="12" sm="4">
+        <v-select
+          :items="engineers"
+          :menu-props="menuPropsMaxHeight"
+          :rules="flightDetailsRules.required"
+          dense
+          label="EIC"
+          outlined
+          v-model="flightDetails.eic"
+        ></v-select>
+      </v-col>
+    </v-row>
   </v-form>
 </template>
 
@@ -184,7 +188,6 @@ export default {
       },
       flightDetailsRules: {},
       menuPropsMaxHeight: { maxHeight: '100%' },
-      ataModal: false,
     };
   },
 
@@ -229,6 +232,16 @@ export default {
       };
     },
   },
+
+  computed: {
+    isOtherAirline() {
+      return this.flightDetails.airline === 'Other';
+    },
+
+    isOtherCheck() {
+      return this.flightDetails.check === 'Other';
+    },
+  },
 };
 </script>
 
@@ -240,6 +253,6 @@ export default {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 8px;
+  padding: 7px 8px;
 }
 </style>
