@@ -79,14 +79,4 @@ export default {
 .main {
   background-color: #f6f6f6;
 }
-
-::v-deep .row {
-  margin: -8px;
-}
-::v-deep .col-12,
-.col-sm-2,
-.col-sm-3,
-.col-sm-4 {
-  padding: 7px 8px;
-}
 </style>

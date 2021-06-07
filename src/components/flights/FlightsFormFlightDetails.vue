@@ -1,20 +1,15 @@
+<!--suppress ALL -->
 <template>
   <v-form ref="form" @submit.prevent="validateFlightDetails">
     <v-row class="my-0">
       <v-col cols="12">
-        <span class="subtitle-2">Flight Details</span>
-
-        <v-divider class="mb-4"></v-divider>
-      </v-col>
-
-      <v-col cols="12" sm="4">
         <DatePicker
           :provided-date="flightDetails.date"
           @getSelectedDate="getSelectedDate"
         />
       </v-col>
 
-      <v-col cols="12" sm="2">
+      <v-col cols="12" :sm="isOtherAirline ? 6 : 4">
         <v-select
           :items="airlines"
           @change="setPrefixHandler"
@@ -25,7 +20,7 @@
         ></v-select>
       </v-col>
 
-      <v-col cols="12" sm="2" v-if="isOtherAirline">
+      <v-col cols="12" sm="6" v-if="isOtherAirline">
         <v-text-field
           :rules="flightDetailsRules.required"
           @keyup="setUpperCaseTextHandler('otherAirline')"
@@ -36,7 +31,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" :sm="isOtherAirline ? 2 : 3">
+      <v-col cols="12" :sm="isOtherAirline ? 6 : 4">
         <v-text-field
           dense
           label="Flt No."
@@ -47,7 +42,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" :sm="isOtherAirline ? 2 : 3">
+      <v-col cols="12" :sm="isOtherAirline ? 6 : 4">
         <v-text-field
           dense
           label="Reg."
@@ -59,7 +54,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="2">
+      <v-col cols="12" sm="4">
         <v-text-field
           dense
           hint="HH:mm"
@@ -71,7 +66,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="2">
+      <v-col cols="12" sm="4">
         <v-text-field
           dense
           hint="HH:mm"
@@ -83,7 +78,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="2">
+      <v-col cols="12" sm="4">
         <v-text-field
           dense
           label="Bay"
@@ -94,7 +89,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" sm="3">
+      <v-col cols="12" sm="4">
         <v-select
           :items="checks"
           :menu-props="menuPropsMaxHeight"
@@ -107,7 +102,7 @@
         ></v-select>
       </v-col>
 
-      <v-col cols="12" sm="3" v-if="isOtherCheck">
+      <v-col cols="12" sm="4" v-if="isOtherCheck">
         <v-text-field
           dense
           label="Other Check"
@@ -118,7 +113,7 @@
         ></v-text-field>
       </v-col>
 
-      <v-col cols="12" :sm="isOtherCheck ? 2 : 3">
+      <v-col cols="12" :sm="isOtherCheck ? 6 : 4">
         <v-select
           :items="aircraftTypes"
           :menu-props="menuPropsMaxHeight"
@@ -130,7 +125,7 @@
         ></v-select>
       </v-col>
 
-      <v-col cols="12" sm="4">
+      <v-col cols="12">
         <v-select
           :items="engineers"
           :menu-props="menuPropsMaxHeight"
@@ -156,7 +151,7 @@ import {
 import DatePicker from '@/components/shared/DatePicker';
 
 export default {
-  name: 'FlightDetails',
+  name: 'FlightsFormFlightDetails',
 
   components: { DatePicker },
 
@@ -253,6 +248,6 @@ export default {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 7px 8px;
+  padding: 8px 8px;
 }
 </style>

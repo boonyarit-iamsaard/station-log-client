@@ -1,9 +1,10 @@
+<!--suppress ALL -->
 <template>
   <v-form ref="flightForm" @submit.prevent="validateFlightData">
-    <v-card class="mx-auto" max-width="959" outlined>
+    <v-card class="mx-auto transparent" flat max-width="959">
       <v-stepper
         :alt-labels="$vuetify.breakpoint.mdAndUp"
-        class="elevation-0"
+        class="elevation-0 transparent"
         v-model="stepper"
       >
         <v-stepper-header class="elevation-0">
@@ -30,33 +31,30 @@
           <v-divider></v-divider>
 
           <v-stepper-step :complete="stepper > 4" step="4">
-            <small>ADDs and Work packages</small>
+            <small>Last</small>
           </v-stepper-step>
         </v-stepper-header>
 
         <v-stepper-items>
-          <v-stepper-content class="pa-4" step="1">
-            <FlightDetails
+          <stepper-content-wrapper
+            :step="1"
+            :title="'Flight Details'"
+            @clickNextOrSave="stepper = 2"
+          >
+            <flights-form-flight-details
               ref="flightDetailsForm"
               :getFlightDetails="getFlightDetails"
-            />
+            ></flights-form-flight-details>
+          </stepper-content-wrapper>
 
-            <div class="d-flex justify-space-between">
-              <v-btn color="primary" outlined> Cancel</v-btn>
-
-              <v-btn color="primary" @click="stepper = 2"> Continue</v-btn>
-            </div>
-          </v-stepper-content>
-
-          <v-stepper-content class="pa-4" step="2">
-            <v-row class="mb-0">
+          <stepper-content-wrapper
+            :step="2"
+            :title="'Services'"
+            @clickBackOrCancel="stepper = 1"
+            @clickNextOrSave="stepper = 3"
+          >
+            <v-row class="my-0">
               <v-col cols="12">
-                <span class="subtitle-2">Service Details</span>
-
-                <v-divider class="mb-4"></v-divider>
-              </v-col>
-
-              <v-col cols="12" sm="3">
                 <v-text-field
                   dense
                   hint="minutes"
@@ -71,89 +69,41 @@
                 <v-checkbox class="mt-0" label="Disinfection"></v-checkbox>
               </v-col>
             </v-row>
+          </stepper-content-wrapper>
 
-            <div class="d-flex justify-space-between">
-              <v-btn outlined color="primary" @click="stepper = 1"> BACK</v-btn>
+          <stepper-content-wrapper
+            :step="3"
+            :title="'ADDs'"
+            @clickBackOrCancel="stepper = 2"
+            @clickNextOrSave="stepper = 4"
+          >
+            <v-row class="my-0">
+              <v-col
+                class="py-0"
+                cols="12"
+                v-for="deferral in deferralsList"
+                :key="deferral.key"
+              >
+                <v-text-field
+                  dense
+                  outlined
+                  v-model="flightData.deferrals[deferral.key]"
+                  type="number"
+                  :label="deferral.label"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </stepper-content-wrapper>
 
-              <v-btn color="primary" @click="stepper = 3">CONTINUE</v-btn>
-            </div>
-          </v-stepper-content>
-
-          <v-stepper-content class="pa-4" step="3">
-            <v-card>
-              <v-card-text class="pa-0">
-                <v-row class="mb-0">
-                  <v-col cols="12">
-                    <v-icon
-                      class="mr-2"
-                      color="primary"
-                      large
-                      v-if="!hasDoneDeferrals"
-                      @click="clickAddDeferral"
-                    >
-                      mdi-plus-circle-outline
-                    </v-icon>
-
-                    <v-icon
-                      class="mr-2"
-                      color="error"
-                      large
-                      v-if="hasDoneDeferrals"
-                      @click="hasDoneDeferrals = false"
-                    >
-                      mdi-minus-circle-outline
-                    </v-icon>
-
-                    <span class="subtitle-2"> ADDs </span>
-
-                    <v-divider class="mb-4"></v-divider>
-                  </v-col>
-                </v-row>
-
-                <v-row v-if="flightData.deferrals.length > 0">
-                  <v-col
-                    cols="6"
-                    v-for="deferral in flightData.deferrals"
-                    :key="deferral._id"
-                  >
-                    <v-select
-                      dense
-                      outlined
-                      label="ADD type"
-                      v-model="deferral.type"
-                      :items="deferralTypes"
-                    ></v-select>
-
-                    <v-text-field
-                      dense
-                      outlined
-                      label="amounts"
-                      type="number"
-                      v-model="deferral.amount"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-card-text>
-
-              <v-card-actions class="pa-0 d-flex justify-space-between">
-                <v-btn outlined color="primary" @click="stepper = 2">
-                  BACK
-                </v-btn>
-
-                <v-btn color="primary" @click="validateFlightData">
-                  SAVE
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-stepper-content>
-
-          <v-stepper-content class="pa-4" step="4">
-            <div class="d-flex justify-space-between">
-              <v-btn outlined color="primary" @click="stepper = 3"> BACK</v-btn>
-
-              <v-btn color="primary" @click="validateFlightData">SAVE</v-btn>
-            </div>
-          </v-stepper-content>
+          <stepper-content-wrapper
+            :step="4"
+            :title="'Last Step'"
+            :is-last-step="true"
+            @clickBackOrCancel="stepper = 3"
+            @clickNextOrSave="validateFlightData"
+          >
+            <p>Last Step</p>
+          </stepper-content-wrapper>
         </v-stepper-items>
       </v-stepper>
     </v-card>
@@ -161,25 +111,40 @@
 </template>
 
 <script>
-import FlightDetails from '@/components/shared/FlightDetails';
-import { generateObjectID } from '@/utils/object-id';
+import FlightsFormFlightDetails from '@/components/flights/FlightsFormFlightDetails';
+import StepperContentWrapper from '@/components/shared/StepperContentWrapper';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'FlightsForm',
 
-  components: { FlightDetails },
+  components: {
+    FlightsFormFlightDetails,
+    StepperContentWrapper,
+  },
 
   data() {
     return {
-      deferral: {
-        _id: generateObjectID(),
-        type: '',
-        amount: 0,
-      },
-      deferralTypes: ['P', 'S', 'A', 'Z', 'Z', 'W'],
+      deferralsList: [
+        { key: 'padd', label: 'PADD' },
+        { key: 'sadd', label: 'SADD' },
+        { key: 'add', label: 'ADD' },
+        { key: 'zadd', label: 'ZADD' },
+        { key: 'cadd', label: 'CADD' },
+        { key: 'madd', label: 'MADD' },
+        { key: 'worked', label: 'Worked' },
+      ],
       flightData: {
         date: new Date().toISOString().substr(0, 10),
+        deferrals: {
+          padd: 0,
+          sadd: 0,
+          add: 0,
+          zadd: 0,
+          cadd: 0,
+          madd: 0,
+          worked: 0,
+        },
         handOver: '',
         services: {
           afac: 0,
@@ -187,21 +152,15 @@ export default {
           lavatory: false,
           disinfection: false,
         },
-        deferrals: [],
       },
       flightDataRules: {},
       hasDoneDeferrals: false,
       isFlightDetailsValid: true,
-      stepper: 3,
+      stepper: 1,
     };
   },
 
   methods: {
-    clickAddDeferral() {
-      this.hasDoneDeferrals = true;
-      this.flightData.deferrals.push(this.deferral);
-    },
-
     getFlightDetails(flightDetails) {
       Object.keys(flightDetails).forEach(key => {
         this.flightData[key] = flightDetails[key];
@@ -250,4 +209,22 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.transparent {
+  background-color: transparent;
+}
+::v-deep .v-stepper__step {
+  padding: 16px;
+}
+::v-deep .row {
+  margin: -8px;
+}
+::v-deep .col-12,
+.col-6,
+.col-sm-2,
+.col-sm-3,
+.col-sm-4,
+.col-sm-6 {
+  padding: 8px;
+}
+</style>

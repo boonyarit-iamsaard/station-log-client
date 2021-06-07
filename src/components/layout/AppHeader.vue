@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'AppHeader',
 
@@ -48,18 +50,21 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      logoutUser: 'auth/logout',
+    }),
+
     logout() {
-      this.$store
-        .dispatch('auth/logout')
+      this.logoutUser()
         .then(() => this.$router.push('/login'))
         .catch(err => console.log(err));
     },
   },
 
   computed: {
-    user() {
-      return this.$store.getters['auth/getUser'];
-    },
+    ...mapGetters({
+      user: 'auth/getUser',
+    }),
 
     name() {
       if (this.user) {
