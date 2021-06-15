@@ -39,7 +39,7 @@ const routes = [
       {
         path: 'create',
         name: 'flightCreate',
-        component: () => import('@/components/flights/FlightsForm'),
+        component: () => import('@/components/flights/FlightFormNew'),
       },
     ],
     meta: {
