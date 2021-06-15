@@ -8,12 +8,14 @@ import {
 
 export default {
   namespaced: true,
+
   state() {
     return {
       handlingRecords: [],
       currentHandlingRecord: {},
     };
   },
+
   getters: {
     getHandlingRecords(state) {
       return state.handlingRecords;
@@ -22,6 +24,7 @@ export default {
       return state.currentHandlingRecord;
     },
   },
+
   actions: {
     async addHandlingRecord(context, payload) {
       try {
@@ -86,6 +89,7 @@ export default {
       }
     },
   },
+
   mutations: {
     ADD_HANDLING_RECORD(state, payload) {
       state.handlingRecords.push(payload);

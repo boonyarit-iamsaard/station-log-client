@@ -15,6 +15,7 @@ const user = localStorage.getItem('user')
 
 export default {
   namespaced: true,
+
   state() {
     return {
       isAdmin: isAdmin,
@@ -22,6 +23,7 @@ export default {
       user: user,
     };
   },
+
   getters: {
     getIsAdmin(state) {
       return state.isAdmin;
@@ -35,8 +37,9 @@ export default {
       return state.user;
     },
   },
+
   actions: {
-    login: async (context, payload) => {
+    async login(context, payload) {
       try {
         const response = await login(payload);
         const { expiresIn, token, user } = response.data;
@@ -66,7 +69,7 @@ export default {
       }
     },
 
-    logout: context => {
+    logout(context) {
       localStorage.removeItem('expirationDate');
       localStorage.removeItem('isAdmin');
       localStorage.removeItem('token');
@@ -75,7 +78,7 @@ export default {
       context.commit('CLEAR_USER');
     },
 
-    setLogoutTimer: context => {
+    setLogoutTimer(context) {
       const now = new Date();
       const expirationDate = new Date(localStorage.getItem('expirationDate'));
       const expirationTime = expirationDate.getTime() - now.getTime();
@@ -87,12 +90,12 @@ export default {
   },
 
   mutations: {
-    CLEAR_USER: state => {
+    CLEAR_USER(state) {
       state.isAdmin = false;
       state.user = null;
       state.token = null;
     },
-    SET_USER: (state, payload) => {
+    SET_USER(state, payload) {
       state.isAdmin = payload.isAdmin;
       state.user = payload.user;
       state.token = payload.token;
