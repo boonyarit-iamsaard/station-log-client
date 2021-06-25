@@ -7,7 +7,7 @@
       </v-stepper-step>
 
       <v-stepper-content class="pa-4 mb-n2 ml-7 mr-n4" step="1">
-        <FlightFormFlightDetailNew />
+        <flight-details-flight-information v-model="flightDetails" />
 
         <v-btn color="primary" depressed @click="step = 2"> Continue </v-btn>
 
@@ -55,15 +55,34 @@
 </template>
 
 <script>
-import FlightFormFlightDetailNew from './FlightFormFlightDetailNew.vue';
+import FlightDetailsFlightInformationVue from './FlightDetailsFlightInformation.vue';
 
 export default {
   name: 'FlightFormNew',
 
-  components: { FlightFormFlightDetailNew },
+  components: {
+    'flight-details-flight-information': FlightDetailsFlightInformationVue,
+  },
 
   data() {
     return {
+      flightDetails: {
+        date: {
+          label: 'Date',
+          type: 'input-date',
+          value: new Date().toISOString().substr(0, 10),
+        },
+        airline: {
+          label: 'Airline',
+          type: 'input-select',
+          value: 'CX',
+        },
+        fltno: {
+          label: 'Flt No.',
+          type: 'input-text',
+          value: '',
+        },
+      },
       step: 1,
     };
   },
