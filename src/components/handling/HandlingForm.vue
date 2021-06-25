@@ -26,13 +26,13 @@
     >
       <v-card-text>
         <v-row class="mt-0">
-          <v-col cols="12">
+          <v-col cols="12" class="py-1 px-3">
             <span>Flight Details</span>
 
             <v-divider class="mb-4"></v-divider>
           </v-col>
 
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="4" class="py-1 px-3">
             <v-dialog
               ref="dialog"
               v-model="modal"
@@ -68,7 +68,7 @@
             </v-dialog>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-select
               dense
               item-text="text"
@@ -79,23 +79,24 @@
               :items="airlines"
               @change="setPrefixHandler"
             ></v-select>
+
             <v-text-field
+              class="uppercase"
               dense
-              hint="*"
               label="Other airline"
               outlined
-              persistent-hint
               v-if="formData.airline === 'Other'"
               v-model="formData.otherAirline"
               :rules="formRules.required"
-              @keyup="
+              @blur="
                 formData.otherAirline = formData.otherAirline.toUpperCase()
               "
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="3" class="py-1 px-3">
             <v-text-field
+              class="uppercase"
               dense
               hint="*Required."
               label="Flt No."
@@ -103,12 +104,13 @@
               persistent-hint
               v-model="formData.fltno"
               :rules="formRules.required"
-              @keyup="setUpperCaseTextHandler('fltno')"
+              @blur="formData.fltno = formData.fltno.toUpperCase()"
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="3" class="py-1 px-3">
             <v-text-field
+              class="uppercase"
               dense
               hint="*Required."
               label="Reg."
@@ -117,19 +119,19 @@
               v-model="formData.tail"
               :prefix="formData.prefix"
               :rules="formRules.required"
-              @keyup="setUpperCaseTextHandler('tail')"
+              @blur="formData.tail = formData.tail.toUpperCase()"
             ></v-text-field>
           </v-col>
         </v-row>
 
         <v-row>
-          <v-col cols="12">
+          <v-col cols="12" class="py-1 px-3">
             <span>Action Details</span>
 
             <v-divider class="mb-4"></v-divider>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-select
               dense
               hint="*Required"
@@ -142,7 +144,7 @@
             ></v-select>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-autocomplete
               dense
               item-text="text"
@@ -156,8 +158,9 @@
             ></v-autocomplete>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-text-field
+              class="uppercase"
               dense
               hint="*Required."
               label="Check"
@@ -166,26 +169,28 @@
               v-if="formData.check === 'Other'"
               v-model="formData.otherCheck"
               :rules="formRules.required"
-              @keyup="formData.otherCheck = formData.otherCheck.toUpperCase()"
+              @blur="formData.otherCheck = formData.otherCheck.toUpperCase()"
             ></v-text-field>
           </v-col>
         </v-row>
 
         <v-row v-for="(task, index) in formData.tasks" :key="task._id">
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-text-field
+              class="uppercase"
               dense
               hint="*optional"
               label="WO/TASK"
               outlined
               persistent-hint
               v-model="task.taskNo"
-              @keyup="task.taskNo = task.taskNo.toUpperCase()"
+              @blur="task.taskNo = task.taskNo.toUpperCase()"
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="4" class="py-1 px-3">
             <v-textarea
+              class="uppercase"
               hint="*Required"
               label="Details"
               outlined
@@ -193,11 +198,11 @@
               rows="2"
               v-model="task.taskDetails"
               :rules="formRules.required"
-              @keyup="task.taskDetails = task.taskDetails.toUpperCase()"
+              @blur="task.taskDetails = task.taskDetails.toUpperCase()"
             ></v-textarea>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-text-field
               dense
               label="ENG"
@@ -207,7 +212,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-text-field
               dense
               label="MECH"
@@ -217,7 +222,7 @@
             ></v-text-field>
           </v-col>
 
-          <v-col cols="12" sm="2">
+          <v-col cols="12" sm="2" class="py-1 px-3">
             <v-btn
               class="mr-2"
               color="primary"
@@ -247,11 +252,11 @@
         </v-row>
 
         <v-row>
-          <v-col cols="12">
+          <v-col cols="12" class="py-1 px-3">
             <v-divider class="mb-4"></v-divider>
           </v-col>
 
-          <v-col cols="12" sm="4">
+          <v-col cols="12" sm="4" class="py-1 px-3">
             <v-autocomplete
               dense
               label="EIC"
@@ -266,7 +271,12 @@
 
       <v-card-actions class="px-4 pt-0 pb-4">
         <v-row class="ma-0">
-          <v-col cols="12" sm="2" :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0'">
+          <v-col
+            cols="12"
+            sm="2"
+            class="pa-0"
+            :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0'"
+          >
             <v-btn
               block
               color="secondary"
@@ -283,6 +293,7 @@
           <v-col
             cols="12"
             sm="2"
+            class="pa-0"
             :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0 mr-4'"
           >
             <v-btn
@@ -474,11 +485,6 @@ export default {
       );
     },
 
-    openDeleteTaskDialog(id) {
-      this.$refs.confirmDeleteTask.dialog = true;
-      this.deleteTaskID = id;
-    },
-
     setDateFormatHandler(date) {
       return format(new Date(date), 'dd MMMM yyyy');
     },
@@ -536,11 +542,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-::v-deep .col-12,
-.col-sm-2,
-.col-sm-3,
-.col-sm-4 {
-  padding: 4px 12px;
+<style lang="scss">
+.uppercase input {
+  text-transform: uppercase;
+}
+
+.uppercase textarea {
+  text-transform: uppercase;
 }
 </style>
