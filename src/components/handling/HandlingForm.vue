@@ -473,7 +473,7 @@
 import { format } from 'date-fns';
 import { cloneDeep } from 'lodash';
 import { generateObjectID } from '@/utils/object-id';
-import { engineersList } from '@/utils/staffs';
+import { engineers } from '@/utils/staffs';
 import {
   aircraftTypes,
   airlines,
@@ -504,7 +504,7 @@ export default {
       confirmDialogSubtitle: '',
       confirmDialogTitle: '',
       deleteTaskDialog: false,
-      engineers: engineersList(),
+      engineers: engineers(),
       exclusivePerHour: getChargeablePerHourItems,
       exclusivePerService: getChargeablePerServiceItems,
       formData: cloneDeep(handlingData),
