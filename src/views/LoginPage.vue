@@ -1,32 +1,47 @@
 <template>
   <v-row>
-    <Progress :isLoading="isLoading" />
-
     <v-col cols="12" sm="6" md="4" class="mx-auto">
-      <v-form ref="loginForm" @submit.prevent="onFormSubmitHandler">
-        <v-card outlined>
-          <v-card-title class="d-flex justify-center pa-4">
-            <span>Login</span>
+      <v-form ref="form" @submit.prevent="submitForm">
+        <v-card class="shadow">
+          <v-card-title class="d-flex flex-column pa-4">
+            <v-img
+              :src="require('@/assets/images/logo.png')"
+              alt="Company Logo"
+              class="shrink mb-4"
+              contain
+              height="32"
+              transition="scale-transition"
+              width="32"
+            />
+
+            <span class="title">Station Log</span>
+
+            <span class="subtitle-1">Bangkok Engineering</span>
           </v-card-title>
 
           <v-card-text class="pa-4">
             <v-text-field
+              :rules="formRules.username"
               dense
               label="Username"
               outlined
               v-model.trim="formData.username"
-            ></v-text-field>
+            />
+
             <v-text-field
+              :rules="formRules.password"
               dense
               label="Password"
               type="password"
               outlined
               v-model.trim="formData.password"
-            ></v-text-field>
+            />
           </v-card-text>
 
-          <v-card-actions class="pa-4">
-            <v-btn block color="primary" depressed type="submit">Login</v-btn>
+          <v-card-actions class="pb-4 pt-0 px-4">
+            <v-btn block class="shadow" color="primary" type="submit">
+              Login
+            </v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -35,10 +50,9 @@
 </template>
 
 <script>
-import Progress from '../components/shared/Progress.vue';
-export default {
-  components: { Progress },
+import { mapActions } from 'vuex';
 
+export default {
   name: 'LoginPage',
 
   data() {
@@ -48,27 +62,43 @@ export default {
         password: '',
       },
       formRules: {},
-      isLoading: false,
       redirect: '/',
     };
   },
 
   methods: {
-    async onFormSubmitHandler() {
-      this.isLoading = true;
+    ...mapActions({
+      login: 'auth/login',
+      setIsError: 'error/setIsError',
+      setErrorMessage: 'error/setErrorMessage',
+      setShouldLoading: 'setShouldLoading',
+    }),
 
-      await this.$store
-        .dispatch('auth/login', this.formData)
-        .then(() => {
-          this.isLoading = false;
-          this.$router.replace(this.redirect);
-        })
-        .catch(err => {
-          this.isLoading = false;
+    submitForm() {
+      this.formRules = {
+        username: [v => !!v || 'Username is required.'],
+        password: [v => !!v || 'Password is required.'],
+      };
 
-          this.$store.dispatch('error/setIsError');
-          this.$store.dispatch('error/setErrorMessage', err.message);
-        });
+      this.$nextTick(async () => {
+        if (this.$refs.form.validate()) {
+          await this.setShouldLoading(true);
+
+          try {
+            const user = await this.login(this.formData);
+
+            if (!user) return;
+
+            this.setShouldLoading(false);
+            await this.$router.replace(this.redirect);
+          } catch (error) {
+            this.setShouldLoading(false);
+
+            this.setIsError();
+            this.setErrorMessage(error.message);
+          }
+        }
+      });
     },
   },
 
