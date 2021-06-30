@@ -1,30 +1,32 @@
 <template>
-  <v-container class="pa-0">
-    <div class="mx-auto" style="max-width: 959px">
-      <v-row>
-        <v-col
-          v-for="item in items"
-          :key="item.title"
-          class="mx-auto"
-          col="12"
-          sm="4"
-        >
-          <v-card outlined link :to="item.path">
-            <v-img
-              class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="150px"
-              :src="item.src"
-            >
-              <v-card-title
-                class="font-weight-regular"
-                v-text="item.title"
-              ></v-card-title>
-            </v-img>
-          </v-card>
-        </v-col>
-      </v-row>
+  <v-container class="pa-0" style="max-width: 959px">
+    <div class="mb-4">
+      <span class="title">Home</span>
     </div>
+
+    <v-row>
+      <v-col
+        :key="item.title"
+        class="mx-auto"
+        col="12"
+        sm="4"
+        v-for="item in items"
+      >
+        <v-card class="shadow" link :to="item.path">
+          <v-img
+            :src="item.src"
+            class="white--text align-end"
+            gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+            height="150px"
+          >
+            <v-card-title
+              class="font-weight-regular pa-2"
+              v-text="item.title"
+            />
+          </v-img>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -38,19 +40,19 @@ export default {
         {
           title: 'Flight Movement',
           icon: 'mdi-airplane',
-          src: require('../assets/images/flight.jpg'),
+          src: require('@/assets/images/flight.jpg'),
           path: '/flights',
         },
         {
           title: 'Spare Movement',
           icon: 'mdi-airplane',
-          src: require('../assets/images/spare.jpg'),
+          src: require('@/assets/images/spare.jpg'),
           path: '/spares',
         },
         {
           title: 'Customer Handling',
           icon: 'mdi-airplane',
-          src: require('../assets/images/third-party.jpg'),
+          src: require('@/assets/images/third-party.jpg'),
           path: '/handling',
         },
       ],
