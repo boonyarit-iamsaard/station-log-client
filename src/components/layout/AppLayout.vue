@@ -5,19 +5,20 @@
     <AppHeader
       :isMobile="isMobile"
       @open="$refs.sidenav.drawer = !$refs.sidenav.drawer"
+      v-if="user"
     />
 
     <AppDrawer ref="sidenav" v-if="user" />
 
-    <v-main class="main">
+    <v-main class="grey lighten-3">
       <v-container class="pa-4">
         <v-dialog :value="isError" max-width="400">
           <v-alert
+            @click="acknowledgeError"
             class="mb-0"
             dismissible
             type="error"
             v-if="isError"
-            @click="acknowledgeError"
           >
             {{ errorMessage }}
           </v-alert>
@@ -75,8 +76,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.main {
-  background-color: #f6f6f6;
-}
-</style>
+<style lang="scss" scoped></style>
