@@ -1,9 +1,9 @@
-import staffs from '@/assets/static-data/staffs.json';
+import staffsData from '@/assets/static-data/staffs.json';
 
-const engineersList = () => {
+const engineers = () => {
   let list = [];
 
-  staffs.forEach(staff => {
+  staffsData.forEach(staff => {
     if (staff.position === 'Engineer') {
       list.push(staff.name);
     }
@@ -12,14 +12,14 @@ const engineersList = () => {
   return list.sort();
 };
 
-const staffsList = () => {
+const staffs = () => {
   let list = [];
 
-  staffs.forEach(staff => {
+  staffsData.forEach(staff => {
     list.push(staff.name);
   });
 
   return list.sort();
 };
 
-export { engineersList, staffsList };
+export { engineers, staffs };
