@@ -8,6 +8,7 @@ import {
 
 export default {
   namespaced: true,
+
   state() {
     return {
       currentSpare: {},
@@ -20,6 +21,7 @@ export default {
       spares: [],
     };
   },
+
   getters: {
     getCurrentSpare(state) {
       return state.currentSpare;
@@ -31,6 +33,7 @@ export default {
       return state.spares;
     },
   },
+
   actions: {
     setFilters(context, payload) {
       context.commit('SET_FILTERS', payload);
@@ -45,21 +48,24 @@ export default {
 
         return spare;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not add spare, please try again later.'
+        );
       }
     },
 
     async fetchSpares(context) {
       try {
         const response = await getSpares();
+        const { spares } = response.data;
 
-        context.commit('SET_SPARES', response.data.spares);
+        context.commit('SET_SPARES', spares);
+
+        return spares;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not load spares, please try again later.'
+        );
       }
     },
 
@@ -69,10 +75,12 @@ export default {
         const { spare } = response.data;
 
         context.commit('SET_CURRENT_SPARE', spare);
+
+        return spare;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not find spare, please try again later.'
+        );
       }
     },
 
@@ -82,10 +90,12 @@ export default {
         const { spare } = response.data;
 
         context.commit('UPDATE_SPARE', spare);
+
+        return spare;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not update spare, please try again later.'
+        );
       }
     },
 
@@ -95,15 +105,16 @@ export default {
 
         context.commit('DELETE_SPARE', payload);
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not delete spare, please try again later.'
+        );
       }
     },
   },
+
   mutations: {
     ADD_SPARE(state, payload) {
-      state.spares.push(payload);
+      state.spares = state.spares.concat(payload);
     },
 
     DELETE_SPARE(state, payload) {
