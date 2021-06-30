@@ -60,12 +60,14 @@ export default {
         });
 
         context.commit('SET_USER', { isAdmin, token, user });
+
         await context.dispatch('setLogoutTimer');
+
         return user;
       } catch (error) {
-        if (error.response) {
-          throw new Error(error.response.data.message);
-        } else throw new Error('Could not log user in.');
+        throw new Error(
+          error.message || 'Could not login, please try again later.'
+        );
       }
     },
 
@@ -95,6 +97,7 @@ export default {
       state.user = null;
       state.token = null;
     },
+
     SET_USER(state, payload) {
       state.isAdmin = payload.isAdmin;
       state.user = payload.user;
