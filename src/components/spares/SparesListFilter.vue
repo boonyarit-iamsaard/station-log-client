@@ -33,57 +33,62 @@
 
     <v-col cols="12" md="2">
       <v-select
-        outlined
-        dense
-        label="Airline"
-        v-model="filters.airline"
         :items="airlines"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        dense
+        label="Airline"
+        outlined
+        v-model="filters.airline"
+      />
     </v-col>
 
     <v-col cols="12" md="2">
       <v-select
-        outlined
-        dense
-        label="Type"
-        v-model="filters.type"
         :items="types"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        dense
+        label="Type"
+        outlined
+        v-model="filters.type"
+      />
     </v-col>
 
     <v-col cols="12" md="2">
       <v-select
-        outlined
-        dense
-        label="Store"
-        v-model="filters.store"
         :items="stores"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        dense
+        label="Store"
+        outlined
+        v-model="filters.store"
+      />
     </v-col>
 
     <v-col cols="12" md="2">
       <v-select
-        outlined
-        dense
-        label="Status"
-        v-model="filters.status"
         :items="statuses"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        dense
+        label="Status"
+        outlined
+        v-model="filters.status"
+      />
     </v-col>
 
     <v-col cols="2">
-      <v-btn block color="secondary" depressed @click="onResetFiltersHandler">
+      <v-btn
+        block
+        class="shadow"
+        color="secondary"
+        @click="onResetFiltersHandler"
+      >
         <v-icon left>mdi-close</v-icon>
         RESET
       </v-btn>
     </v-col>
 
     <v-col cols="2">
-      <v-btn block color="primary" depressed link to="/spares/create">
+      <v-btn block class="shadow" color="primary" link to="/spares/create">
         <v-icon left>mdi-plus</v-icon>
         ADD
       </v-btn>

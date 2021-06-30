@@ -1,11 +1,11 @@
 <template>
   <v-data-table
-    class="mx-auto"
-    style="max-width: 1263px"
-    :items="items"
     :headers="headers"
+    :items="items"
     :sort-by="['date', 'airline']"
     :sort-desc="[true, false]"
+    class="mx-auto shadow"
+    style="max-width: 1263px"
   >
     <template v-slot:top>
       <div class="pa-4">

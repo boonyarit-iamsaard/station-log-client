@@ -12,9 +12,6 @@
     >
       <template v-slot:default="{ items }">
         <v-card
-          class="mb-4"
-          link
-          :outlined="$vuetify.breakpoint.smAndDown"
           :key="item._id"
           :to="{
             name: 'sparesEdit',
@@ -22,6 +19,8 @@
               id: item._id,
             },
           }"
+          class="mb-4 shadow"
+          link
           v-for="item in items"
         >
           <v-card-title class="d-flex justify-space-between">
