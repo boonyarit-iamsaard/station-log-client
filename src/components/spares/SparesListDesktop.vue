@@ -47,6 +47,8 @@
 
 <script>
 import { format } from 'date-fns';
+import { mapGetters } from 'vuex';
+
 import SparesListFilter from '@/components/spares/SparesListFilter';
 
 export default {
@@ -150,9 +152,9 @@ export default {
   },
 
   computed: {
-    filters() {
-      return this.$store.getters['spares/getFilters'];
-    },
+    ...mapGetters({
+      filters: 'spares/getFilters',
+    }),
   },
 
   created() {

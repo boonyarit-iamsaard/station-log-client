@@ -12,42 +12,66 @@
     >
       <template v-slot:default="{ items }">
         <v-card
-          class="mb-4 d-flex flex-row"
-          link
-          outlined
           :key="item._id"
           :to="{
-            name: 'sparesEdit',
+            name: 'flightEdit',
             params: {
               id: item._id,
             },
           }"
+          class="mb-4 shadow"
+          link
           v-for="item in items"
         >
-          <v-card-title>
-            <v-avatar color="primary" class="white--text" size="40">
-              <span class="body-1" v-if="item.airline === 'Other'">
-                {{ item.otherAirline }}
+          <v-card-title class="d-flex justify-space-between">
+            <div>
+              <v-avatar
+                :color="setAvatarColor(item.airline)"
+                class="white--text mr-4"
+                size="32"
+              >
+                <span class="body-1">
+                  {{ item.airline }}
+                </span>
+              </v-avatar>
+
+              <span class="subtitle-1">
+                {{ item.fltno }} / {{ item.acreg }}
               </span>
-              <span class="body-1" v-else>
-                {{ item.airline }}
-              </span>
-            </v-avatar>
+            </div>
+
+            <span class="caption">{{ item.date | dateFormat }} </span>
           </v-card-title>
 
-          <v-card-text class="py-2 pr-2 pl-0">
-            <div class="d-flex flex-column">
-              <div class="d-flex justify-space-between align-center">
-                <span class="subtitle-1">
-                  {{ item.fltno }} {{ item.acreg }}
-                </span>
-                <span class="caption">{{ item.date | formattedDate }} </span>
-              </div>
-              <div class="d-flex justify-space-between align-center">
-                <span>{{ item.check }} {{ item.bay }}</span>
+          <v-card-text>
+            <v-row class="ma-0">
+              <v-col class="pa-0" cols="6" sm="3">
+                <span class="font-weight-bold">ATA: </span>
+                <span>{{ item.ata !== '' ? item.ata : 'N/A' }}</span>
+              </v-col>
+
+              <v-col class="pa-0" cols="6" sm="3">
+                <span class="font-weight-bold">ATD: </span>
+                <span>{{ item.atd !== '' ? item.atd : 'N/A' }}</span>
+              </v-col>
+
+              <v-col class="pa-0" cols="6" sm="3">
+                <span class="font-weight-bold">Bay: </span>
+                <span>{{ item.bay }}</span>
+              </v-col>
+
+              <v-col class="pa-0" cols="6" sm="3">
+                <span class="font-weight-bold">Check: </span>
+                <span>{{ item.check }}</span>
+              </v-col>
+            </v-row>
+
+            <v-row class="ma-0">
+              <v-col class="pa-0" cols="6" sm="3">
+                <span class="font-weight-bold">Engineer: </span>
                 <span>{{ item.eic }}</span>
-              </div>
-            </div>
+              </v-col>
+            </v-row>
           </v-card-text>
         </v-card>
       </template>
@@ -89,14 +113,16 @@ export default {
   },
 
   methods: {
-    setAvatarColor(type) {
-      switch (type) {
-        case 'Consumable':
+    setAvatarColor(airline) {
+      switch (airline) {
+        case 'CX':
           return 'primary';
-        case 'Return':
+        case 'LD':
           return 'error';
-        default:
+        case 'PR':
           return 'secondary';
+        default:
+          return 'info';
       }
     },
   },
@@ -111,7 +137,7 @@ export default {
   },
 
   filters: {
-    formattedDate(value) {
+    dateFormat(value) {
       if (!value) return '';
 
       return format(new Date(value), 'dd MMM yy');

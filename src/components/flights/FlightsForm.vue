@@ -111,9 +111,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import FlightsFormFlightDetails from '@/components/flights/FlightsFormFlightDetails';
 import StepperContentWrapper from '@/components/shared/StepperContentWrapper';
-import { mapGetters } from 'vuex';
 
 export default {
   name: 'FlightsForm',

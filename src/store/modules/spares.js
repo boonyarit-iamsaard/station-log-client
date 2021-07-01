@@ -11,7 +11,6 @@ export default {
 
   state() {
     return {
-      currentSpare: {},
       filters: {
         airline: 'ALL',
         status: 'ALL',
@@ -23,9 +22,6 @@ export default {
   },
 
   getters: {
-    getCurrentSpare(state) {
-      return state.currentSpare;
-    },
     getFilters(state) {
       return state.filters;
     },
@@ -74,8 +70,6 @@ export default {
         const response = await getSpareByID(payload);
         const { spare } = response.data;
 
-        context.commit('SET_CURRENT_SPARE', spare);
-
         return spare;
       } catch (error) {
         throw new Error(
@@ -119,10 +113,6 @@ export default {
 
     DELETE_SPARE(state, payload) {
       state.spares = state.spares.filter(spare => spare._id !== payload);
-    },
-
-    SET_CURRENT_SPARE(state, payload) {
-      state.currentSpare = payload;
     },
 
     SET_FILTERS(state, payload) {

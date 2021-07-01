@@ -19,7 +19,7 @@ export default {
       setShouldLoading: 'setShouldLoading',
     }),
 
-    async setFlightsList() {
+    async handleFetchFlights() {
       this.setShouldLoading(true);
 
       try {
@@ -43,7 +43,7 @@ export default {
   },
 
   created() {
-    this.setFlightsList();
+    this.handleFetchFlights();
   },
 };
 </script>

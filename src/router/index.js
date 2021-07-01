@@ -41,6 +41,11 @@ const routes = [
         name: 'flightCreate',
         component: () => import('@/components/flights/FlightFormNew'),
       },
+      {
+        path: 'edit/:id',
+        name: 'flightEdit',
+        component: () => import('@/components/flights/FlightFormNew'),
+      },
     ],
     meta: {
       requiresAuth: true,

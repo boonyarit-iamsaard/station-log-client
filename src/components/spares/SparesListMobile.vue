@@ -41,11 +41,6 @@
 
           <v-card-text>
             <v-row class="ma-0">
-              <!--              <v-col class="pa-0" cols="6" sm="3">-->
-              <!--                <span class="font-weight-bold">DATE: </span>-->
-              <!--                <span>{{ setDateFormatHandler(item.date) }} </span>-->
-              <!--              </v-col>-->
-
               <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">FLT: </span>
                 <span>{{ item.airline.concat(item.fltno) }}&nbsp;&nbsp;</span>
