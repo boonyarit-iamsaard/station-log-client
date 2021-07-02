@@ -152,26 +152,12 @@
           <v-divider class="mb-4" />
 
           <!--Tasks completed-->
-          <v-row class="my-0">
-            <v-col class="pt-0" cols="12" v-if="flight.tasks.length > 0">
-              <span class="black--text subtitle-1">Tasks Completed</span>
-            </v-col>
-
-            <v-col cols="12" v-if="flight.tasks.length === 0">
-              <v-btn @click="addTask" class="mb-4" color="info" outlined>
-                Add Tasks Completed
-              </v-btn>
-            </v-col>
-          </v-row>
-
           <flight-form-task-complete
             :rules="flightRules.task"
             @addTask="addTask"
             @deleteTask="deleteTask"
             v-model="flight.tasks"
           />
-
-          <v-divider class="mb-4" />
 
           <!--Chargeable services-->
           <v-row class="my-0">
@@ -195,19 +181,12 @@
           <v-divider class="mb-4" />
 
           <!--Assigned delay codes-->
-          <v-row class="my-0">
-            <v-col class="pt" cols="12" v-if="flight.assignedDelay.length > 0">
-              <span class="black--text subtitle-1">Assigned Delay Codes</span>
-            </v-col>
-
-            <v-col cols="12" v-if="flight.assignedDelay.length === 0">
-              <v-btn class="mb-4" color="info" outlined>
-                Add Assigned Delay Codes
-              </v-btn>
-            </v-col>
-          </v-row>
-
-          <v-divider class="mb-4" />
+          <flight-form-assigned-delay
+            :rules="flightRules.assignedDelay"
+            @addAssignedDelay="addAssignedDelay"
+            @deleteAssignedDelay="deleteAssignedDelay"
+            v-model="flight.assignedDelay"
+          />
 
           <!--Handling by-->
           <v-row class="my-0">
@@ -277,6 +256,7 @@
 
 <script>
 import FlightFormExtraGroundEquipment from '@/components/flights/FlightFormExtraGroundEquipment';
+import FlightFormAssignedDelay from '@/components/flights/FlightFormAssignedDelay';
 import FlightFormTaskComplete from '@/components/flights/FlightFormTaskComplete';
 import InputCheckbox from '@/components/shared/input/InputCheckbox';
 import InputCombo from '@/components/shared/input/InputCombo';
@@ -292,6 +272,7 @@ export default {
   name: 'FlightFormNew',
 
   components: {
+    'flight-form-assigned-delay': FlightFormAssignedDelay,
     'flight-form-extra-ground-equipment': FlightFormExtraGroundEquipment,
     'flight-form-task-complete': FlightFormTaskComplete,
     'input-checkbox': InputCheckbox,
@@ -306,6 +287,11 @@ export default {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
       checks: ['10D', '36H', '72H', 'ETR', 'OCT', 'TR', 'WY'],
+      delay: {
+        category: '',
+        code: '',
+        duration: '',
+      },
       engineers: engineers(),
       extraGroundEquipment: {
         company: '',
@@ -351,6 +337,13 @@ export default {
   },
 
   methods: {
+    addAssignedDelay() {
+      this.flight.assignedDelay.push({
+        _id: IDGenerator(),
+        ...this.delay,
+      });
+    },
+
     addExtraGroundEquipment() {
       this.flight.extraGroundEquipments.push({
         _id: IDGenerator(),
@@ -363,6 +356,12 @@ export default {
         _id: IDGenerator(),
         ...this.task,
       });
+    },
+
+    deleteAssignedDelay(id) {
+      this.flight.assignedDelay = this.flight.assignedDelay.filter(
+        delay => delay._id !== id
+      );
     },
 
     deleteExtraGroundEquipment(id) {
@@ -396,13 +395,17 @@ export default {
     submitForm() {
       this.flightRules = {
         fltno: [v => !!v || 'Flt No. is required.'],
-        // tail: [v => !!v || 'A/C Reg. is required.'],
+        tail: [v => !!v || 'A/C Reg. is required.'],
         task: {
           taskDetails: [v => !!v || 'Task details is required.'],
         },
         extraGroundEquipment: {
           company: [v => !!v || 'Company is required.'],
           equipment: [v => !!v || 'Equipment is required.'],
+        },
+        assignedDelay: {
+          code: [v => !!v || 'Delay code is required.'],
+          duration: [v => !!v || 'Delay duration is required.'],
         },
       };
 

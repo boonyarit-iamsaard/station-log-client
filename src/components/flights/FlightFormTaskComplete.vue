@@ -7,6 +7,18 @@
       title="Do you want to proceed?"
     />
 
+    <v-row class="my-0">
+      <v-col class="pt-0" cols="12" v-if="model.length > 0">
+        <span class="black--text subtitle-1">Tasks Completed</span>
+      </v-col>
+
+      <v-col cols="12" v-if="model.length === 0">
+        <v-btn @click="$emit('addTask')" class="mb-4" color="info" outlined>
+          Add Tasks Completed
+        </v-btn>
+      </v-col>
+    </v-row>
+
     <v-row class="my-0" :key="task._id" v-for="(task, index) in model">
       <v-col cols="12" sm="3">
         <input-text
@@ -79,6 +91,7 @@
         </v-btn>
 
         <v-btn
+          :disabled="task.taskDetails === ''"
           @click="$emit('addTask')"
           color="primary"
           outlined
@@ -88,6 +101,8 @@
         </v-btn>
       </v-col>
     </v-row>
+
+    <v-divider class="mb-4" />
   </div>
 </template>
 
