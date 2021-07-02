@@ -8,6 +8,7 @@
     class="uppercase"
     dense
     outlined
+    ref="textarea"
     v-model="model"
   />
 </template>
@@ -42,7 +43,14 @@ export default {
       },
 
       set(value) {
+        const text = this.$refs.textarea.$refs.input;
+        const start = text.selectionStart;
+
         this.$emit('input', value.toUpperCase());
+
+        this.$nextTick(() => {
+          text.selectionStart = text.selectionEnd = start;
+        });
       },
     },
   },

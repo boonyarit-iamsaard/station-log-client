@@ -9,6 +9,7 @@
     :type="number ? 'number' : 'text'"
     dense
     outlined
+    ref="text"
     v-mask="time ? '##:##' : null"
     v-model="model"
   />
@@ -66,10 +67,17 @@ export default {
       },
 
       set(value) {
+        const text = this.$refs.text.$refs.input;
+        const start = text.selectionStart;
+
         this.number ? (value = Number(value)) : value;
         this.upperCase ? (value = value.toUpperCase()) : value;
 
         this.$emit('input', value);
+
+        this.$nextTick(() => {
+          text.selectionStart = text.selectionEnd = start;
+        });
       },
     },
   },
