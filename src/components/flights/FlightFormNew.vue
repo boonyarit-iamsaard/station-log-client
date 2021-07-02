@@ -137,7 +137,7 @@
                 color="info"
                 outlined
               >
-                Add Extra Ground Equipments
+                Add Extra Ground Equipment
               </v-btn>
             </v-col>
           </v-row>
@@ -173,7 +173,7 @@
 
             <v-col cols="12" v-if="flight.chargeableServices.length === 0">
               <v-btn class="mb-4" color="info" outlined>
-                Add Chargeable Services / Equipments
+                Add Chargeable Service / Equipment
               </v-btn>
             </v-col>
           </v-row>

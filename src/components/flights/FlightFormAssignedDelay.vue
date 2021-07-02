@@ -9,7 +9,7 @@
 
     <v-row class="my-0">
       <v-col class="pt" cols="12" v-if="model.length > 0">
-        <span class="black--text subtitle-1">Assigned Delay</span>
+        <span class="black--text subtitle-1">Assigned Delays</span>
       </v-col>
 
       <v-col cols="12" v-if="model.length === 0">
@@ -19,7 +19,7 @@
           color="info"
           outlined
         >
-          Add Assigned Delay Codes
+          Add Assigned Delay
         </v-btn>
       </v-col>
     </v-row>

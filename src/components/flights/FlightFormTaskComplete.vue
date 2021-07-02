@@ -9,12 +9,12 @@
 
     <v-row class="my-0">
       <v-col class="pt-0" cols="12" v-if="model.length > 0">
-        <span class="black--text subtitle-1">Tasks Completed</span>
+        <span class="black--text subtitle-1">Completed Tasks</span>
       </v-col>
 
       <v-col cols="12" v-if="model.length === 0">
         <v-btn @click="$emit('addTask')" class="mb-4" color="info" outlined>
-          Add Tasks Completed
+          Add Completed Task
         </v-btn>
       </v-col>
     </v-row>
