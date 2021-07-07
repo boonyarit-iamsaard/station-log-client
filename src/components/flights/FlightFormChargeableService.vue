@@ -2,7 +2,7 @@
   <div>
     <confirm-dialog
       @action="
-        $emit('removeFieldArray', { id: delayID, name: 'assignedDelays' })
+        $emit('removeFieldArray', { id: serviceID, name: 'chargeableServices' })
       "
       ref="confirmDialog"
       subtitle="This assigned delay will be deleted."
@@ -11,50 +11,71 @@
 
     <v-row class="mb-0" v-if="model.length === 0">
       <flight-form-append-field-array-wrapper
-        @appendFieldArray="$emit('appendFieldArray', 'assignedDelays')"
-        title="Add Assigned Delay"
+        @appendFieldArray="$emit('appendFieldArray', 'chargeableServices')"
+        title="Add Chargeable Service / Equipment"
       />
     </v-row>
 
     <v-card class="mb-4 shadow" v-if="model.length > 0">
       <v-card-title>
-        <span class="black--text subtitle-1">Assigned Delays</span>
+        <span class="black--text subtitle-1">
+          Chargeable Services / Equipments
+        </span>
       </v-card-title>
 
       <v-card-text>
-        <v-row :key="delay._id" class="my-0" v-for="(delay, index) in model">
-          <v-col cols="12" sm="3">
+        <v-row
+          :key="service._id"
+          class="my-0"
+          v-for="(service, index) in model"
+        >
+          <v-col cols="12" sm="6">
             <input-autocomplete
-              :items="codes"
-              :rules="rules.code"
-              @change="$emit('setDelayCategory', delay._id)"
-              label="Code"
-              v-model="delay.code"
+              :items="chargeableItems"
+              :rules="rules.service"
+              label="Service / Equipment"
+              v-model="service.service"
             />
           </v-col>
 
-          <v-col cols="12" sm="3">
+          <v-col
+            cols="12"
+            sm="2"
+            v-if="chargeablePerHourItems.includes(service.service)"
+          >
             <input-text
-              :rules="rules.category"
-              disabled
-              label="Category"
-              v-model="delay.category"
+              :label="
+                service.service === 'Brake Cooling'
+                  ? 'Usage (fans)'
+                  : 'Usage (hours)'
+              "
+              :rules="rules.usage"
+              number
+              v-model="service.usage"
             />
           </v-col>
 
-          <v-col cols="12" sm="3">
+          <v-col cols="12" sm="2">
             <input-text
-              :rules="rules.duration"
-              hint="HH:mm"
-              label="Duration"
-              time
-              v-model="delay.duration"
+              hint="Optional"
+              label="Engineer (hours)"
+              number
+              v-model="service.engineerHours"
+            />
+          </v-col>
+
+          <v-col cols="12" sm="2">
+            <input-text
+              hint="Optional"
+              label="Mechanic (hours)"
+              number
+              v-model="service.mechanicHours"
             />
           </v-col>
 
           <v-col class="pt-0" cols="12">
             <v-btn
-              @click="deleteAssignedDelay(delay._id)"
+              @click="deleteChargeableService(service._id)"
               class="mr-4"
               color="error"
               outlined
@@ -63,8 +84,8 @@
             </v-btn>
 
             <v-btn
-              :disabled="!delay.code || !delay.category || !delay.duration"
-              @click="$emit('appendFieldArray', 'assignedDelays')"
+              :disabled="!service.service"
+              @click="$emit('appendFieldArray', 'chargeableServices')"
               color="primary"
               outlined
               v-if="index === model.length - 1"
@@ -84,10 +105,13 @@ import FlightFormAppendFieldArrayWrapper from '@/components/flights/FlightFormAp
 import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 import InputText from '@/components/shared/input/InputText';
 
-import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
+import {
+  chargeableItems,
+  chargeablePerHourItems,
+} from '@/components/flights/chargeable-items';
 
 export default {
-  name: 'FlightFormAssignedDelay',
+  name: 'FlightFormChargeableService',
 
   components: {
     'confirm-dialog': ConfirmDialog,
@@ -100,9 +124,8 @@ export default {
     rules: {
       type: Object,
       default: () => ({
-        code: [],
-        category: [],
-        duration: [],
+        service: [],
+        usage: [],
       }),
     },
     value: {
@@ -113,28 +136,20 @@ export default {
 
   data() {
     return {
-      companies: ['BFS', 'TG'],
-      delayID: '',
-      equipments: ['AIRCOND', 'ASU', 'Cherry Picker', 'GPU'],
+      chargeableItems: chargeableItems(),
+      chargeablePerHourItems: chargeablePerHourItems(),
+      serviceID: '',
     };
   },
 
   methods: {
-    deleteAssignedDelay(id) {
-      this.delayID = id;
+    deleteChargeableService(id) {
+      this.serviceID = id;
       this.$refs.confirmDialog.dialog = true;
     },
   },
 
   computed: {
-    codes() {
-      let codes = [];
-
-      assignableDelayCodes.forEach(delay => codes.push(delay.code));
-
-      return codes;
-    },
-
     model: {
       get() {
         return this.value;
@@ -147,4 +162,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
