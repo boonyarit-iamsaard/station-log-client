@@ -1,0 +1,86 @@
+[
+  {
+    "category": "Basic",
+    "code": "TDA"
+  },
+  {
+    "category": "Basic",
+    "code": "TDL"
+  },
+  {
+    "category": "Basic",
+    "code": "TCT"
+  },
+  {
+    "category": "Basic",
+    "code": "TLT"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TNA"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TAA"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TAE"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TSS"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TST"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TDD"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TDT"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TDU"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TML"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TMS"
+  },
+  {
+    "category": "Non-Basic",
+    "code": "TMT"
+  },
+  {
+    "category": "Ground-Service",
+    "code": "GFA"
+  },
+  {
+    "category": "Ground-Service",
+    "code": "GFE"
+  },
+  {
+    "category": "Ground-Service",
+    "code": "GSL"
+  },
+  {
+    "category": "Ground-Service",
+    "code": "GTL"
+  },
+  {
+    "category": "Ground-Service",
+    "code": "GTS"
+  },
+  {
+    "category": "Ground-Service",
+    "code": "AFO"
+  }
+]
