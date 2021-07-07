@@ -1,10 +1,5 @@
 [
   {
-    "name": "Please select",
-    "inclusive": false,
-    "type": "per service"
-  },
-  {
     "name": "Aircraft Chocks, Oil/Fuel Service Stands",
     "inclusive": false,
     "type": "per service"
