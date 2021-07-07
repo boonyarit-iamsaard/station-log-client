@@ -132,7 +132,7 @@ export default {
 
       assignableDelayCodes.forEach(delay => codes.push(delay.code));
 
-      return codes;
+      return codes.sort();
     },
 
     model: {
