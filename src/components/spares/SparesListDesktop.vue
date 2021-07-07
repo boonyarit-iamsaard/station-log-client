@@ -35,7 +35,7 @@
         icon
         link
         :to="{
-          name: 'sparesEdit',
+          name: 'spares-edit',
           params: { id: item._id },
         }"
       >

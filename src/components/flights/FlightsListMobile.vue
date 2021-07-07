@@ -14,7 +14,7 @@
         <v-card
           :key="item._id"
           :to="{
-            name: 'flightEdit',
+            name: 'flight-edit',
             params: {
               id: item._id,
             },

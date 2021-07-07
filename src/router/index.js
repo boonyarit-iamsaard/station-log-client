@@ -10,7 +10,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'HomePage',
+    name: 'homepage',
     component: Home,
     meta: {
       requiresAuth: true,
@@ -38,12 +38,12 @@ const routes = [
       },
       {
         path: 'create',
-        name: 'flightCreate',
+        name: 'flight-create',
         component: () => import('@/components/flights/FlightFormNew'),
       },
       {
         path: 'edit/:id',
-        name: 'flightEdit',
+        name: 'flight-edit',
         component: () => import('@/components/flights/FlightFormNew'),
       },
     ],
@@ -62,12 +62,12 @@ const routes = [
       },
       {
         path: 'create',
-        name: 'sparesCreate',
+        name: 'spares-create',
         component: () => import('@/components/spares/SparesForm'),
       },
       {
         path: 'edit/:id',
-        name: 'sparesEdit',
+        name: 'spares-edit',
         component: () => import('@/components/spares/SparesForm'),
       },
     ],
