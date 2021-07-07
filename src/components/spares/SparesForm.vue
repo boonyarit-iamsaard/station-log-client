@@ -509,7 +509,10 @@ export default {
             this.setErrorMessage(error.message);
           }
 
-          if (!spare) return;
+          if (!spare) {
+            this.setShouldLoading(false);
+            return;
+          }
 
           this.setShouldLoading(false);
           this.resetForm();
