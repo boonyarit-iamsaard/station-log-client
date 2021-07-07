@@ -26,6 +26,7 @@
                 :rules="item.rules"
                 :time="item.time"
                 :upper-case="item.upperCase"
+                @change="item.name === 'airline' ? onAirlineChange() : null"
                 v-model="flight[item.name]"
               />
             </v-col>
@@ -129,13 +130,15 @@
 
         <v-card-actions class="pb-4 pt-0 px-4">
           <div>
-            <v-btn class="shadow" color="error">Delete</v-btn>
+            <v-btn disabled class="shadow" color="error">Delete</v-btn>
           </div>
 
           <v-spacer />
 
           <div>
-            <v-btn class="shadow mr-4" color="secondary">Cancel</v-btn>
+            <v-btn @click="resetForm" class="shadow mr-4" color="secondary"
+              >Cancel</v-btn
+            >
 
             <v-btn class="shadow" color="primary" type="submit">Save</v-btn>
           </div>
@@ -171,6 +174,7 @@ import { flightFormRules } from '@/components/flights/flight-form-rules';
 import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
 
 import { IDGenerator } from '@/utils/id-generator';
+import { mapActions } from 'vuex';
 
 export default {
   name: 'FlightFormNew',
@@ -227,11 +231,38 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      addFlight: 'flight/addFlight',
+      fetchFlightByID: 'flight/fetchFlightByID',
+      setErrorMessage: 'error/setErrorMessage',
+      setIsError: 'error/setIsError',
+      setShouldLoading: 'setShouldLoading',
+      updateFlight: 'flight/updateFlight',
+    }),
+
     appendFieldArray(name) {
       this.flight[name].push({
         _id: IDGenerator(),
         ...this.fieldArray[name],
       });
+    },
+
+    async handleFetchFlightByID(id) {
+      this.setShouldLoading(true);
+
+      try {
+        const flight = await this.fetchFlightByID(id);
+
+        if (!flight) return;
+
+        this.flight = cloneDeep(flight);
+        this.setShouldLoading(false);
+      } catch (error) {
+        this.setShouldLoading(false);
+
+        this.setIsError();
+        this.setErrorMessage(error.message);
+      }
     },
 
     findDelayCategory(code) {
@@ -244,8 +275,21 @@ export default {
       return assignableDelay.category;
     },
 
+    onAirlineChange() {
+      this.flight.tail = '';
+    },
+
     removeFieldArray({ id, name }) {
       this.flight[name] = this.flight[name].filter(field => field._id !== id);
+    },
+
+    resetForm() {
+      this.flightRules = {};
+      this.flight = cloneDeep(defaultValues);
+
+      this.$nextTick(() => {
+        this.$router.replace('/flights');
+      });
     },
 
     setDelayCategory(id) {
@@ -273,12 +317,35 @@ export default {
         });
       });
 
-      this.$nextTick(() => {
+      this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
           this.flight.prefix = this.prefix;
           this.flight.acreg = this.prefix.concat(this.flight.tail);
 
           console.log(JSON.stringify(this.flight, null, 2));
+
+          let flight;
+          try {
+            if (this.$route.params.id) {
+              flight = await this.updateFlight(this.flight);
+            } else {
+              flight = await this.updateFlight(this.flight);
+            }
+          } catch (error) {
+            this.setShouldLoading(false);
+
+            this.setIsError();
+            this.setErrorMessage(error.message);
+          }
+
+          if (!flight) {
+            console.log('No data returned.');
+            this.setShouldLoading(false);
+            return;
+          }
+
+          this.setShouldLoading(false);
+          this.resetForm();
         }
       });
     },
@@ -299,6 +366,12 @@ export default {
           return '';
       }
     },
+  },
+
+  created() {
+    if (this.$route.params.id) {
+      this.handleFetchFlightByID(this.$route.params.id);
+    }
   },
 };
 </script>
