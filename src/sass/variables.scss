@@ -4,6 +4,8 @@ $border-radius-root: 8px !default;
 
 $body-font-family: 'Inter', sans-serif;
 
+$btn-font-weight: 400 !default;
+
 $btn-text-transform: capitalize !default;
 
 $grey: (
@@ -17,4 +19,14 @@ $grey: (
   'darken-2': #374151,
   'darken-3': #1f2937,
   'darken-4': #111827,
+);
+
+$material-light: (
+  'text-fields': (
+    'filled': map-get($grey, 'lighten-4'),
+    'filled-hover': map-get($grey, 'lighten-3'),
+    'outlined': map-get($grey, 'lighten-3'),
+    'outlined-disabled': map-get($grey, 'lighten-3'),
+    'outlined-hover': map-get($grey, 'lighten-2'),
+  ),
 );
