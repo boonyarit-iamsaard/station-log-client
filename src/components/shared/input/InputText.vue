@@ -1,27 +1,42 @@
 <template>
-  <v-text-field
-    :class="upperCase ? 'uppercase' : null"
-    :hint="hint"
-    :label="label"
-    :prefix="prefix"
-    :persistent-hint="hint !== ''"
-    :rules="rules"
-    :type="number ? 'number' : 'text'"
-    dense
-    outlined
-    ref="text"
-    v-mask="time ? '##:##' : null"
-    v-model="model"
-  />
+  <div>
+    <input-label :label="label" />
+
+    <v-text-field
+      :class="upperCase ? 'uppercase' : null"
+      :disabled="disabled"
+      :hint="hint"
+      :persistent-hint="hint !== ''"
+      :prefix="prefix"
+      :rules="rules"
+      :type="number ? 'number' : 'text'"
+      dense
+      filled
+      outlined
+      ref="text"
+      v-mask="time ? '##:##' : null"
+      v-model="model"
+    />
+  </div>
 </template>
 
 <script>
 import { VueMaskDirective } from 'v-mask';
 
+import InputLabel from '@/components/shared/input/InputLabel';
+
 export default {
   name: 'InputText',
 
+  components: {
+    'input-label': InputLabel,
+  },
+
   props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     hint: {
       type: String,
       default: '',
@@ -67,17 +82,18 @@ export default {
       },
 
       set(value) {
-        const text = this.$refs.text.$refs.input;
-        const start = text.selectionStart;
+        if (!this.number) {
+          const text = this.$refs.text.$refs.input;
+          const start = text.selectionStart;
 
-        this.number ? (value = Number(value)) : value;
-        this.upperCase ? (value = value.toUpperCase()) : value;
+          this.upperCase ? (value = value.toUpperCase()) : value;
 
-        this.$emit('input', value);
+          this.$emit('input', value);
 
-        this.$nextTick(() => {
-          text.selectionStart = text.selectionEnd = start;
-        });
+          this.$nextTick(() => {
+            text.selectionStart = text.selectionEnd = start;
+          });
+        } else this.$emit('input', Number(value));
       },
     },
   },

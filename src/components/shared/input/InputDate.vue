@@ -7,17 +7,21 @@
     width="290px"
   >
     <template v-slot:activator="{ on, attrs }">
-      <v-text-field
-        :disabled="disabled"
-        :value="date | dateFormat"
-        append-icon="mdi-calendar"
-        dense
-        label="Date"
-        outlined
-        readonly
-        v-bind="attrs"
-        v-on="on"
-      />
+      <div>
+        <input-label label="Date" />
+
+        <v-text-field
+          :disabled="disabled"
+          :value="date | dateFormat"
+          append-icon="mdi-calendar"
+          dense
+          filled
+          outlined
+          readonly
+          v-bind="attrs"
+          v-on="on"
+        />
+      </div>
     </template>
 
     <v-date-picker v-model="date" scrollable>
@@ -34,10 +38,11 @@
 
 <script>
 import { format } from 'date-fns';
+import InputLabel from '@/components/shared/input/InputLabel';
 
 export default {
   name: 'InputDate',
-
+  components: { InputLabel },
   props: {
     disabled: {
       type: Boolean,

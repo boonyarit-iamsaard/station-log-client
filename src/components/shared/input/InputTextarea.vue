@@ -1,22 +1,27 @@
 <template>
-  <v-textarea
-    :hint="hint"
-    :label="label"
-    :persistent-hint="hint !== ''"
-    :rows="3"
-    :rules="rules"
-    class="uppercase"
-    dense
-    outlined
-    ref="textarea"
-    v-model="model"
-  />
+  <div>
+    <input-label :label="label" />
+
+    <v-textarea
+      :hint="hint"
+      :persistent-hint="hint !== ''"
+      :rows="3"
+      :rules="rules"
+      class="uppercase"
+      dense
+      filled
+      outlined
+      ref="textarea"
+      v-model="model"
+    />
+  </div>
 </template>
 
 <script>
+import InputLabel from '@/components/shared/input/InputLabel';
 export default {
   name: 'InputTextarea',
-
+  components: { InputLabel },
   props: {
     hint: {
       type: String,
