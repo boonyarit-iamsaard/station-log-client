@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div class="mb-4">
-      <span class="title">Flight Movement</span>
-    </div>
+    <flights-list-mobile
+      :flights="flights"
+      v-if="!shouldLoading && smallScreen"
+    />
 
-    <FlightsListMobile :flights="flights" v-if="!shouldLoading" />
+    <flights-list-desktop :flights="flights" v-if="!shouldLoading" />
   </div>
 </template>
 
@@ -12,11 +13,15 @@
 import { mapActions, mapGetters } from 'vuex';
 
 import FlightsListMobile from '@/components/flights/FlightsListMobile';
+import FlightsListDesktop from '@/components/flights/FlightsListDesktop';
 
 export default {
   name: 'FlightsList',
 
-  components: { FlightsListMobile },
+  components: {
+    'flights-list-desktop': FlightsListDesktop,
+    'flights-list-mobile': FlightsListMobile,
+  },
 
   methods: {
     ...mapActions({
@@ -47,6 +52,10 @@ export default {
       flights: 'flight/getFlights',
       shouldLoading: 'getShouldLoading',
     }),
+
+    smallScreen() {
+      return this.$vuetify.breakpoint.smAndDown;
+    },
   },
 
   created() {
