@@ -1,5 +1,12 @@
 <template>
   <v-container class="pa-0" style="max-width: 959px">
+    <confirm-dialog
+      @action="handleDeleteFlight"
+      ref="confirmDialog"
+      subtitle="This flight will be deleted."
+      title="Do you want to proceed?"
+    />
+
     <v-form ref="form" @submit.prevent="submitForm">
       <div class="mb-4">
         <span class="title">Flight Movement Form</span>
@@ -130,7 +137,14 @@
 
         <v-card-actions class="pb-4 pt-0 px-4">
           <div>
-            <v-btn disabled class="shadow" color="error">Delete</v-btn>
+            <v-btn
+              :disabled="!admin"
+              @click="$refs.confirmDialog.dialog = true"
+              class="shadow"
+              color="error"
+            >
+              Delete
+            </v-btn>
           </div>
 
           <v-spacer />
@@ -151,6 +165,7 @@
 <script>
 import { cloneDeep } from 'lodash';
 
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
 import FlightFormAssignedDelay from '@/components/flights/FlightFormAssignedDelay';
 import FlightFormChargeableService from '@/components/flights/FlightFormChargeableService';
@@ -174,12 +189,13 @@ import { flightFormRules } from '@/components/flights/flight-form-rules';
 import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
 
 import { IDGenerator } from '@/utils/id-generator';
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FlightFormNew',
 
   components: {
+    'confirm-dialog': ConfirmDialog,
     'flight-form-assigned-delay': FlightFormAssignedDelay,
     'flight-form-chargeable-service': FlightFormChargeableService,
     'flight-form-extra-ground-equipment': FlightFormExtraGroundEquipment,
@@ -234,6 +250,7 @@ export default {
   methods: {
     ...mapActions({
       addFlight: 'flight/addFlight',
+      deleteFlight: 'flight/deleteFlight',
       fetchFlightByID: 'flight/fetchFlightByID',
       setErrorMessage: 'error/setErrorMessage',
       setIsError: 'error/setIsError',
@@ -246,6 +263,23 @@ export default {
         _id: IDGenerator(),
         ...this.fieldArray[name],
       });
+    },
+
+    async handleDeleteFlight() {
+      this.setShouldLoading(true);
+
+      try {
+        await this.deleteFlight(this.$route.params.id);
+
+        this.setShouldLoading(false);
+
+        await this.$router.replace('/flights');
+      } catch (error) {
+        this.setShouldLoading(false);
+
+        this.setIsError();
+        this.setErrorMessage(error.message);
+      }
     },
 
     async handleFetchFlightByID(id) {
@@ -323,8 +357,6 @@ export default {
           this.flight.prefix = this.prefix;
           this.flight.acreg = this.prefix.concat(this.flight.tail);
 
-          console.log(JSON.stringify(this.flight, null, 2));
-
           let flight;
           try {
             if (this.$route.params.id) {
@@ -353,6 +385,10 @@ export default {
   },
 
   computed: {
+    ...mapGetters({
+      admin: 'auth/getIsAdmin',
+    }),
+
     prefix() {
       switch (this.flight.airline) {
         case 'ASL':
