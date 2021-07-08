@@ -10,7 +10,7 @@
       :prefix="prefix"
       :prepend-inner-icon="prependInnerIcon"
       :rules="rules"
-      :type="number ? 'number' : 'text'"
+      :type="inputType"
       dense
       filled
       outlined
@@ -66,6 +66,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    type: {
+      type: String,
+      default: 'text',
+    },
     value: {
       type: [String, Number],
       default: '',
@@ -81,6 +85,12 @@ export default {
   },
 
   computed: {
+    inputType() {
+      if (this.number) return 'number';
+
+      return this.type;
+    },
+
     model: {
       get() {
         return this.value;

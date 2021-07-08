@@ -7,6 +7,7 @@
       :persistent-hint="hint !== ''"
       :rows="3"
       :rules="rules"
+      auto-grow
       class="uppercase"
       dense
       filled
