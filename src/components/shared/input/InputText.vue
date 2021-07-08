@@ -8,6 +8,7 @@
       :hint="hint"
       :persistent-hint="hint !== ''"
       :prefix="prefix"
+      :prepend-inner-icon="prependInnerIcon"
       :rules="rules"
       :type="number ? 'number' : 'text'"
       dense
@@ -50,6 +51,10 @@ export default {
       default: false,
     },
     prefix: {
+      type: String,
+      default: '',
+    },
+    prependInnerIcon: {
       type: String,
       default: '',
     },
