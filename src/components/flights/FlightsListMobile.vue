@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="mb-4">
+      <span class="title">Flight Movement</span>
+    </div>
+
     <v-data-iterator
       :items-per-page.sync="itemsPerPage"
       :items="items"
