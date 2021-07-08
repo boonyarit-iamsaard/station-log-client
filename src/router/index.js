@@ -10,7 +10,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'homepage',
+    name: 'home',
     component: Home,
     meta: {
       requiresAuth: true,
@@ -33,7 +33,7 @@ const routes = [
     children: [
       {
         path: '',
-        name: 'flights',
+        name: 'flight',
         component: () => import('@/components/flights/FlightsList'),
       },
       {
