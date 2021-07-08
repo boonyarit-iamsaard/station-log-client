@@ -27,12 +27,20 @@
         </v-card>
       </v-col>
     </v-row>
+
+    <flight-remark-and-hand-over />
   </v-container>
 </template>
 
 <script>
+import FlightRemarkAndHandover from '@/components/dashboard/FlightRemarkAndHandover';
+
 export default {
   name: 'HomePage',
+
+  components: {
+    'flight-remark-and-hand-over': FlightRemarkAndHandover,
+  },
 
   data() {
     return {

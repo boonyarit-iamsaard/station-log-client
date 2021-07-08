@@ -55,7 +55,7 @@
           <v-col cols="12">
             <input-textarea
               hint="Optional"
-              label="Remark"
+              label="Delay Remark"
               time
               v-model="delay.remark"
             />

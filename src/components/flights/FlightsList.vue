@@ -5,7 +5,10 @@
       v-if="!shouldLoading && smallScreen"
     />
 
-    <flights-list-desktop :flights="flights" v-if="!shouldLoading" />
+    <flights-list-desktop
+      :flights="flights"
+      v-if="!shouldLoading && !smallScreen"
+    />
   </div>
 </template>
 
@@ -59,7 +62,9 @@ export default {
   },
 
   created() {
-    this.handleFetchFlights();
+    if (this.flights.length === 0) {
+      this.handleFetchFlights();
+    }
   },
 };
 </script>

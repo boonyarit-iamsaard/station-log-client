@@ -34,7 +34,7 @@
                 class="white--text mr-4"
                 size="32"
               >
-                <span class="body-1">
+                <span class="body-2">
                   {{ item.airline }}
                 </span>
               </v-avatar>

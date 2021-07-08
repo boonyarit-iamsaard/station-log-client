@@ -123,7 +123,7 @@ export const flightHandlingByFields = [
     xs: 12,
   },
   {
-    label: 'Remark / Handover',
+    label: 'Flight Remark / Handover',
     name: 'remark',
     sm: 12,
     type: 'input-textarea',
