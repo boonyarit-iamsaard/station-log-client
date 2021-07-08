@@ -1,9 +1,16 @@
 <template>
-  <FlightsListMobile :flights="flights" v-if="!shouldLoading" />
+  <div>
+    <div class="mb-4">
+      <span class="title">Flight Movement</span>
+    </div>
+
+    <FlightsListMobile :flights="flights" v-if="!shouldLoading" />
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex';
+
 import FlightsListMobile from '@/components/flights/FlightsListMobile';
 
 export default {
