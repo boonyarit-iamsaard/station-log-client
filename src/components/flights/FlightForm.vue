@@ -102,7 +102,7 @@
       />
 
       <!--Handling by-->
-      <v-card class="mb-4 shadow">
+      <v-card class="shadow">
         <flight-form-title-wrapper title="Handling By" />
 
         <v-card-text class="pb-0">
@@ -202,6 +202,7 @@ export default {
           category: '',
           code: '',
           duration: '',
+          remark: '',
         },
         chargeableServices: {
           service: '',
@@ -329,7 +330,7 @@ export default {
             if (this.$route.params.id) {
               flight = await this.updateFlight(this.flight);
             } else {
-              flight = await this.updateFlight(this.flight);
+              flight = await this.addFlight(this.flight);
             }
           } catch (error) {
             this.setShouldLoading(false);

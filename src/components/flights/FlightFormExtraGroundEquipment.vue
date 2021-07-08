@@ -25,7 +25,11 @@
       </v-card-title>
 
       <v-card-text>
-        <v-row :key="equipment._id" v-for="(equipment, index) in model">
+        <v-row
+          :key="equipment._id"
+          class="my-0"
+          v-for="(equipment, index) in model"
+        >
           <v-col cols="12" sm="3">
             <input-select
               :items="equipments"
@@ -44,7 +48,7 @@
             />
           </v-col>
 
-          <v-col cols="12" sm="6" style="padding-top: 22px">
+          <v-col cols="12" sm="6" :style="style">
             <v-btn
               @click="deleteExtraGroundEquipment(equipment._id)"
               class="mr-4"
@@ -103,6 +107,9 @@ export default {
       companies: ['BFS', 'TG'],
       equipmentID: '',
       equipments: ['AIRCOND', 'ASU', 'Cherry Picker', 'GPU'],
+      styleObject: {
+        paddingTop: '22px',
+      },
     };
   },
 
@@ -114,6 +121,10 @@ export default {
   },
 
   computed: {
+    isMobile() {
+      return this.$vuetify.breakpoint.xs;
+    },
+
     model: {
       get() {
         return this.value;
@@ -121,6 +132,10 @@ export default {
       set(value) {
         this.$emit('input', value);
       },
+    },
+
+    style() {
+      return !this.isMobile ? this.styleObject : {};
     },
   },
 };

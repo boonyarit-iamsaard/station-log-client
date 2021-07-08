@@ -88,7 +88,11 @@
             />
           </v-col>
 
-          <v-col class="pt-0" cols="12">
+          <v-col
+            :class="index !== model.length - 1 ? 'pb-4' : null"
+            class="pt-0"
+            cols="12"
+          >
             <v-btn
               @click="deleteTask(task._id)"
               class="mr-4"
