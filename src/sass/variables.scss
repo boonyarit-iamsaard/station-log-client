@@ -6,6 +6,10 @@ $body-font-family: 'Inter', sans-serif;
 
 $btn-font-weight: 400 !default;
 
+$btn-sizes: (
+  'default': 40,
+);
+
 $btn-text-transform: capitalize !default;
 
 $grey: (
