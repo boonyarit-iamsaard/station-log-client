@@ -6,13 +6,13 @@
 
     <v-data-iterator
       :items-per-page.sync="itemsPerPage"
-      :items="items"
+      :items="flightRemarkAndHandover"
       :page.sync="page"
       :sort-by="['date']"
       :sort-desc="[true]"
       class="mb-14"
       hide-default-footer
-      v-if="items.length > 0"
+      v-if="flightRemarkAndHandover.length > 0"
     >
       <template v-slot:default="{ items }">
         <v-card
@@ -72,7 +72,7 @@
       </template>
     </v-data-iterator>
 
-    <v-card class="shadow" v-if="items.length === 0">
+    <v-card class="shadow" v-if="flightRemarkAndHandover.length === 0">
       <v-card-text>
         <span> No flight remark / handover found. </span>
       </v-card-text>
@@ -96,7 +96,6 @@ export default {
 
   data() {
     return {
-      items: [],
       itemsPerPage: 5,
       itemsPerPageArray: [5, 10, 20],
       page: 1,
@@ -147,7 +146,8 @@ export default {
 
     calculatePageLength() {
       const defaultLength = 5;
-      const calculatedLength = this.items.length / defaultLength;
+      const calculatedLength =
+        this.flightRemarkAndHandover.length / defaultLength;
 
       return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
     },
@@ -169,8 +169,6 @@ export default {
     if (this.getFlights.length === 0) {
       this.handleFetchFlights();
     }
-
-    this.items = this.flightRemarkAndHandover;
   },
 };
 </script>
