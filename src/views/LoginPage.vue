@@ -1,59 +1,57 @@
 <template>
-  <v-row>
-    <v-col cols="12" sm="6" md="4" class="mx-auto">
-      <v-form ref="form" @submit.prevent="submitForm">
-        <v-card class="shadow">
-          <v-card-title class="d-flex flex-column pa-4">
-            <v-img
-              :src="require('@/assets/images/logo.png')"
-              alt="Company Logo"
-              class="shrink mb-4"
-              contain
-              height="32"
-              transition="scale-transition"
-              width="32"
-            />
+  <v-form ref="form" @submit.prevent="submitForm">
+    <v-card class="mt-8 mx-auto shadow" style="max-width: 400px">
+      <v-card-title class="d-flex flex-column pa-4">
+        <v-img
+          :src="require('@/assets/images/logo.png')"
+          alt="Company Logo"
+          class="shrink mb-4"
+          contain
+          height="32"
+          transition="scale-transition"
+          width="32"
+        />
 
-            <span class="title">Station Log</span>
+        <span class="title">Station Log</span>
 
-            <span class="subtitle-1">Bangkok Engineering</span>
-          </v-card-title>
+        <span class="subtitle-1">Bangkok Engineering</span>
+      </v-card-title>
 
-          <v-card-text class="pa-4">
-            <v-text-field
-              :rules="formRules.username"
-              dense
-              label="Username"
-              outlined
-              v-model.trim="formData.username"
-            />
+      <v-card-text class="pa-4">
+        <input-text
+          :rules="formRules.username"
+          label="Username"
+          v-model.trim="formData.username"
+        />
 
-            <v-text-field
-              :rules="formRules.password"
-              dense
-              label="Password"
-              type="password"
-              outlined
-              v-model.trim="formData.password"
-            />
-          </v-card-text>
+        <input-text
+          :rules="formRules.password"
+          label="Password"
+          type="password"
+          v-model.trim="formData.password"
+        />
+      </v-card-text>
 
-          <v-card-actions class="pb-4 pt-0 px-4">
-            <v-btn block class="shadow" color="primary" type="submit">
-              Login
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-col>
-  </v-row>
+      <v-card-actions class="pb-4 pt-0 px-4">
+        <v-btn block class="shadow" color="primary" type="submit">
+          Login
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
 import { mapActions } from 'vuex';
 
+import InputText from '@/components/shared/input/InputText';
+
 export default {
   name: 'LoginPage',
+
+  components: {
+    'input-text': InputText,
+  },
 
   data() {
     return {
