@@ -52,7 +52,20 @@
             />
           </v-col>
 
-          <v-col class="pt-0" cols="12">
+          <v-col cols="12">
+            <input-textarea
+              hint="Optional"
+              label="Remark"
+              time
+              v-model="delay.remark"
+            />
+          </v-col>
+
+          <v-col
+            :class="index !== model.length - 1 ? 'pb-4' : null"
+            class="pt-0"
+            cols="12"
+          >
             <v-btn
               @click="deleteAssignedDelay(delay._id)"
               class="mr-4"
@@ -83,6 +96,7 @@ import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormAppendFieldArrayWrapper from '@/components/flights/FlightFormAppendFieldArrayWrapper';
 import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 import InputText from '@/components/shared/input/InputText';
+import InputTextarea from '@/components/shared/input/InputTextarea';
 
 import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
 
@@ -94,6 +108,7 @@ export default {
     'flight-form-append-field-array-wrapper': FlightFormAppendFieldArrayWrapper,
     'input-autocomplete': InputAutocomplete,
     'input-text': InputText,
+    'input-textarea': InputTextarea,
   },
 
   props: {
