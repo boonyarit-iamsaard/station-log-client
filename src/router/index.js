@@ -39,12 +39,12 @@ const routes = [
       {
         path: 'create',
         name: 'flight-create',
-        component: () => import('@/components/flights/FlightFormNew'),
+        component: () => import('@/components/flights/FlightForm'),
       },
       {
         path: 'edit/:id',
         name: 'flight-edit',
-        component: () => import('@/components/flights/FlightFormNew'),
+        component: () => import('@/components/flights/FlightForm'),
       },
     ],
     meta: {
