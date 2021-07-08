@@ -2,10 +2,10 @@
   <v-navigation-drawer
     app
     v-model="drawer"
-    :temporary="$vuetify.breakpoint.mdAndDown"
-    :permanent="$vuetify.breakpoint.lgAndUp"
+    :temporary="$vuetify.breakpoint.lgAndDown"
+    :permanent="$vuetify.breakpoint.xl"
   >
-    <v-toolbar flat>
+    <v-toolbar class="d-flex align-center px-4" flat>
       <v-img
         alt="Company Logo"
         class="shrink mr-4"
@@ -18,12 +18,15 @@
 
       <div class="d-flex flex-column">
         <span class="title">Station Log</span>
-        <span class="caption">Bangkok Engineering</span>
+
+        <span style="font-size: 10px">Bangkok Engineering</span>
       </div>
     </v-toolbar>
 
+    <v-divider class="grey lighten-4" />
+
     <v-container class="px-0 pb-0 pt-4">
-      <AppDrawerList />
+      <app-drawer-list />
     </v-container>
   </v-navigation-drawer>
 </template>
@@ -34,7 +37,9 @@ import AppDrawerList from './AppDrawerList.vue';
 export default {
   name: 'AppDrawer',
 
-  components: { AppDrawerList },
+  components: {
+    'app-drawer-list': AppDrawerList,
+  },
 
   data() {
     return {

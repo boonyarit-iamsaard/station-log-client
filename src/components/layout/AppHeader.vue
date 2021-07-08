@@ -2,9 +2,27 @@
   <v-app-bar app class="grey lighten-3" flat>
     <v-app-bar-nav-icon
       @click="$emit('open')"
-      class="hidden-lg-and-up"
+      class="hidden-xl-only"
       v-if="user"
     />
+
+    <div class="align-center d-flex grey lighten-3" v-if="!extraLargeScreen">
+      <v-img
+        :src="require('@/assets/images/logo.png')"
+        alt="Company Logo"
+        class="shrink mr-4"
+        contain
+        height="32"
+        transition="scale-transition"
+        width="32"
+      />
+
+      <div class="d-flex flex-column">
+        <span class="title">Station Log</span>
+
+        <span style="font-size: 10px">Bangkok Engineering</span>
+      </div>
+    </div>
 
     <v-spacer />
 
@@ -50,6 +68,10 @@ export default {
     ...mapGetters({
       user: 'auth/getUser',
     }),
+
+    extraLargeScreen() {
+      return this.$vuetify.breakpoint.xl;
+    },
 
     name() {
       return this.user ? `${this.user.firstname} ${this.user.lastname}` : null;
