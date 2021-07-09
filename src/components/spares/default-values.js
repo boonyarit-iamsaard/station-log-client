@@ -1,5 +1,7 @@
+const currentDate = new Date().toISOString().substr(0, 10);
+
 export const spareData = {
-  date: new Date().toISOString().substr(0, 10),
+  date: currentDate,
   airline: 'CX',
   fltno: '',
   prefix: 'B-',
@@ -16,19 +18,19 @@ export const spareData = {
   status: 'Pending',
   issued: {
     by: '',
-    date: null,
+    date: currentDate,
     number: '',
     status: false,
   },
   returned: {
     by: '',
-    date: null,
+    date: currentDate,
     number: '',
     status: false,
   },
   transferred: {
     by: '',
-    date: null,
+    date: currentDate,
     number: '',
     status: false,
   },

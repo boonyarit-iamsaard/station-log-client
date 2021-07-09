@@ -4,8 +4,6 @@
       <span class="title">Flight Movement</span>
     </div>
 
-    <!--<flight-list-filter v-model="filters" />-->
-
     <v-data-table
       :headers="headers"
       :items="items"
@@ -40,11 +38,6 @@
         </v-chip>
 
         <span v-else>{{ item.fltno }}</span>
-      </template>
-
-      <template v-slot:item.check1="{ item }">
-        <!--        {{ item.check2 ? item.check1 + ' / ' + item.check2 : item.check1 }}-->
-        {{ item.check1 }}
       </template>
 
       <template v-slot:item.extraGroundEquipments="{ item }">
@@ -95,7 +88,6 @@
 <script>
 import { format } from 'date-fns';
 
-// import FlightListFilter from '@/components/flights/FlightListFilter';
 import InputText from '@/components/shared/input/InputText';
 
 export default {
@@ -103,7 +95,6 @@ export default {
 
   components: {
     'input-text': InputText,
-    // 'flight-list-filter': FlightListFilter,
   },
 
   props: {
@@ -124,8 +115,6 @@ export default {
         {
           text: 'Airline',
           value: 'airline',
-          // TODO add filter later
-          // filter: value => this.onFilterChange(value, this.filters.airline),
         },
         {
           text: 'Flt No.',
@@ -199,13 +188,6 @@ export default {
         : item.mechanic1;
     },
 
-    // TODO add filter later
-    // onFilterChange(value, filter) {
-    //   if (filter === 'ALL') return true;
-    //
-    //   return value === filter;
-    // },
-
     tasks(item) {
       return item.tasks.length > 0 ? item.tasks.length : 'N/A';
     },
@@ -231,11 +213,6 @@ export default {
 ::v-deep th {
   height: auto !important;
   padding-top: 8px !important;
-  /*padding: 8px 8px 0 !important;*/
   vertical-align: top !important;
 }
-
-/*::v-deep td {*/
-/*  padding: 0 8px !important;*/
-/*}*/
 </style>

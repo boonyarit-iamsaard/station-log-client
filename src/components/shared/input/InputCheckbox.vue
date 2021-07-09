@@ -3,9 +3,11 @@
     <input-label :label="label" />
 
     <v-checkbox
+      :disabled="disabled"
       :hint="hint"
       :persistent-hint="!!hint"
       :rules="rules"
+      @change="$emit('change')"
       class="mt-0 pt-0"
       v-model="model"
     />
@@ -22,6 +24,10 @@ export default {
   },
 
   props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     hint: {
       type: String,
       default: '',

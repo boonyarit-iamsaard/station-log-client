@@ -3,6 +3,7 @@
     <input-label :label="label" />
 
     <v-select
+      :disabled="disabled"
       :hint="hint"
       :items="items"
       :persistent-hint="!!hint"
@@ -27,6 +28,10 @@ export default {
   },
 
   props: {
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
     hint: {
       type: String,
       default: '',

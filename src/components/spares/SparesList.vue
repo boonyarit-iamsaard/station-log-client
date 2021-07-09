@@ -31,7 +31,10 @@ export default {
       try {
         const spares = await this.fetchSpares();
 
-        if (!spares) return;
+        if (!spares) {
+          this.setShouldLoading(false);
+          return;
+        }
 
         this.setShouldLoading(false);
       } catch (error) {

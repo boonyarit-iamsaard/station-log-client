@@ -58,10 +58,10 @@ export default {
           path: '/spares',
         },
         {
-          title: 'Customer Handling',
+          title: 'Cabin Disinfection',
           icon: 'mdi-airplane',
-          src: require('@/assets/images/third-party.jpg'),
-          path: '/handling',
+          src: require('@/assets/images/disinfection.jpg'),
+          path: '/disinfection',
         },
       ],
     };

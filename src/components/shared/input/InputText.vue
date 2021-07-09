@@ -4,6 +4,7 @@
 
     <v-text-field
       :class="upperCase ? 'uppercase' : null"
+      :counter="counter"
       :disabled="disabled"
       :hint="hint"
       :persistent-hint="hint !== ''"
@@ -34,6 +35,10 @@ export default {
   },
 
   props: {
+    counter: {
+      type: Number,
+      default: undefined,
+    },
     disabled: {
       type: Boolean,
       default: false,

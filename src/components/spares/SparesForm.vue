@@ -1,7 +1,7 @@
 <template>
   <v-container class="pa-0" style="max-width: 959px">
     <v-form ref="form" @submit.prevent="submitForm">
-      <ConfirmDialog
+      <confirm-dialog
         :subtitle="'This record would be deleted!'"
         :title="'Do you want to proceed?'"
         @action="handleDeleteSpare"
@@ -12,107 +12,58 @@
         <span class="title">Spare Movement Form</span>
       </div>
 
-      <v-card class="shadow">
+      <v-card class="mb-4 shadow">
+        <flight-form-title-wrapper title="Flight Details" />
+
         <v-card-text>
-          <!-- Flight details -->
-          <v-row class="mt-0">
-            <v-col cols="12">
-              <span class="subtitle-1">Flight Details</span>
-
-              <v-divider class="mb-4"></v-divider>
-            </v-col>
-
+          <v-row>
             <v-col cols="12" sm="4">
-              <v-dialog
-                ref="dialog"
-                v-model="modal"
-                :return-value.sync="formData.date"
-                persistent
-                width="290px"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    :value="formData.date | formatDate"
-                    append-icon="mdi-calendar"
-                    dense
-                    label="Date"
-                    outlined
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                  />
-                </template>
-
-                <v-date-picker v-model="formData.date" scrollable>
-                  <v-spacer />
-
-                  <v-btn text color="primary" @click="modal = false">
-                    Cancel
-                  </v-btn>
-
-                  <v-btn
-                    text
-                    color="primary"
-                    @click="$refs.dialog.save(formData.date)"
-                  >
-                    OK
-                  </v-btn>
-                </v-date-picker>
-              </v-dialog>
+              <input-date v-model="formData.date" />
             </v-col>
 
             <v-col cols="12" sm="2">
-              <v-select
-                dense
-                label="Airline"
-                outlined
-                v-model="formData.airline"
+              <input-select
                 :items="airlines"
                 @change="handleAirlineChange"
+                label="Airline"
+                v-model="formData.airline"
               />
             </v-col>
 
             <v-col cols="12" sm="3">
-              <v-text-field
-                class="uppercase"
-                dense
-                label="Flt No."
-                outlined
-                v-model="formData.fltno"
+              <input-text
                 :rules="formRules.fltno"
-                @blur="formData.fltno = formData.fltno.toUpperCase()"
+                label="Flt No."
+                upper-case
+                v-model="formData.fltno"
               />
             </v-col>
 
             <v-col cols="12" sm="3">
-              <v-text-field
+              <input-text
                 :prefix="formData.prefix"
                 :rules="formRules.tail"
-                @blur="formData.tail = formData.tail.toUpperCase()"
-                class="uppercase"
-                dense
-                label="Reg."
-                outlined
+                label="A/C Reg."
+                upper-case
                 v-model="formData.tail"
-              ></v-text-field>
+              />
             </v-col>
           </v-row>
+        </v-card-text>
+      </v-card>
 
-          <!-- Spare details -->
+      <v-card class="mt-4 shadow">
+        <flight-form-title-wrapper title="Spare Details" />
+
+        <v-card-text>
           <v-row>
-            <v-col cols="12">
-              <span class="subtitle-1">Spare Details</span>
-
-              <v-divider class="mb-4" />
-            </v-col>
-
             <v-col cols="12">
               <v-radio-group
                 :row="$vuetify.breakpoint.smAndUp"
                 @change="handleSpareTypeChange"
                 class="mt-0"
                 dense
-                label="Type"
+                label="Spare type"
                 v-model="formData.type"
               >
                 <v-radio
@@ -126,286 +77,210 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-              <v-text-field
+              <input-text
                 :rules="formRules.part"
-                @blur="formData.part = formData.part.toUpperCase()"
-                class="uppercase"
-                dense
                 label="Part No."
-                outlined
+                upper-case
                 v-model="formData.part"
               />
             </v-col>
 
             <v-col cols="12" sm="6">
-              <v-text-field
+              <input-text
                 :rules="formRules.desc"
-                @blur="formData.desc = formData.desc.toUpperCase()"
-                class="uppercase"
-                dense
                 label="Description"
-                outlined
+                upper-case
                 v-model="formData.desc"
               />
             </v-col>
 
             <v-col cols="12" sm="4">
-              <v-text-field
+              <input-text
                 :rules="formRules.serial"
-                @blur="formData.serial = formData.serial.toUpperCase()"
-                class="uppercase"
-                dense
                 label="Serial No."
-                outlined
+                upper-case
                 v-model="formData.serial"
               />
             </v-col>
 
             <v-col cols="12" sm="4">
-              <v-text-field
+              <input-text
+                :counter="10"
                 :rules="formRules.grn"
-                @blur="formData.grn = formData.grn.toUpperCase()"
-                class="uppercase"
-                counter="10"
-                dense
                 label="GRN."
-                outlined
+                upper-case
                 v-model="formData.grn"
               />
             </v-col>
 
             <v-col cols="12" sm="4">
-              <v-text-field
+              <input-text
                 :rules="formRules.qty"
-                dense
                 label="QTY."
-                outlined
-                type="number"
+                number
                 v-model="formData.qty"
               />
             </v-col>
 
             <v-col cols="12" sm="4">
-              <v-select
+              <input-select
                 :items="stores"
-                dense
                 label="Store"
-                outlined
                 v-model="formData.store"
               />
             </v-col>
 
             <v-col cols="12" sm="4">
-              <v-select
+              <input-select
                 :items="staffs"
-                :rules="formRules.usedBy"
-                dense
                 label="Used By"
-                outlined
                 v-model="formData.usedBy"
               />
             </v-col>
           </v-row>
+        </v-card-text>
+      </v-card>
 
-          <!-- Spare actions -->
+      <v-card class="mt-4 shadow">
+        <flight-form-title-wrapper title="Actions" />
+
+        <v-card-text>
           <v-row>
-            <v-col cols="12">
-              <span class="subtitle-1">Spare Actions</span>
-
-              <v-divider class="mb-4"></v-divider>
-            </v-col>
-
-            <!-- Issued -->
-            <v-col cols="12" :sm="formData.issued.status ? 3 : 12">
-              <v-checkbox
-                :disabled="formData.returned.status || !isAdmin"
+            <v-col cols="12" :sm="issued ? 3 : 12">
+              <input-checkbox
+                :disabled="returned || !admin"
                 @change="handleSpareActionChange('issued')"
-                dense
                 label="Issued?"
                 v-model="formData.issued.status"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.issued.status">
-              <v-text-field
-                :disabled="formData.returned.status || !isAdmin"
+            <v-col cols="12" sm="3" v-if="issued">
+              <input-text
+                :disabled="returned || !admin"
                 :rules="formRules.issuedNumber"
-                @blur="
-                  formData.issued.number = formData.issued.number.toUpperCase()
-                "
-                class="uppercase"
-                dense
                 label="IS No."
-                outlined
+                upper-case
                 v-model="formData.issued.number"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.issued.status">
-              <v-select
-                :disabled="formData.returned.status || !isAdmin"
+            <v-col cols="12" sm="3" v-if="issued">
+              <input-select
+                :disabled="returned || !admin"
                 :items="staffs"
                 :rules="formRules.issuedBy"
-                dense
                 label="By"
-                outlined
                 v-model="formData.issued.by"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.issued.status">
-              <DatePicker
-                ref="issuedDate"
-                :disabled="formData.returned.status"
-                :provided-date="
-                  formData.issued.date
-                    ? formData.issued.date
-                    : new Date().toISOString().substr(0, 10)
-                "
-              />
+            <v-col cols="12" sm="3" v-if="issued">
+              <input-date :disabled="returned" v-model="issuedDate" />
             </v-col>
 
             <!-- Returned -->
             <v-col
-              :sm="formData.returned.status ? 3 : 12"
+              :sm="returned ? 3 : 12"
               cols="12"
-              v-if="formData.type === 'Return' && formData.issued.status"
+              v-if="returnable && issued"
             >
-              <v-checkbox
-                :disabled="formData.transferred.status || !isAdmin"
+              <input-checkbox
+                :disabled="transferred || !admin"
                 @change="handleSpareActionChange('returned')"
-                dense
                 label="Returned?"
                 v-model="formData.returned.status"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.returned.status">
-              <v-text-field
-                :disabled="formData.transferred.status || !isAdmin"
+            <v-col cols="12" sm="3" v-if="returned">
+              <input-text
+                :disabled="transferred || !admin"
                 :rules="formRules.returnedNumber"
-                @blur="
-                  formData.returned.number = formData.returned.number.toUpperCase()
-                "
-                class="uppercase"
-                dense
                 label="IR No."
-                outlined
+                upper-case
                 v-model="formData.returned.number"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.returned.status">
-              <v-select
-                :disabled="formData.transferred.status || !isAdmin"
+            <v-col cols="12" sm="3" v-if="returned">
+              <input-select
+                :disabled="transferred || !admin"
                 :items="staffs"
                 :rules="formRules.returnedBy"
-                dense
                 label="By"
-                outlined
                 v-model="formData.returned.by"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.returned.status">
-              <DatePicker
-                :disabled="formData.transferred.status"
-                ref="returnedDate"
+            <v-col cols="12" sm="3" v-if="returned">
+              <input-date
+                :disabled="transferred || !admin"
+                v-model="returnedDate"
               />
             </v-col>
 
             <!-- Transferred -->
             <v-col
-              :sm="formData.transferred.status ? 3 : 12"
+              :sm="transferred ? 3 : 12"
               cols="12"
-              v-if="
-                formData.type === 'Return' &&
-                formData.issued.status &&
-                formData.returned.status
-              "
+              v-if="returnable && issued && returned"
             >
-              <v-checkbox
-                :disabled="!isAdmin"
+              <input-checkbox
+                :disabled="!admin"
                 @change="handleSpareActionChange('transferred')"
-                dense
                 label="Transferred?"
                 v-model="formData.transferred.status"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.transferred.status">
-              <v-text-field
-                :disabled="!isAdmin"
+            <v-col cols="12" sm="3" v-if="transferred">
+              <input-text
+                :disabled="!admin"
                 :rules="formRules.transferredNumber"
-                @blur="
-                  formData.transferred.number = formData.transferred.number.toUpperCase()
-                "
-                class="uppercase"
-                dense
                 label="TX No."
-                outlined
+                upper-case
                 v-model="formData.transferred.number"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.transferred.status">
-              <v-select
-                :disabled="!isAdmin"
+            <v-col cols="12" sm="3" v-if="transferred">
+              <input-select
+                :disabled="!admin"
                 :items="staffs"
                 :rules="formRules.transferredBy"
-                dense
                 label="By"
-                outlined
                 v-model="formData.transferred.by"
               />
             </v-col>
 
-            <v-col cols="12" sm="3" v-if="formData.transferred.status">
-              <DatePicker ref="transferredDate" />
+            <v-col cols="12" sm="3" v-if="transferred">
+              <input-date v-model="transferredDate" />
             </v-col>
           </v-row>
         </v-card-text>
 
-        <v-card-actions class="px-4 pt-0 pb-4">
-          <v-row class="ma-0">
-            <v-col
-              cols="12"
-              sm="2"
-              :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0'"
+        <v-card-actions class="pb-4 pt-0 px-4">
+          <div>
+            <v-btn
+              :disabled="!admin || !$route.params.id"
+              @click="$refs.confirmDeleteDialog.dialog = true"
+              class="shadow"
+              color="error"
             >
-              <v-btn block color="secondary" class="shadow" @click="resetForm">
-                <v-icon left>mdi-close</v-icon>
-                Cancel
-              </v-btn>
-            </v-col>
+              Delete
+            </v-btn>
+          </div>
 
-            <v-spacer v-if="!isMobile" />
+          <v-spacer />
 
-            <v-col
-              cols="12"
-              sm="2"
-              :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0 mr-4'"
-            >
-              <v-btn
-                block
-                class="shadow"
-                color="error"
-                :disabled="!isAdmin"
-                @click="$refs.confirmDeleteDialog.dialog = true"
-                v-if="$route.params.id"
-              >
-                <v-icon left>mdi-delete</v-icon>
-                Delete
-              </v-btn>
-            </v-col>
+          <div>
+            <v-btn @click="resetForm" class="shadow mr-4" color="secondary">
+              Cancel
+            </v-btn>
 
-            <v-col cols="12" sm="2" class="pa-0">
-              <v-btn block class="shadow" color="primary" type="submit">
-                <v-icon left>mdi-check</v-icon>
-                Save
-              </v-btn>
-            </v-col>
-          </v-row>
+            <v-btn class="shadow" color="primary" type="submit">Save</v-btn>
+          </div>
         </v-card-actions>
       </v-card>
     </v-form>
@@ -418,23 +293,47 @@ import { format } from 'date-fns';
 import { mapActions, mapGetters } from 'vuex';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import DatePicker from '@/components/shared/DatePicker';
+import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
+import InputDate from '@/components/shared/input/InputDate';
+import InputSelect from '@/components/shared/input/InputSelect';
+import InputText from '@/components/shared/input/InputText';
+import InputCheckbox from '@/components/shared/input/InputCheckbox';
+
 import { spareData } from '@/components/spares/default-values';
 import { staffs } from '@/utils/staffs';
+import { sparesFormRules } from '@/components/spares/spares-form-rules';
+
+const currentDate = new Date().toISOString().substr(0, 10);
 
 export default {
   name: 'SparesForm',
 
-  components: { DatePicker, ConfirmDialog },
+  components: {
+    'confirm-dialog': ConfirmDialog,
+    'flight-form-title-wrapper': FlightFormTitleWrapper,
+    'input-checkbox': InputCheckbox,
+    'input-date': InputDate,
+    'input-select': InputSelect,
+    'input-text': InputText,
+  },
 
   data() {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
+      defaultSpareAction: {
+        by: '',
+        date: currentDate,
+        number: '',
+        status: false,
+      },
       formData: cloneDeep(spareData),
       formRules: {},
+      issuedDate: new Date().toISOString().substr(0, 10),
       modal: false,
+      returnedDate: new Date().toISOString().substr(0, 10),
       staffs: staffs(),
       stores: ['BKK', 'BKK306', 'BKKAHK'],
+      transferredDate: new Date().toISOString().substr(0, 10),
       types: ['Consumable', 'Fluid', 'Return'],
     };
   },
@@ -451,28 +350,7 @@ export default {
     }),
 
     submitForm() {
-      this.formRules = {
-        fltno: [v => !!v || 'Flt No. is required.'],
-        tail: [v => !!v || 'A/C Reg. is required.'],
-        part: [v => !!v || 'Part No. is required.'],
-        desc: [v => !!v || 'Description is required.'],
-        serial: [v => !!v || 'Serial No. is required.'],
-        grn: [
-          v => !!v || 'GRN is required.',
-          v => v.length >= 10 || 'GRN must contains 10 characters',
-        ],
-        qty: [
-          v => !!v || 'QTY is required.',
-          v => v >= 1 || 'QTY must not equal 0',
-        ],
-        usedBy: [v => !!v || 'Used By is required.'],
-        issuedNumber: [v => !!v || 'IS No. is required.'],
-        issuedBy: [v => !!v || 'Required.'],
-        returnedNumber: [v => !!v || 'IR No. is required.'],
-        returnedBy: [v => !!v || 'Required.'],
-        transferredNumber: [v => !!v || 'TX No. is required.'],
-        transferredBy: [v => !!v || 'Required.'],
-      };
+      this.formRules = { ...sparesFormRules };
 
       this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
@@ -481,26 +359,16 @@ export default {
           this.formData.acreg = this.formData.prefix.concat(this.formData.tail);
           this.formData.status = this.setSpareStatus();
 
-          if (this.formData.issued.status) {
-            this.formData.issued.date = this.$refs.issuedDate.selectedDate;
-          }
-
-          if (this.formData.returned.status) {
-            this.formData.returned.date = this.$refs.returnedDate.selectedDate;
-          }
-
-          if (this.formData.transferred.status) {
-            this.formData.transferred.date = this.$refs.transferredDate.selectedDate;
-          }
-
-          const submitData = this.formData;
+          this.formData.issued.date = this.issuedDate;
+          this.formData.returned.date = this.returnedDate;
+          this.formData.transferred.date = this.transferredDate;
 
           let spare;
           try {
             if (this.$route.params.id) {
-              spare = await this.updateSpare(submitData);
+              spare = await this.updateSpare(this.formData);
             } else {
-              spare = await this.addSpare(submitData);
+              spare = await this.addSpare(this.formData);
             }
           } catch (error) {
             this.setShouldLoading(false);
@@ -552,9 +420,25 @@ export default {
       try {
         const spare = await this.fetchSpareByID(id);
 
-        if (!spare) return;
+        if (!spare) {
+          this.setShouldLoading(false);
+          return;
+        }
 
         this.formData = cloneDeep(spare);
+
+        if (this.formData.issued.date) {
+          this.issuedDate = this.formData.issued.date;
+        }
+
+        if (this.formData.returned.date) {
+          this.returnedDate = this.formData.returned.date;
+        }
+
+        if (this.formData.transferred.date) {
+          this.transferredDate = this.formData.transferred.date;
+        }
+
         this.setShouldLoading(false);
       } catch (error) {
         this.setShouldLoading(false);
@@ -579,50 +463,81 @@ export default {
 
     handleSpareActionChange(name) {
       if (!this.formData[name].status) {
-        delete this.formData[name].date;
-        this.formData[name].number = '';
-        this.formData[name].by = '';
+        this.formData[name] = {
+          ...this.formData[name],
+          ...this.defaultSpareAction,
+        };
+      }
+
+      if (name === 'issued') {
+        this.issuedDate = currentDate;
+      }
+
+      if (name === 'returned') {
+        this.returnedDate = currentDate;
+      }
+
+      if (name === 'transferred') {
+        this.transferredDate = currentDate;
       }
     },
 
     handleSpareTypeChange() {
-      if (this.formData.type !== 'Return') {
-        this.formData.returned = { status: false, number: '', by: '' };
-        this.formData.transferred = { status: false, number: '', by: '' };
+      if (!this.returnable) {
+        this.returnedDate = currentDate;
+        this.transferredDate = currentDate;
+
+        this.formData.returned = {
+          ...this.formData.returned,
+          ...this.defaultSpareAction,
+        };
+        this.formData.transferred = {
+          ...this.formData.transferred,
+          ...this.defaultSpareAction,
+        };
       }
     },
 
     setSpareStatus() {
-      if (this.formData.type === 'Return') {
-        if (this.formData.transferred.status) {
-          return 'Transferred';
-        } else if (
-          this.formData.returned.status &&
-          !this.formData.transferred.status
-        ) {
-          return 'Returned';
-        } else if (
-          this.formData.issued.status &&
-          !this.formData.returned.status &&
-          !this.formData.transferred.status
-        ) {
-          return 'Issued';
-        } else return 'Pending';
-      } else {
-        if (this.formData.issued.status) {
-          return 'Issued';
-        } else return 'Pending';
+      if (this.returnable) {
+        if (this.transferred) return 'Transferred';
+
+        if (this.returned && !this.transferred) return 'Returned';
+
+        if (this.issued && !this.returned && !this.transferred) return 'Issued';
+
+        return 'Pending';
       }
+
+      if (this.issued) return 'Issued';
+
+      return 'Pending';
     },
   },
 
   computed: {
     ...mapGetters({
-      isAdmin: 'auth/getIsAdmin',
+      admin: 'auth/getIsAdmin',
     }),
+
+    issued() {
+      return this.formData.issued.status;
+    },
 
     isMobile() {
       return this.$vuetify.breakpoint.xs;
+    },
+
+    returnable() {
+      return this.formData.type === 'Return';
+    },
+
+    returned() {
+      return this.formData.returned.status;
+    },
+
+    transferred() {
+      return this.formData.transferred.status;
     },
   },
 
@@ -662,6 +577,6 @@ export default {
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 7px 8px;
+  padding: 0 8px;
 }
 </style>

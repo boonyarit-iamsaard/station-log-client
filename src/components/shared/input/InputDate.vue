@@ -38,11 +38,14 @@
 
 <script>
 import { format } from 'date-fns';
+
 import InputLabel from '@/components/shared/input/InputLabel';
 
 export default {
   name: 'InputDate',
+
   components: { InputLabel },
+
   props: {
     disabled: {
       type: Boolean,

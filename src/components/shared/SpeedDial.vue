@@ -46,6 +46,8 @@ export default {
           return '/spares/create';
         case '/flights':
           return '/flights/create';
+        case '/disinfection':
+          return '/disinfection/create';
         case '/handling':
           return '/handling/create';
         default:
@@ -56,9 +58,11 @@ export default {
     showSpeedDial() {
       const spares = this.$route.path === '/spares' && this.isMobile;
       const flights = this.$route.path === '/flights' && this.isMobile;
+      const disinfection =
+        this.$route.path === '/disinfection' && this.isMobile;
       const handling = this.$route.path === '/handling' && this.isMobile;
 
-      return spares || flights || handling;
+      return spares || flights || handling || disinfection;
     },
   },
 };

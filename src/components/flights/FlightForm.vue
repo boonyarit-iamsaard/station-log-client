@@ -138,7 +138,7 @@
         <v-card-actions class="pb-4 pt-0 px-4">
           <div>
             <v-btn
-              :disabled="!admin"
+              :disabled="!admin || !$route.params.id"
               @click="$refs.confirmDialog.dialog = true"
               class="shadow"
               color="error"
@@ -354,6 +354,8 @@ export default {
 
       this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
+          this.setShouldLoading(true);
+
           this.flight.prefix = this.prefix;
           this.flight.acreg = this.prefix.concat(this.flight.tail);
 
@@ -372,7 +374,6 @@ export default {
           }
 
           if (!flight) {
-            console.log('No data returned.');
             this.setShouldLoading(false);
             return;
           }

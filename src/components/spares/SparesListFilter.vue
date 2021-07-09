@@ -32,76 +32,66 @@
     </v-col> -->
 
     <v-col cols="12" md="2">
-      <v-select
+      <input-select
         :items="airlines"
         @change="onUpdateFiltersHandler"
-        dense
         label="Airline"
-        outlined
         v-model="filters.airline"
       />
     </v-col>
 
     <v-col cols="12" md="2">
-      <v-select
+      <input-select
         :items="types"
         @change="onUpdateFiltersHandler"
-        dense
         label="Type"
-        outlined
         v-model="filters.type"
       />
     </v-col>
 
     <v-col cols="12" md="2">
-      <v-select
+      <input-select
         :items="stores"
         @change="onUpdateFiltersHandler"
-        dense
         label="Store"
-        outlined
         v-model="filters.store"
       />
     </v-col>
 
     <v-col cols="12" md="2">
-      <v-select
+      <input-select
         :items="statuses"
         @change="onUpdateFiltersHandler"
-        dense
         label="Status"
-        outlined
         v-model="filters.status"
       />
     </v-col>
 
-    <v-col cols="2">
+    <v-col class="d-flex" cols="4">
       <v-btn
-        block
-        class="shadow"
-        color="secondary"
         @click="onResetFiltersHandler"
+        class="mr-4 mt-6"
+        color="info"
+        outlined
       >
-        <v-icon left>mdi-close</v-icon>
-        RESET
+        Reset filter
       </v-btn>
-    </v-col>
 
-    <v-col cols="2">
-      <v-btn block class="shadow" color="primary" link to="/spares/create">
-        <v-icon left>mdi-plus</v-icon>
-        ADD
+      <v-spacer />
+
+      <v-btn class="mt-6 shadow" color="primary" link to="/spares/create">
+        Add New Spare
       </v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script>
-// import { format } from 'date-fns';
+import InputSelect from '@/components/shared/input/InputSelect';
 
 export default {
   name: 'SparesListFilter',
-
+  components: { InputSelect },
   data() {
     return {
       filters: {
