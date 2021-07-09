@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 
 import auth from '@/store/modules/auth';
+import disinfection from '@/store/modules/disinfection';
 import error from '@/store/modules/error';
 import flight from '@/store/modules/flight';
 import handling from '@/store/modules/handling';
@@ -36,6 +37,7 @@ export default new Vuex.Store({
 
   modules: {
     auth,
+    disinfection,
     error,
     flight,
     handling,

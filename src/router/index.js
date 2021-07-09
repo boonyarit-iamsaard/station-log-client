@@ -28,6 +28,30 @@ const routes = [
     },
   },
   {
+    path: '/disinfection',
+    component: () => import('@/views/DisinfectionPage'),
+    children: [
+      {
+        path: '',
+        name: 'disinfection',
+        component: () => import('@/components/disinfection/DisinfectionList'),
+      },
+      {
+        path: 'create',
+        name: 'disinfection-create',
+        component: () => import('@/components/disinfection/DisinfectionForm'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'disinfection-edit',
+        component: () => import('@/components/disinfection/DisinfectionForm'),
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/flights',
     component: () => import('@/views/FlightsPage'),
     children: [
