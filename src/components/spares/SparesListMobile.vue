@@ -4,8 +4,8 @@
       :items-per-page.sync="itemsPerPage"
       :items="items"
       :page.sync="page"
-      :sort-by="['date']"
-      :sort-desc="[true]"
+      :sort-by="['date', 'createdAt']"
+      :sort-desc="[true, true]"
       class="mb-14"
       hide-default-footer
       v-if="items.length > 0"

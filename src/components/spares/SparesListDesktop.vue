@@ -7,8 +7,8 @@
     <v-data-table
       :headers="headers"
       :items="items"
-      :sort-by="['date', 'airline']"
-      :sort-desc="[true, false]"
+      :sort-by="['date', 'createdAt']"
+      :sort-desc="[true, true]"
       class="shadow"
     >
       <template v-slot:top>
