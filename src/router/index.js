@@ -10,7 +10,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
-    name: 'HomePage',
+    name: 'home',
     component: Home,
     meta: {
       requiresAuth: true,
@@ -28,8 +28,49 @@ const routes = [
     },
   },
   {
+    path: '/disinfection',
+    component: () => import('@/views/DisinfectionPage'),
+    children: [
+      {
+        path: '',
+        name: 'disinfection',
+        component: () => import('@/components/disinfection/DisinfectionList'),
+      },
+      {
+        path: 'create',
+        name: 'disinfection-create',
+        component: () => import('@/components/disinfection/DisinfectionForm'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'disinfection-edit',
+        component: () => import('@/components/disinfection/DisinfectionForm'),
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/flights',
     component: () => import('@/views/FlightsPage'),
+    children: [
+      {
+        path: '',
+        name: 'flight',
+        component: () => import('@/components/flights/FlightsList'),
+      },
+      {
+        path: 'create',
+        name: 'flight-create',
+        component: () => import('@/components/flights/FlightForm'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'flight-edit',
+        component: () => import('@/components/flights/FlightForm'),
+      },
+    ],
     meta: {
       requiresAuth: true,
     },
@@ -45,12 +86,12 @@ const routes = [
       },
       {
         path: 'create',
-        name: 'sparesCreate',
+        name: 'spares-create',
         component: () => import('@/components/spares/SparesForm'),
       },
       {
         path: 'edit/:id',
-        name: 'sparesEdit',
+        name: 'spares-edit',
         component: () => import('@/components/spares/SparesForm'),
       },
     ],
@@ -90,10 +131,15 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (store.getters.getIsAuthenticated) {
+    if (store.getters['auth/getIsAuthenticated']) {
       next();
     } else {
-      next('/login');
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath,
+        },
+      });
     }
   } else {
     next();

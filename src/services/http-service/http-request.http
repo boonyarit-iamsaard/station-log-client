@@ -1,0 +1,48 @@
+DELETE http://localhost:5000/api/disinfection/60e70b6c11bba31f78b67f9d
+Content-Type: application/json
+
+###
+PUT http://localhost:5000/api/disinfection/60e70a9211bba31f78b67f9c
+Content-Type: application/json
+
+{
+  "date": "2021-07-07",
+  "airline": "CX",
+  "fltno": "653/654",
+  "prefix": "B-",
+  "tail": "LRD",
+  "acreg": "B-LRD",
+  "mechanic1": "Boonyarit",
+  "mechanic2": "Totsapon",
+  "startAt": "14:00",
+  "endAt": "14:30",
+  "chemicalUsage": 2
+}
+
+###
+GET http://localhost:5000/api/disinfection/60e70a9211bba31f78b67f9c
+Accept: application/json
+
+###
+POST http://localhost:5000/api/disinfection
+Content-Type: application/json
+
+{
+  "date": "2021-07-07",
+  "airline": "KE",
+  "fltno": "651",
+  "prefix": "HL",
+  "tail": "7002",
+  "acreg": "HL7002",
+  "mechanic1": "Boonyarit",
+  "mechanic2": "Totsapon",
+  "startAt": "22:30",
+  "endAt": "23:00",
+  "chemicalUsage": 2
+}
+
+###
+GET http://localhost:5000/api/disinfection
+Accept: application/json
+
+###

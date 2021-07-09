@@ -1,34 +1,38 @@
 <template>
-  <v-app-bar app color="white" flat>
+  <v-app-bar app class="grey lighten-3" flat>
     <v-app-bar-nav-icon
-      class="hidden-lg-and-up"
-      v-if="user"
       @click="$emit('open')"
-    ></v-app-bar-nav-icon>
+      class="hidden-xl-only"
+      v-if="user"
+    />
 
-    <v-toolbar-items class="d-flex align-center">
+    <div class="align-center d-flex grey lighten-3" v-if="!extraLargeScreen">
       <v-img
+        :src="require('@/assets/images/logo.png')"
         alt="Company Logo"
-        class="shrink"
+        class="shrink mr-4"
         contain
-        src="../../assets/logo.png"
+        height="32"
         transition="scale-transition"
-        height="30"
-        width="30"
+        width="32"
       />
-    </v-toolbar-items>
 
-    <v-toolbar-title class="ml-4"> {{ title }} </v-toolbar-title>
+      <div class="d-flex flex-column">
+        <span class="title">Station Log</span>
 
-    <v-spacer></v-spacer>
+        <span style="font-size: 10px">Bangkok Engineering</span>
+      </div>
+    </div>
+
+    <v-spacer />
 
     <div class="d-flex align-center" v-if="user">
-      <v-btn rounded text v-if="!isMobile">
+      <v-btn text v-if="!isMobile">
         <v-icon left> mdi-account-circle </v-icon>
         {{ name }}
       </v-btn>
 
-      <v-btn rounded text @click="logout">
+      <v-btn text @click="logout">
         <v-icon left>mdi-logout-variant</v-icon>
         Logout
       </v-btn>
@@ -37,6 +41,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
   name: 'AppHeader',
 
@@ -48,47 +54,27 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      logoutUser: 'auth/logout',
+    }),
+
     logout() {
-      this.$store
-        .dispatch('logout')
-        .then(() => this.$router.push('/login'))
-        .catch(err => console.log(err));
+      this.logoutUser();
+      this.$router.push('/login');
     },
   },
 
   computed: {
-    user() {
-      return this.$store.getters['getUser'];
+    ...mapGetters({
+      user: 'auth/getUser',
+    }),
+
+    extraLargeScreen() {
+      return this.$vuetify.breakpoint.xl;
     },
 
     name() {
-      if (this.user) {
-        return `${this.user.firstname} ${this.user.lastname}`;
-      }
-      return null;
-    },
-
-    title() {
-      switch (this.$route.path) {
-        case '/flights':
-          return 'Flights Movement';
-        case '/spares':
-          return 'Spares Movement';
-        case '/handling':
-          return '3rd Party Handling Record';
-        case '/handling/create':
-          return '3rd Party Handling Form';
-        case '/spares/create':
-          return 'Spares Movement Form';
-        case `/spares/edit/${this.$route.params.id}`:
-          return 'Spares Movement Form';
-        case `/handling/edit/${this.$route.params.id}`:
-          return '3rd Party Handling Form';
-        default:
-          return this.$vuetify.breakpoint.smAndUp
-            ? 'Bangkok Engineering - Station Log'
-            : 'Station Log';
-      }
+      return this.user ? `${this.user.firstname} ${this.user.lastname}` : null;
     },
   },
 };

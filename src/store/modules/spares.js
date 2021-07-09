@@ -4,13 +4,13 @@ import {
   getSpares,
   getSpareByID,
   updateSpare,
-} from '@/api/spares-api';
+} from '@/services/http-service/spares-http';
 
 export default {
   namespaced: true,
+
   state() {
     return {
-      currentSpare: {},
       filters: {
         airline: 'ALL',
         status: 'ALL',
@@ -20,10 +20,8 @@ export default {
       spares: [],
     };
   },
+
   getters: {
-    getCurrentSpare(state) {
-      return state.currentSpare;
-    },
     getFilters(state) {
       return state.filters;
     },
@@ -31,6 +29,7 @@ export default {
       return state.spares;
     },
   },
+
   actions: {
     setFilters(context, payload) {
       context.commit('SET_FILTERS', payload);
@@ -39,48 +38,58 @@ export default {
     async addSpare(context, payload) {
       try {
         const response = await createSpare(payload);
+        const { spare } = response.data;
 
-        context.commit('ADD_SPARE', response.data.spare);
+        context.commit('ADD_SPARE', spare);
+
+        return spare;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not add spare, please try again later.'
+        );
       }
     },
 
     async fetchSpares(context) {
       try {
         const response = await getSpares();
+        const { spares } = response.data;
 
-        context.commit('SET_SPARES', response.data.spares);
+        context.commit('SET_SPARES', spares);
+
+        return spares;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not load spares, please try again later.'
+        );
       }
     },
 
     async fetchSpareByID(context, payload) {
       try {
         const response = await getSpareByID(payload);
+        const { spare } = response.data;
 
-        context.commit('SET_CURRENT_SPARE', response.data.spare);
+        return spare;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not find spare, please try again later.'
+        );
       }
     },
 
     async updateSpare(context, payload) {
       try {
         const response = await updateSpare(payload);
+        const { spare } = response.data;
 
-        context.commit('UPDATE_SPARE', response.data.spare);
+        context.commit('UPDATE_SPARE', spare);
+
+        return spare;
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not update spare, please try again later.'
+        );
       }
     },
 
@@ -90,23 +99,20 @@ export default {
 
         context.commit('DELETE_SPARE', payload);
       } catch (error) {
-        if (error.response) {
-          console.log(error.response.data.message);
-        } else console.log(error);
+        throw new Error(
+          error.message || 'Could not delete spare, please try again later.'
+        );
       }
     },
   },
+
   mutations: {
     ADD_SPARE(state, payload) {
-      state.spares.push(payload);
+      state.spares = state.spares.concat(payload);
     },
 
     DELETE_SPARE(state, payload) {
       state.spares = state.spares.filter(spare => spare._id !== payload);
-    },
-
-    SET_CURRENT_SPARE(state, payload) {
-      state.currentSpare = payload;
     },
 
     SET_FILTERS(state, payload) {

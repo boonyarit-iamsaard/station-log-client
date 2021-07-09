@@ -1,41 +1,46 @@
 <template>
   <div>
     <v-data-iterator
-      class="mb-14"
+      :items-per-page.sync="itemsPerPage"
       :items="items"
-      :items-per-page="5"
+      :page.sync="page"
       :sort-by="['date']"
       :sort-desc="[true]"
+      class="mb-14"
+      hide-default-footer
       v-if="items.length > 0"
     >
       <template v-slot:default="{ items }">
         <v-card
-          class="mb-4"
-          link
-          :flat="$vuetify.breakpoint.smAndDown"
-          :outlined="$vuetify.breakpoint.mdAndUp"
+          :key="item._id"
           :to="{
-            name: 'sparesEdit',
+            name: 'spares-edit',
             params: {
               id: item._id,
             },
           }"
+          class="mb-4 shadow"
+          link
           v-for="item in items"
-          :key="item._id"
         >
-          <v-card-title>
-            <span class="subtitle-1">{{ item.part }} / {{ item.desc }}</span>
+          <v-card-title class="d-flex justify-space-between">
+            <div>
+              <v-avatar
+                :color="setAvatarColor(item.type)"
+                class="white--text mr-4"
+                size="32"
+              >
+                <span class="body-2">
+                  {{ item.type.substr(0, 1) }}
+                </span>
+              </v-avatar>
+              <span class="subtitle-1">{{ item.part }} / {{ item.desc }}</span>
+            </div>
+            <span class="caption">{{ setDateFormatHandler(item.date) }} </span>
           </v-card-title>
-
-          <v-divider></v-divider>
 
           <v-card-text>
             <v-row class="ma-0">
-              <v-col class="pa-0" cols="6" sm="3">
-                <span class="font-weight-bold">DATE: </span>
-                <span>{{ setDateFormatHandler(item.date) }} </span>
-              </v-col>
-
               <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">FLT: </span>
                 <span>{{ item.airline.concat(item.fltno) }}&nbsp;&nbsp;</span>
@@ -71,6 +76,15 @@
           </v-card-text>
         </v-card>
       </template>
+
+      <template v-slot:footer>
+        <v-pagination
+          :length="calculatePageLength"
+          :total-visible="5"
+          circle
+          v-model="page"
+        ></v-pagination>
+      </template>
     </v-data-iterator>
 
     <p class="text-center title" v-if="items.length === 0">No spares found.</p>
@@ -93,12 +107,35 @@ export default {
   data() {
     return {
       items: [],
+      itemsPerPage: 5,
+      itemsPerPageArray: [5, 10, 20],
+      page: 1,
     };
   },
 
   methods: {
     setDateFormatHandler(date) {
       return format(new Date(date), 'dd/MM/yy');
+    },
+
+    setAvatarColor(type) {
+      switch (type) {
+        case 'Consumable':
+          return 'primary';
+        case 'Return':
+          return 'error';
+        default:
+          return 'secondary';
+      }
+    },
+  },
+
+  computed: {
+    calculatePageLength() {
+      const defaultLength = 5;
+      const calculatedLength = this.items.length / defaultLength;
+
+      return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
     },
   },
 

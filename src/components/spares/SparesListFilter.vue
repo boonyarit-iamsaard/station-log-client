@@ -32,71 +32,66 @@
     </v-col> -->
 
     <v-col cols="12" md="2">
-      <v-select
-        outlined
-        dense
-        label="Airline"
-        v-model="filters.airline"
+      <input-select
         :items="airlines"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        label="Airline"
+        v-model="filters.airline"
+      />
     </v-col>
 
     <v-col cols="12" md="2">
-      <v-select
-        outlined
-        dense
-        label="Type"
-        v-model="filters.type"
+      <input-select
         :items="types"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        label="Type"
+        v-model="filters.type"
+      />
     </v-col>
 
     <v-col cols="12" md="2">
-      <v-select
-        outlined
-        dense
-        label="Store"
-        v-model="filters.store"
+      <input-select
         :items="stores"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        label="Store"
+        v-model="filters.store"
+      />
     </v-col>
 
     <v-col cols="12" md="2">
-      <v-select
-        outlined
-        dense
-        label="Status"
-        v-model="filters.status"
+      <input-select
         :items="statuses"
         @change="onUpdateFiltersHandler"
-      ></v-select>
+        label="Status"
+        v-model="filters.status"
+      />
     </v-col>
 
-    <v-col cols="2">
-      <v-btn block color="secondary" depressed @click="onResetFiltersHandler">
-        <v-icon left>mdi-close</v-icon>
-        RESET
+    <v-col class="d-flex" cols="4">
+      <v-btn
+        @click="onResetFiltersHandler"
+        class="mr-4 mt-6"
+        color="info"
+        outlined
+      >
+        Reset filter
       </v-btn>
-    </v-col>
 
-    <v-col cols="2">
-      <v-btn block color="primary" depressed link to="/spares/create">
-        <v-icon left>mdi-plus</v-icon>
-        ADD
+      <v-spacer />
+
+      <v-btn class="mt-6 shadow" color="primary" link to="/spares/create">
+        Add New Spare
       </v-btn>
     </v-col>
   </v-row>
 </template>
 
 <script>
-// import { format } from 'date-fns';
+import InputSelect from '@/components/shared/input/InputSelect';
 
 export default {
   name: 'SparesListFilter',
-
+  components: { InputSelect },
   data() {
     return {
       filters: {
@@ -108,7 +103,7 @@ export default {
       },
       airlines: ['ALL', 'ASL', 'CX', 'KA', 'LD', 'PR'],
       statuses: ['ALL', 'Pending', 'Issued', 'Returned', 'Transferred'],
-      stores: ['ALL', 'BKK', 'BKK306'],
+      stores: ['ALL', 'BKK', 'BKKAHK', 'BKK306'],
       types: ['ALL', 'Consumable', 'Fluid', 'Return'],
       modal: false,
     };

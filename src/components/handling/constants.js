@@ -1,26 +1,100 @@
-// import { v4 as uuidv4 } from 'uuid';
+import chargeableItems from '@/assets/static-data/chargeable-items.json';
 
-export const defaultData = {
-  date: new Date().toISOString().substr(0, 10),
-  airline: 'LD',
-  otherAirline: '',
-  fltno: '',
-  prefix: 'B-',
-  tail: '',
+const aircraftTypes = [
+  'A320',
+  'A321',
+  'A306',
+  'A330',
+  'A33F',
+  'A350',
+  'B777',
+  'Other',
+];
+
+const airlines = ['ASL', 'CX', 'KA', 'LD', 'PR', 'Other'];
+
+const checks = ['ETR', 'OCT', 'TR', '36H', '72H', 'WY', '10DY', 'Other'];
+
+const handlingData = {
   acreg: '',
   aircraftType: '',
-  check: '',
-  otherCheck: '',
-  tasks: [
-    {
-      // id: uuidv4(),
-      taskNo: '',
-      taskDetails: '',
-      hour: {
-        eng: 0,
-        mech: 0,
-      },
+  airline: 'LD',
+  brakeCooling: {
+    fan: 0,
+    hour: {
+      mech: 0,
+      eng: 0,
     },
-  ],
+  },
+  check: '',
+  date: new Date().toISOString().substr(0, 10),
   eic: '',
+  fltno: '',
+  otherAirline: '',
+  otherCheck: '',
+  prefix: 'B-',
+  remark: '',
+  services: [],
+  tail: '',
+  tasks: [],
+};
+
+const task = {
+  taskNo: '',
+  taskDetails: '',
+  hour: {
+    eng: 0,
+    mech: 0,
+  },
+};
+
+const service = {
+  service: 'Please select',
+  chargeType: 'per service',
+  usage: 0,
+  hour: {
+    eng: 0,
+    mech: 0,
+  },
+};
+
+const getChargeablePerHourItems = () => {
+  let items = [];
+  chargeableItems.forEach(service => {
+    if (service.type === 'per hour') {
+      items.push(service.name);
+    }
+  });
+
+  return items;
+};
+
+const getChargeablePerServiceItems = () => {
+  let items = [];
+  chargeableItems.forEach(service => {
+    if (service.inclusive === false) {
+      items.push(service.name);
+    }
+  });
+
+  return items;
+};
+
+const getChargeableItems = () => {
+  let items = [];
+  chargeableItems.forEach(service => items.push(service.name));
+
+  return items;
+};
+
+export {
+  aircraftTypes,
+  airlines,
+  checks,
+  getChargeablePerHourItems,
+  getChargeablePerServiceItems,
+  handlingData,
+  service,
+  getChargeableItems,
+  task,
 };

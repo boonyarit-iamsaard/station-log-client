@@ -1,44 +1,57 @@
 <template>
-  <v-row>
-    <v-overlay absolute :value="isLoading">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+  <v-form ref="form" @submit.prevent="submitForm">
+    <v-card class="mt-8 mx-auto shadow" style="max-width: 400px">
+      <v-card-title class="d-flex flex-column pa-4">
+        <v-img
+          :src="require('@/assets/images/logo.png')"
+          alt="Company Logo"
+          class="shrink mb-4"
+          contain
+          height="32"
+          transition="scale-transition"
+          width="32"
+        />
 
-    <v-col cols="12" sm="6" md="4" class="mx-auto">
-      <v-form ref="signinForm" @submit.prevent="onFormSubmitHandler">
-        <v-card outlined>
-          <v-card-title class="d-flex justify-center pa-4">
-            <span>Please Login</span>
-          </v-card-title>
+        <span class="title">Station Log</span>
 
-          <v-card-text class="pa-4">
-            <v-text-field
-              dense
-              label="Username"
-              outlined
-              v-model.trim="formData.username"
-            ></v-text-field>
-            <v-text-field
-              dense
-              label="Password"
-              type="password"
-              outlined
-              v-model.trim="formData.password"
-            ></v-text-field>
-          </v-card-text>
+        <span class="subtitle-1">Bangkok Engineering</span>
+      </v-card-title>
 
-          <v-card-actions class="pa-4">
-            <v-btn block color="primary" depressed type="submint">Login</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-col>
-  </v-row>
+      <v-card-text class="pa-4">
+        <input-text
+          :rules="formRules.username"
+          label="Username"
+          v-model.trim="formData.username"
+        />
+
+        <input-text
+          :rules="formRules.password"
+          label="Password"
+          type="password"
+          v-model.trim="formData.password"
+        />
+      </v-card-text>
+
+      <v-card-actions class="pb-4 pt-0 px-4">
+        <v-btn block class="shadow" color="primary" type="submit">
+          Login
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
+import InputText from '@/components/shared/input/InputText';
+
 export default {
-  name: 'SigninPage',
+  name: 'LoginPage',
+
+  components: {
+    'input-text': InputText,
+  },
 
   data() {
     return {
@@ -47,25 +60,50 @@ export default {
         password: '',
       },
       formRules: {},
-      isLoading: false,
+      redirect: '/',
     };
   },
 
   methods: {
-    async onFormSubmitHandler() {
-      this.isLoading = true;
+    ...mapActions({
+      login: 'auth/login',
+      setIsError: 'error/setIsError',
+      setErrorMessage: 'error/setErrorMessage',
+      setShouldLoading: 'setShouldLoading',
+    }),
 
-      await this.$store
-        .dispatch('login', this.formData)
-        .then(() => (this.isLoading = false))
-        .then(() => this.$router.replace('/'))
-        .catch(err => {
-          this.isLoading = false;
+    submitForm() {
+      this.formRules = {
+        username: [v => !!v || 'Username is required.'],
+        password: [v => !!v || 'Password is required.'],
+      };
 
-          this.$store.dispatch('error/setIsError');
-          this.$store.dispatch('error/setErrorMessage', err.message);
-        });
+      this.$nextTick(async () => {
+        if (this.$refs.form.validate()) {
+          await this.setShouldLoading(true);
+
+          try {
+            const user = await this.login(this.formData);
+
+            if (!user) return;
+
+            this.setShouldLoading(false);
+            await this.$router.replace(this.redirect);
+          } catch (error) {
+            this.setShouldLoading(false);
+
+            this.setIsError();
+            this.setErrorMessage(error.message);
+          }
+        }
+      });
     },
+  },
+
+  created() {
+    if (this.$route.query.redirect) {
+      this.redirect = this.$route.query.redirect;
+    }
   },
 };
 </script>

@@ -30,8 +30,13 @@ export default {
       items: [
         { title: 'Home', icon: 'mdi-home', path: '/' },
         { title: 'Flights', icon: 'mdi-airplane', path: '/flights' },
-        { title: 'Spares', icon: 'mdi-cog', path: '/spares' },
-        { title: '3rd Party Handling', icon: 'mdi-cog', path: '/handling' },
+        { title: 'Spares', icon: 'mdi-wrench', path: '/spares' },
+        {
+          title: 'Disinfection',
+          icon: 'mdi-flask-empty',
+          path: '/disinfection',
+        },
+        // { title: '3rd Party Handling', icon: 'mdi-cog', path: '/handling' },
       ],
     };
   },

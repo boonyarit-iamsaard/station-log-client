@@ -1,8 +1,6 @@
 <template>
   <div>
-    <v-overlay :value="isLoading" absolute>
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+    <Progress :isLoading="isLoading" />
 
     <HandlingListMobile
       :handlingRecords="handlingRecords"
@@ -19,6 +17,7 @@
 <script>
 import HandlingListDesktop from '@/components/handling/HandlingListDesktop';
 import HandlingListMobile from '@/components/handling/HandlingListMobile.vue';
+import Progress from '../shared/Progress.vue';
 
 export default {
   name: 'HandlingList',
@@ -29,7 +28,7 @@ export default {
     };
   },
 
-  components: { HandlingListDesktop, HandlingListMobile },
+  components: { HandlingListDesktop, HandlingListMobile, Progress },
 
   methods: {
     async fetchHandlingRecordsHandler() {

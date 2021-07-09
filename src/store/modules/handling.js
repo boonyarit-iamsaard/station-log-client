@@ -1,19 +1,21 @@
 import {
-  createHandling,
-  deleteHandling,
-  getHandlings,
-  getHandlingByID,
-  updateHandling,
-} from '@/api/handling-api';
+  createHandlingRecord,
+  deleteHandlingRecord,
+  getHandlingRecords,
+  getHandlingRecordByID,
+  updateHandlingRecord,
+} from '@/services/http-service/handling-http';
 
 export default {
   namespaced: true,
+
   state() {
     return {
       handlingRecords: [],
       currentHandlingRecord: {},
     };
   },
+
   getters: {
     getHandlingRecords(state) {
       return state.handlingRecords;
@@ -22,12 +24,14 @@ export default {
       return state.currentHandlingRecord;
     },
   },
+
   actions: {
     async addHandlingRecord(context, payload) {
       try {
-        const response = await createHandling(payload);
+        const response = await createHandlingRecord(payload);
+        const { handlingRecord } = response.data;
 
-        context.commit('ADD_HANDLING_RECORD', response.data.handlingRecord);
+        context.commit('ADD_HANDLING_RECORD', handlingRecord);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -37,9 +41,10 @@ export default {
 
     async updateHandlingRecord(context, payload) {
       try {
-        const response = await updateHandling(payload);
+        const response = await updateHandlingRecord(payload);
+        const { handlingRecord } = response.data;
 
-        context.commit('UPDATE_HANDLING_RECORD', response.data.handlingRecord);
+        context.commit('UPDATE_HANDLING_RECORD', handlingRecord);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -49,7 +54,7 @@ export default {
 
     async deleteHandlingRecord(context, payload) {
       try {
-        await deleteHandling(payload);
+        await deleteHandlingRecord(payload);
 
         context.commit('DELETE_HANDLING_RECORD', payload);
       } catch (error) {
@@ -61,7 +66,7 @@ export default {
 
     async fetchHandlingRecords(context) {
       try {
-        const response = await getHandlings();
+        const response = await getHandlingRecords();
 
         context.commit('SET_HANDLING_RECORDS', response.data.handlingRecords);
       } catch (error) {
@@ -73,12 +78,10 @@ export default {
 
     async fetchCurrentHandlingRecord(context, payload) {
       try {
-        const response = await getHandlingByID(payload);
+        const response = await getHandlingRecordByID(payload);
+        const { handlingRecord } = response.data;
 
-        context.commit(
-          'SET_CURRENT_HANDLING_RECORD',
-          response.data.handlingRecord
-        );
+        context.commit('SET_CURRENT_HANDLING_RECORD', handlingRecord);
       } catch (error) {
         if (error.response) {
           console.log(error.response.data.message);
@@ -86,6 +89,7 @@ export default {
       }
     },
   },
+
   mutations: {
     ADD_HANDLING_RECORD(state, payload) {
       state.handlingRecords.push(payload);

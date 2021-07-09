@@ -1,10 +1,10 @@
 <template>
   <v-dialog v-model="dialog" persistent max-width="290">
-    <v-card>
+    <v-card class="shadow">
       <v-card-title class="title pa-4">{{ title }} </v-card-title>
 
       <v-card-subtitle class="pa-4">{{ subtitle }}</v-card-subtitle>
-      <v-card-actions class="pa-4">
+      <v-card-actions class="pb-4 pt-0 px-4">
         <v-btn color="primary" text @click="dialog = false"> cancel </v-btn>
 
         <v-spacer></v-spacer>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: 'SharedDialog',
+  name: 'ConfirmDialog',
 
   props: {
     title: {

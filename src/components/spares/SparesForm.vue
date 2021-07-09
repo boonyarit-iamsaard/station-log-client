@@ -1,482 +1,454 @@
 <template>
-  <v-form ref="form" @submit.prevent="onFormSubmit">
-    <SharedDialog
-      ref="confirmDeleteDialog"
-      :title="'Do you want to proceed?'"
-      :subtitle="'This record would be deleted!'"
-      @action="onDeleteSpare"
-    />
+  <v-container class="pa-0" style="max-width: 959px">
+    <v-form ref="form" @submit.prevent="submitForm">
+      <confirm-dialog
+        :subtitle="'This record would be deleted!'"
+        :title="'Do you want to proceed?'"
+        @action="handleDeleteSpare"
+        ref="confirmDeleteDialog"
+      />
 
-    <v-overlay absolute :value="isLoading">
-      <v-progress-circular indeterminate size="64"></v-progress-circular>
-    </v-overlay>
+      <div class="mb-4">
+        <span class="title">Spare Movement Form</span>
+      </div>
 
-    <v-card
-      class="mx-auto"
-      max-width="959"
-      :flat="$vuetify.breakpoint.smAndDown"
-      :outlined="$vuetify.breakpoint.mdAndUp"
-    >
-      <v-card-text>
-        <!-- Flight details -->
-        <v-row class="mt-0">
-          <v-col cols="12">
-            <span>Flight Details</span>
+      <v-card class="mb-4 shadow">
+        <flight-form-title-wrapper title="Flight Details" />
 
-            <v-divider class="mb-4"></v-divider>
-          </v-col>
-          <v-col cols="12" sm="4">
-            <v-dialog
-              ref="dialog"
-              v-model="modal"
-              :return-value.sync="formData.date"
-              persistent
-              width="290px"
-            >
-              <template v-slot:activator="{ on, attrs }">
-                <v-text-field
-                  append-icon="mdi-calendar"
-                  dense
-                  label="Date"
-                  outlined
-                  readonly
-                  v-bind="attrs"
-                  v-on="on"
-                  :value="setDateFormatHandler(formData.date)"
-                ></v-text-field>
-              </template>
-              <v-date-picker v-model="formData.date" scrollable>
-                <v-spacer></v-spacer>
-                <v-btn text color="primary" @click="modal = false">
-                  Cancel
-                </v-btn>
-                <v-btn
-                  text
-                  color="primary"
-                  @click="$refs.dialog.save(formData.date)"
-                >
-                  OK
-                </v-btn>
-              </v-date-picker>
-            </v-dialog>
-          </v-col>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" sm="4">
+              <input-date v-model="formData.date" />
+            </v-col>
 
-          <v-col cols="12" sm="2">
-            <v-select
-              dense
-              label="Airline"
-              outlined
-              v-model="formData.airline"
-              :items="airlines"
-              @change="onAirlineChangeHandler"
-            ></v-select>
-          </v-col>
+            <v-col cols="12" sm="2">
+              <input-select
+                :items="airlines"
+                @change="handleAirlineChange"
+                label="Airline"
+                v-model="formData.airline"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="3">
-            <v-text-field
-              dense
-              label="Flt No."
-              outlined
-              v-model="formData.fltno"
-              :rules="formRules.fltno"
-              @keyup="setUpperCaseTextHandler('fltno')"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="3">
+              <input-text
+                :rules="formRules.fltno"
+                label="Flt No."
+                upper-case
+                v-model="formData.fltno"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="3">
-            <v-text-field
-              dense
-              label="Reg."
-              outlined
-              v-model="formData.tail"
-              :prefix="formData.prefix"
-              :rules="formRules.tail"
-              @keyup="setUpperCaseTextHandler('tail')"
-            ></v-text-field>
-          </v-col>
-        </v-row>
+            <v-col cols="12" sm="3">
+              <input-text
+                :prefix="formData.prefix"
+                :rules="formRules.tail"
+                label="A/C Reg."
+                upper-case
+                v-model="formData.tail"
+              />
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
 
-        <!-- Spare details -->
-        <v-row>
-          <v-col cols="12">
-            <span>Spare Details</span>
+      <v-card class="mt-4 shadow">
+        <flight-form-title-wrapper title="Spare Details" />
 
-            <v-divider class="mb-4"></v-divider>
-          </v-col>
-
-          <v-col cols="12">
-            <v-radio-group
-              dense
-              class="mt-0"
-              label="Type"
-              v-model="formData.type"
-              :row="$vuetify.breakpoint.smAndUp"
-              @change="onTypeChangeHandler"
-            >
-              <v-radio
-                v-for="type in types"
-                :key="type"
-                :label="type"
-                :value="type"
+        <v-card-text>
+          <v-row>
+            <v-col cols="12">
+              <v-radio-group
+                :row="$vuetify.breakpoint.smAndUp"
+                @change="handleSpareTypeChange"
+                class="mt-0"
+                dense
+                label="Spare type"
+                v-model="formData.type"
               >
-              </v-radio>
-            </v-radio-group>
-          </v-col>
+                <v-radio
+                  :key="type"
+                  :label="type"
+                  :value="type"
+                  v-for="type in types"
+                >
+                </v-radio>
+              </v-radio-group>
+            </v-col>
 
-          <v-col cols="12" sm="6">
-            <v-text-field
-              dense
-              label="Part No."
-              outlined
-              v-model="formData.part"
-              :rules="formRules.part"
-              @keyup="setUpperCaseTextHandler('part')"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="6">
+              <input-text
+                :rules="formRules.part"
+                label="Part No."
+                upper-case
+                v-model="formData.part"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="6">
-            <v-text-field
-              dense
-              label="Description"
-              outlined
-              v-model="formData.desc"
-              :rules="formRules.desc"
-              @keyup="setUpperCaseTextHandler('desc')"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="6">
+              <input-text
+                :rules="formRules.desc"
+                label="Description"
+                upper-case
+                v-model="formData.desc"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4">
-            <v-text-field
-              dense
-              label="Serial No."
-              outlined
-              v-model="formData.serial"
-              :rules="formRules.serial"
-              @keyup="setUpperCaseTextHandler('serial')"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="4">
+              <input-text
+                :rules="formRules.serial"
+                label="Serial No."
+                upper-case
+                v-model="formData.serial"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4">
-            <v-text-field
-              counter="10"
-              dense
-              label="GRN."
-              outlined
-              v-model="formData.grn"
-              :rules="formRules.grn"
-              @keyup="setUpperCaseTextHandler('grn')"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="4">
+              <input-text
+                :counter="10"
+                :rules="formRules.grn"
+                label="GRN."
+                upper-case
+                v-model="formData.grn"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4">
-            <v-text-field
-              dense
-              label="QTY."
-              outlined
-              type="number"
-              v-model="formData.qty"
-              :rules="formRules.qty"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="4">
+              <input-text
+                :rules="formRules.qty"
+                label="QTY."
+                number
+                v-model="formData.qty"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4">
-            <v-select
-              dense
-              label="Store"
-              outlined
-              v-model="formData.store"
-              :items="stores"
-            ></v-select>
-          </v-col>
+            <v-col cols="12" sm="4">
+              <input-select
+                :items="stores"
+                label="Store"
+                v-model="formData.store"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4">
-            <v-select
-              dense
-              label="Used By"
-              outlined
-              v-model="formData.usedBy"
-              :rules="formRules.usedBy"
-              :items="staffs"
-            ></v-select>
-          </v-col>
-        </v-row>
+            <v-col cols="12" sm="4">
+              <input-select
+                :items="staffs"
+                label="Used By"
+                v-model="formData.usedBy"
+              />
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
 
-        <!-- Spare actions -->
-        <v-row>
-          <v-col cols="12">
-            <span>Spare Actions</span>
+      <v-card class="mt-4 shadow">
+        <flight-form-title-wrapper title="Actions" />
 
-            <v-divider class="mb-4"></v-divider>
-          </v-col>
+        <v-card-text>
+          <v-row>
+            <v-col cols="12" :sm="issued ? 3 : 12">
+              <input-checkbox
+                :disabled="returned || !admin"
+                @change="handleSpareActionChange('issued')"
+                label="Issued?"
+                v-model="formData.issued.status"
+              />
+            </v-col>
 
-          <!-- Issued -->
-          <v-col cols="12" :sm="formData.issued.status ? 4 : 12">
-            <v-checkbox
-              dense
-              label="Issued?"
-              v-model="formData.issued.status"
-              :disabled="formData.returned.status || !isAdmin"
-              @change="onActionChangeHandler('issued')"
-            ></v-checkbox>
-          </v-col>
+            <v-col cols="12" sm="3" v-if="issued">
+              <input-text
+                :disabled="returned || !admin"
+                :rules="formRules.issuedNumber"
+                label="IS No."
+                upper-case
+                v-model="formData.issued.number"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.issued.status">
-            <v-text-field
-              dense
-              label="IS No."
-              outlined
-              v-model="formData.issued.number"
-              :disabled="formData.returned.status || !isAdmin"
-              :rules="formRules.issuedNumber"
-              @keyup="setUpperCaseTextHandler('issued')"
-            ></v-text-field>
-          </v-col>
+            <v-col cols="12" sm="3" v-if="issued">
+              <input-select
+                :disabled="returned || !admin"
+                :items="staffs"
+                :rules="formRules.issuedBy"
+                label="By"
+                v-model="formData.issued.by"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="4" v-if="formData.issued.status">
-            <v-select
-              dense
-              label="By"
-              outlined
-              v-model="formData.issued.by"
-              :disabled="formData.returned.status || !isAdmin"
-              :items="staffs"
-              :rules="formRules.issuedBy"
-            ></v-select>
-          </v-col>
+            <v-col cols="12" sm="3" v-if="issued">
+              <input-date :disabled="returned" v-model="issuedDate" />
+            </v-col>
 
-          <!-- Returned -->
-          <v-col
-            cols="12"
-            :sm="formData.returned.status ? 4 : 12"
-            v-if="formData.type === 'Return' && formData.issued.status"
-          >
-            <v-checkbox
-              dense
-              label="Returned?"
-              v-model="formData.returned.status"
-              :disabled="formData.transferred.status || !isAdmin"
-              @change="onActionChangeHandler('returned')"
-            ></v-checkbox>
-          </v-col>
-
-          <v-col cols="12" sm="4" v-if="formData.returned.status">
-            <v-text-field
-              dense
-              label="IR No."
-              outlined
-              v-model="formData.returned.number"
-              :disabled="formData.transferred.status || !isAdmin"
-              :rules="formRules.returnedNumber"
-              @keyup="setUpperCaseTextHandler('returned')"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" sm="4" v-if="formData.returned.status">
-            <v-select
-              dense
-              label="By"
-              outlined
-              v-model="formData.returned.by"
-              :disabled="formData.transferred.status || !isAdmin"
-              :items="staffs"
-              :rules="formRules.returnedBy"
-            ></v-select>
-          </v-col>
-
-          <!-- Transferred -->
-          <v-col
-            cols="12"
-            :sm="formData.transferred.status ? 4 : 12"
-            v-if="
-              formData.type === 'Return' &&
-              formData.issued.status &&
-              formData.returned.status
-            "
-          >
-            <v-checkbox
-              dense
-              label="Transferred?"
-              v-model="formData.transferred.status"
-              :disabled="!isAdmin"
-              @change="onActionChangeHandler('transferred')"
-            ></v-checkbox>
-          </v-col>
-
-          <v-col cols="12" sm="4" v-if="formData.transferred.status">
-            <v-text-field
-              dense
-              label="TX No."
-              outlined
-              v-model="formData.transferred.number"
-              :disabled="!isAdmin"
-              :rules="formRules.transferredNumber"
-              @keyup="setUpperCaseTextHandler('transferred')"
-            ></v-text-field>
-          </v-col>
-
-          <v-col cols="12" sm="4" v-if="formData.transferred.status">
-            <v-select
-              dense
-              label="By"
-              outlined
-              v-model="formData.transferred.by"
-              :disabled="!isAdmin"
-              :items="staffs"
-              :rules="formRules.transferredBy"
-            ></v-select>
-          </v-col>
-        </v-row>
-      </v-card-text>
-
-      <v-card-actions class="px-4 pt-0 pb-4">
-        <v-row class="ma-0">
-          <v-col cols="12" sm="2" :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0'">
-            <v-btn block color="secondary" depressed @click="onFormReset">
-              <v-icon left>mdi-close</v-icon>
-              CANCEL
-            </v-btn>
-          </v-col>
-
-          <v-spacer v-if="!isMobile"></v-spacer>
-
-          <v-col
-            cols="12"
-            sm="2"
-            :class="isMobile ? 'pt-0 pb-2 px-0' : 'pa-0 mr-4'"
-          >
-            <v-btn
-              block
-              color="error"
-              depressed
-              :disabled="!isAdmin"
-              @click="$refs.confirmDeleteDialog.dialog = true"
-              v-if="$route.params.id"
+            <!-- Returned -->
+            <v-col
+              :sm="returned ? 3 : 12"
+              cols="12"
+              v-if="returnable && issued"
             >
-              <v-icon left>mdi-delete</v-icon>
-              DELETE
-            </v-btn>
-          </v-col>
+              <input-checkbox
+                :disabled="transferred || !admin"
+                @change="handleSpareActionChange('returned')"
+                label="Returned?"
+                v-model="formData.returned.status"
+              />
+            </v-col>
 
-          <v-col cols="12" sm="2" class="pa-0">
-            <v-btn block color="primary" depressed type="submit">
-              <v-icon left>mdi-check</v-icon>
-              SAVE
+            <v-col cols="12" sm="3" v-if="returned">
+              <input-text
+                :disabled="transferred || !admin"
+                :rules="formRules.returnedNumber"
+                label="IR No."
+                upper-case
+                v-model="formData.returned.number"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="3" v-if="returned">
+              <input-select
+                :disabled="transferred || !admin"
+                :items="staffs"
+                :rules="formRules.returnedBy"
+                label="By"
+                v-model="formData.returned.by"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="3" v-if="returned">
+              <input-date
+                :disabled="transferred || !admin"
+                v-model="returnedDate"
+              />
+            </v-col>
+
+            <!-- Transferred -->
+            <v-col
+              :sm="transferred ? 3 : 12"
+              cols="12"
+              v-if="returnable && issued && returned"
+            >
+              <input-checkbox
+                :disabled="!admin"
+                @change="handleSpareActionChange('transferred')"
+                label="Transferred?"
+                v-model="formData.transferred.status"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="3" v-if="transferred">
+              <input-text
+                :disabled="!admin"
+                :rules="formRules.transferredNumber"
+                label="TX No."
+                upper-case
+                v-model="formData.transferred.number"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="3" v-if="transferred">
+              <input-select
+                :disabled="!admin"
+                :items="staffs"
+                :rules="formRules.transferredBy"
+                label="By"
+                v-model="formData.transferred.by"
+              />
+            </v-col>
+
+            <v-col cols="12" sm="3" v-if="transferred">
+              <input-date v-model="transferredDate" />
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-card-actions class="pb-4 pt-0 px-4">
+          <div>
+            <v-btn
+              :disabled="!admin || !$route.params.id"
+              @click="$refs.confirmDeleteDialog.dialog = true"
+              class="shadow"
+              color="error"
+            >
+              Delete
             </v-btn>
-          </v-col>
-        </v-row>
-      </v-card-actions>
-    </v-card>
-  </v-form>
+          </div>
+
+          <v-spacer />
+
+          <div>
+            <v-btn @click="resetForm" class="shadow mr-4" color="secondary">
+              Cancel
+            </v-btn>
+
+            <v-btn class="shadow" color="primary" type="submit">Save</v-btn>
+          </div>
+        </v-card-actions>
+      </v-card>
+    </v-form>
+  </v-container>
 </template>
 
 <script>
+import { cloneDeep } from 'lodash';
 import { format } from 'date-fns';
-import { defaultData } from './constants';
-import staffs from '@/staffs.js';
-import SharedDialog from '../shared/SharedDialog.vue';
+import { mapActions, mapGetters } from 'vuex';
+
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
+import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
+import InputDate from '@/components/shared/input/InputDate';
+import InputSelect from '@/components/shared/input/InputSelect';
+import InputText from '@/components/shared/input/InputText';
+import InputCheckbox from '@/components/shared/input/InputCheckbox';
+
+import { spareData } from '@/components/spares/default-values';
+import { staffs } from '@/utils/staffs';
+import { sparesFormRules } from '@/components/spares/spares-form-rules';
+
+const currentDate = new Date().toISOString().substr(0, 10);
 
 export default {
   name: 'SparesForm',
 
-  components: { SharedDialog },
+  components: {
+    'confirm-dialog': ConfirmDialog,
+    'flight-form-title-wrapper': FlightFormTitleWrapper,
+    'input-checkbox': InputCheckbox,
+    'input-date': InputDate,
+    'input-select': InputSelect,
+    'input-text': InputText,
+  },
 
   data() {
     return {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
-      formData: { ...defaultData },
+      defaultSpareAction: {
+        by: '',
+        date: currentDate,
+        number: '',
+        status: false,
+      },
+      formData: cloneDeep(spareData),
       formRules: {},
-      isLoading: false,
+      issuedDate: new Date().toISOString().substr(0, 10),
       modal: false,
-      staffs: [],
+      returnedDate: new Date().toISOString().substr(0, 10),
+      staffs: staffs(),
       stores: ['BKK', 'BKK306', 'BKKAHK'],
+      transferredDate: new Date().toISOString().substr(0, 10),
       types: ['Consumable', 'Fluid', 'Return'],
     };
   },
 
   methods: {
-    onFormSubmit() {
-      this.formRules = {
-        fltno: [v => !!v || 'Flt No. is required.'],
-        tail: [v => !!v || 'A/C Reg. is required.'],
-        part: [v => !!v || 'Part No. is required.'],
-        desc: [v => !!v || 'Description is required.'],
-        serial: [v => !!v || 'Serial No. is required.'],
-        grn: [
-          v => !!v || 'GRN is required.',
-          v => v.length >= 10 || 'GRN must contains 10 characters',
-        ],
-        qty: [
-          v => !!v || 'QTY is required.',
-          v => v >= 1 || 'QTY must not equal 0',
-        ],
-        usedBy: [v => !!v || 'Used By is required.'],
-        issuedNumber: [v => !!v || 'IS No. is required.'],
-        issuedBy: [v => !!v || 'Required.'],
-        returnedNumber: [v => !!v || 'IR No. is required.'],
-        returnedBy: [v => !!v || 'Required.'],
-        transferredNumber: [v => !!v || 'TX No. is required.'],
-        transferredBy: [v => !!v || 'Required.'],
-      };
+    ...mapActions({
+      addSpare: 'spares/addSpare',
+      deleteSpare: 'spares/deleteSpare',
+      fetchSpareByID: 'spares/fetchSpareByID',
+      setErrorMessage: 'error/setErrorMessage',
+      setIsError: 'error/setIsError',
+      setShouldLoading: 'setShouldLoading',
+      updateSpare: 'spares/updateSpare',
+    }),
 
-      this.$nextTick(() => {
+    submitForm() {
+      this.formRules = { ...sparesFormRules };
+
+      this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
-          this.isLoading = true;
+          this.setShouldLoading(true);
 
           this.formData.acreg = this.formData.prefix.concat(this.formData.tail);
-          this.formData.status = this.setSpareStatusHandler();
+          this.formData.status = this.setSpareStatus();
 
-          const spareData = this.formData;
+          this.formData.issued.date = this.issuedDate;
+          this.formData.returned.date = this.returnedDate;
+          this.formData.transferred.date = this.transferredDate;
 
-          if (this.$route.params.id) {
-            this.$store.dispatch('spares/updateSpare', spareData);
-          } else {
-            this.$store.dispatch('spares/addSpare', spareData);
+          let spare;
+          try {
+            if (this.$route.params.id) {
+              spare = await this.updateSpare(this.formData);
+            } else {
+              spare = await this.addSpare(this.formData);
+            }
+          } catch (error) {
+            this.setShouldLoading(false);
+
+            this.setIsError();
+            this.setErrorMessage(error.message);
           }
 
-          this.isLoading = false;
+          if (!spare) {
+            this.setShouldLoading(false);
+            return;
+          }
 
-          this.onFormReset();
+          this.setShouldLoading(false);
+          this.resetForm();
         }
       });
     },
 
-    onFormReset() {
+    resetForm() {
       this.formRules = {};
-      this.formData = { ...defaultData };
+      this.formData = cloneDeep(spareData);
 
       this.$nextTick(() => {
         this.$router.replace('/spares');
       });
     },
 
-    async onDeleteSpare() {
-      this.isLoading = true;
-
-      await this.$store.dispatch('spares/deleteSpare', this.$route.params.id);
-
-      this.isLoading = false;
-      await this.$router.replace('/spares');
-    },
-
-    async fetchSpareByID(id) {
-      this.isLoading = true;
+    async handleDeleteSpare() {
+      this.setShouldLoading(true);
 
       try {
-        await this.$store.dispatch('spares/fetchSpareByID', id).then(() => {
-          this.formData = this.currentSpare;
-        });
+        await this.deleteSpare(this.$route.params.id);
+
+        this.setShouldLoading(false);
+
+        await this.$router.replace('/spares');
       } catch (error) {
-        console.log(error.message || 'Something went wrong!');
+        this.setShouldLoading(false);
+
+        this.setIsError();
+        this.setErrorMessage(error.message);
       }
-
-      this.isLoading = false;
     },
 
-    setDateFormatHandler(date) {
-      return format(new Date(date), 'dd MMMM yyyy');
+    async handleFetchSpareByID(id) {
+      this.setShouldLoading(true);
+
+      try {
+        const spare = await this.fetchSpareByID(id);
+
+        if (!spare) {
+          this.setShouldLoading(false);
+          return;
+        }
+
+        this.formData = cloneDeep(spare);
+
+        if (this.formData.issued.date) {
+          this.issuedDate = this.formData.issued.date;
+        }
+
+        if (this.formData.returned.date) {
+          this.returnedDate = this.formData.returned.date;
+        }
+
+        if (this.formData.transferred.date) {
+          this.transferredDate = this.formData.transferred.date;
+        }
+
+        this.setShouldLoading(false);
+      } catch (error) {
+        this.setShouldLoading(false);
+
+        this.setIsError();
+        this.setErrorMessage(error.message);
+      }
     },
 
-    onAirlineChangeHandler() {
+    handleAirlineChange() {
       switch (this.formData.airline) {
         case 'ASL':
           this.formData.prefix = 'EI-';
@@ -489,79 +461,95 @@ export default {
       }
     },
 
-    onActionChangeHandler(name) {
+    handleSpareActionChange(name) {
       if (!this.formData[name].status) {
-        this.formData[name].number = '';
-        this.formData[name].by = '';
+        this.formData[name] = {
+          ...this.formData[name],
+          ...this.defaultSpareAction,
+        };
+      }
+
+      if (name === 'issued') {
+        this.issuedDate = currentDate;
+      }
+
+      if (name === 'returned') {
+        this.returnedDate = currentDate;
+      }
+
+      if (name === 'transferred') {
+        this.transferredDate = currentDate;
       }
     },
 
-    onTypeChangeHandler() {
-      if (this.formData.type !== 'Return') {
-        this.formData.returned = { status: false, number: '', by: '' };
-        this.formData.transferred = { status: false, number: '', by: '' };
+    handleSpareTypeChange() {
+      if (!this.returnable) {
+        this.returnedDate = currentDate;
+        this.transferredDate = currentDate;
+
+        this.formData.returned = {
+          ...this.formData.returned,
+          ...this.defaultSpareAction,
+        };
+        this.formData.transferred = {
+          ...this.formData.transferred,
+          ...this.defaultSpareAction,
+        };
       }
     },
 
-    setUpperCaseTextHandler(name) {
-      if (name === 'issued' || name === 'returned' || name === 'transferred') {
-        this.formData[name].number = this.formData[name].number.toUpperCase();
-      } else {
-        this.formData[name] = this.formData[name].toUpperCase();
+    setSpareStatus() {
+      if (this.returnable) {
+        if (this.transferred) return 'Transferred';
+
+        if (this.returned && !this.transferred) return 'Returned';
+
+        if (this.issued && !this.returned && !this.transferred) return 'Issued';
+
+        return 'Pending';
       }
-    },
 
-    setSpareStatusHandler() {
-      if (this.formData.type === 'Return') {
-        if (this.formData.transferred.status) {
-          return 'Transferred';
-        } else if (
-          this.formData.returned.status &&
-          !this.formData.transferred.status
-        ) {
-          return 'Returned';
-        } else if (
-          this.formData.issued.status &&
-          !this.formData.returned.status &&
-          !this.formData.transferred.status
-        ) {
-          return 'Issued';
-        } else return 'Pending';
-      } else {
-        if (this.formData.issued.status) {
-          return 'Issued';
-        } else return 'Pending';
-      }
-    },
+      if (this.issued) return 'Issued';
 
-    setStaffsListHandler() {
-      const list = [];
-
-      staffs.map(staff => {
-        list.push(staff.name);
-      });
-
-      this.staffs = list.sort();
+      return 'Pending';
     },
   },
 
   computed: {
-    currentSpare() {
-      return this.$store.getters['spares/getCurrentSpare'];
-    },
+    ...mapGetters({
+      admin: 'auth/getIsAdmin',
+    }),
 
-    isAdmin() {
-      return this.$store.getters['getIsAdmin'];
+    issued() {
+      return this.formData.issued.status;
     },
 
     isMobile() {
       return this.$vuetify.breakpoint.xs;
     },
+
+    returnable() {
+      return this.formData.type === 'Return';
+    },
+
+    returned() {
+      return this.formData.returned.status;
+    },
+
+    transferred() {
+      return this.formData.transferred.status;
+    },
+  },
+
+  filters: {
+    formatDate: date => {
+      return format(new Date(date), 'dd MMMM yyyy');
+    },
   },
 
   created() {
     if (this.$route.params.id) {
-      this.fetchSpareByID(this.$route.params.id);
+      this.handleFetchSpareByID(this.$route.params.id);
     }
 
     // http://localhost:8080/spares/create?part=2197&desc=OIL&type=Fluid&store=BKK306
@@ -576,17 +564,19 @@ export default {
       this.formData.type = this.$route.query.type;
       this.formData.store = this.$route.query.store;
     }
-
-    this.setStaffsListHandler();
   },
 };
 </script>
 
 <style lang="scss" scoped>
+::v-deep .row {
+  margin: -8px;
+}
+
 ::v-deep .col-12,
 .col-sm-2,
 .col-sm-3,
 .col-sm-4 {
-  padding: 4px 12px;
+  padding: 0 8px;
 }
 </style>

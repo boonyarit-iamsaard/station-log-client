@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+$border-radius-root: 8px !default;
+
+$body-font-family: 'Inter', sans-serif;
+
+$btn-font-weight: 400 !default;
+
+$btn-sizes: (
+  'default': 40,
+);
+
+$btn-text-transform: capitalize !default;
+
+$grey: (
+  'base': #6b7280,
+  'lighten-5': #f9fafb,
+  'lighten-4': #f3f4f6,
+  'lighten-3': #e5e7eb,
+  'lighten-2': #d1d5db,
+  'lighten-1': #9ca3af,
+  'darken-1': #4b5563,
+  'darken-2': #374151,
+  'darken-3': #1f2937,
+  'darken-4': #111827,
+);
+
+$material-light: (
+  'text-fields': (
+    'filled': map-get($grey, 'lighten-4'),
+    'filled-hover': map-get($grey, 'lighten-3'),
+    'outlined': map-get($grey, 'lighten-3'),
+    'outlined-disabled': map-get($grey, 'lighten-3'),
+    'outlined-hover': map-get($grey, 'lighten-2'),
+  ),
+);

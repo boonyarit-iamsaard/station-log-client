@@ -12,22 +12,19 @@
         <v-card
           class="mb-4"
           link
-          :flat="$vuetify.breakpoint.smAndDown"
-          :outlined="$vuetify.breakpoint.mdAndUp"
+          :outlined="$vuetify.breakpoint.smAndDown"
           :to="`/handling/edit/${item._id}`"
           :key="item._id"
           v-for="item in items"
         >
           <v-card-title>
-            <span class="subtitle-1" v-if="item.airline === 'Other'">{{
-              item.otherAirline.concat(item.fltno)
-            }}</span>
-            <span class="subtitle-1" v-else>{{
-              item.airline.concat(item.fltno)
-            }}</span>
+            <span class="subtitle-1" v-if="item.airline === 'Other'">
+              {{ item.otherAirline.concat(item.fltno) }}
+            </span>
+            <span class="subtitle-1" v-else>
+              {{ item.airline.concat(item.fltno) }}
+            </span>
           </v-card-title>
-
-          <v-divider></v-divider>
 
           <v-card-text>
             <v-row class="ma-0">
