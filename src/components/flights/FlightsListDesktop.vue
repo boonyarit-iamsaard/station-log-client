@@ -8,8 +8,8 @@
       :headers="headers"
       :items="items"
       :search="search"
-      :sort-desc="[true, false]"
-      :sort-by="['date', 'airline']"
+      :sort-by="['date', 'createdAt']"
+      :sort-desc="[true, true]"
       class="shadow"
     >
       <template v-slot:top>

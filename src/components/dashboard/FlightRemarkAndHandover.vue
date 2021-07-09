@@ -8,8 +8,8 @@
       :items-per-page.sync="itemsPerPage"
       :items="flightRemarkAndHandover"
       :page.sync="page"
-      :sort-by="['date']"
-      :sort-desc="[true]"
+      :sort-by="['date', 'createdAt']"
+      :sort-desc="[true, true]"
       class="mb-14"
       hide-default-footer
       v-if="flightRemarkAndHandover.length > 0"
@@ -86,13 +86,6 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FlightRemarkAndHandover',
-
-  props: {
-    flights: {
-      type: Array,
-      default: () => [],
-    },
-  },
 
   data() {
     return {
