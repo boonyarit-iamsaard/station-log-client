@@ -22,7 +22,7 @@
             </v-col>
 
             <v-col cols="12" sm="2">
-              <input-select
+              <input-autocomplete
                 :items="airlines"
                 @change="handleAirlineChange"
                 label="Airline"
@@ -133,6 +133,7 @@
             <v-col cols="12" sm="4">
               <input-select
                 :items="staffs"
+                :rules="formRules.usedBy"
                 label="Used By"
                 v-model="formData.usedBy"
               />
@@ -302,6 +303,7 @@ import InputCheckbox from '@/components/shared/input/InputCheckbox';
 import { spareData } from '@/components/spares/default-values';
 import { staffs } from '@/utils/staffs';
 import { sparesFormRules } from '@/components/spares/spares-form-rules';
+import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 
 const currentDate = new Date().toISOString().substr(0, 10);
 
@@ -309,6 +311,7 @@ export default {
   name: 'SparesForm',
 
   components: {
+    InputAutocomplete,
     'confirm-dialog': ConfirmDialog,
     'flight-form-title-wrapper': FlightFormTitleWrapper,
     'input-checkbox': InputCheckbox,

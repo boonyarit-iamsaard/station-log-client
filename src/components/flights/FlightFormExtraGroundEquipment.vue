@@ -31,7 +31,7 @@
           v-for="(equipment, index) in model"
         >
           <v-col cols="12" sm="3">
-            <input-select
+            <input-autocomplete
               :items="equipments"
               :rules="rules.equipment"
               label="Equipment"
@@ -40,7 +40,7 @@
           </v-col>
 
           <v-col cols="12" sm="3">
-            <input-select
+            <input-autocomplete
               :items="companies"
               :rules="rules.company"
               label="Company"
@@ -77,7 +77,7 @@
 <script>
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormAppendFieldArrayWrapper from '@/components/flights/FlightFormAppendFieldArrayWrapper';
-import InputSelect from '@/components/shared/input/InputSelect';
+import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 
 export default {
   name: 'FlightFormExtraGroundEquipment',
@@ -85,7 +85,7 @@ export default {
   components: {
     'confirm-dialog': ConfirmDialog,
     'flight-form-append-field-array-wrapper': FlightFormAppendFieldArrayWrapper,
-    'input-select': InputSelect,
+    'input-autocomplete': InputAutocomplete,
   },
 
   props: {
