@@ -2,13 +2,13 @@
   <div>
     <v-data-iterator
       :items-per-page.sync="itemsPerPage"
-      :items="items"
+      :items="spares"
       :page.sync="page"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
       class="mb-14"
       hide-default-footer
-      v-if="items.length > 0"
+      v-if="spares.length > 0"
     >
       <template v-slot:default="{ items }">
         <v-card
@@ -87,7 +87,11 @@
       </template>
     </v-data-iterator>
 
-    <p class="text-center title" v-if="items.length === 0">No spares found.</p>
+    <v-card class="shadow" v-if="spares.length === 0">
+      <v-card-text>
+        <span> No spare movement found. </span>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -106,7 +110,6 @@ export default {
 
   data() {
     return {
-      items: [],
       itemsPerPage: 5,
       itemsPerPageArray: [5, 10, 20],
       page: 1,
@@ -133,14 +136,10 @@ export default {
   computed: {
     calculatePageLength() {
       const defaultLength = 5;
-      const calculatedLength = this.items.length / defaultLength;
+      const calculatedLength = this.spares.length / defaultLength;
 
       return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
     },
-  },
-
-  created() {
-    this.items = this.spares;
   },
 };
 </script>

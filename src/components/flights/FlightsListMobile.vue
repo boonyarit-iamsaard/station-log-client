@@ -126,7 +126,7 @@
       </template>
     </v-data-iterator>
 
-    <v-card class="shadow">
+    <v-card class="shadow" v-if="flights.length === 0">
       <v-card-text>
         <span> No flight record found. </span>
       </v-card-text>
