@@ -168,4 +168,16 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+::v-deep th > span {
+  display: block;
+}
+
+::v-deep th {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-size: 0.8rem;
+  height: auto !important;
+  padding: 8px 16px !important;
+  vertical-align: top !important;
+}
+</style>

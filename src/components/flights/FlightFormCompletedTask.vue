@@ -36,7 +36,7 @@
           </v-col>
 
           <v-col cols="12" sm="3">
-            <input-select
+            <input-autocomplete
               :items="deferrals"
               hint="Optional"
               label="ADD"
@@ -54,7 +54,7 @@
           </v-col>
 
           <v-col cols="12" sm="3">
-            <input-select
+            <input-autocomplete
               :items="deferralActions"
               hint="Optional"
               label="ADD action"
@@ -121,17 +121,17 @@
 <script>
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormAppendFieldArrayWrapper from '@/components/flights/FlightFormAppendFieldArrayWrapper';
-import InputSelect from '@/components/shared/input/InputSelect';
 import InputText from '@/components/shared/input/InputText';
 import InputTextarea from '@/components/shared/input/InputTextarea';
+import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 
 export default {
   name: 'FlightFormChildComponent',
 
   components: {
+    InputAutocomplete,
     'confirm-dialog': ConfirmDialog,
     'flight-form-append-field-array-wrapper': FlightFormAppendFieldArrayWrapper,
-    'input-select': InputSelect,
     'input-text': InputText,
     'input-textarea': InputTextarea,
   },

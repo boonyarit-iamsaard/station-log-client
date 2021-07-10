@@ -211,8 +211,10 @@ export default {
 }
 
 ::v-deep th {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-size: 0.8rem;
   height: auto !important;
-  padding-top: 8px !important;
+  padding: 8px 16px !important;
   vertical-align: top !important;
 }
 </style>
