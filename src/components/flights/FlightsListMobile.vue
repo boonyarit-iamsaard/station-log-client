@@ -6,13 +6,13 @@
 
     <v-data-iterator
       :items-per-page.sync="itemsPerPage"
-      :items="items"
+      :items="flights"
       :page.sync="page"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
       class="mb-14"
       hide-default-footer
-      v-if="items.length > 0"
+      v-if="flights.length > 0"
     >
       <template v-slot:default="{ items }">
         <v-card
@@ -126,7 +126,11 @@
       </template>
     </v-data-iterator>
 
-    <p class="text-center title" v-if="items.length === 0">No flights found.</p>
+    <v-card class="shadow">
+      <v-card-text>
+        <span> No flight record found. </span>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
@@ -145,7 +149,6 @@ export default {
 
   data() {
     return {
-      items: [],
       itemsPerPage: 5,
       itemsPerPageArray: [5, 10, 20],
       page: 1,
@@ -170,7 +173,7 @@ export default {
   computed: {
     calculatePageLength() {
       const defaultLength = 5;
-      const calculatedLength = this.items.length / defaultLength;
+      const calculatedLength = this.flights.length / defaultLength;
 
       return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
     },
@@ -182,10 +185,6 @@ export default {
 
       return format(new Date(value), 'dd MMM yy');
     },
-  },
-
-  created() {
-    this.items = this.flights;
   },
 };
 </script>
