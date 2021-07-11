@@ -124,10 +124,6 @@ export default {
       return format(new Date(date), 'dd MMM yy');
     },
   },
-  //
-  // created() {
-  //   this.items = this.disinfectionList;
-  // },
 };
 </script>
 
