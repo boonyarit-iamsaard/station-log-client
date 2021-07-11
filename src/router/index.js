@@ -76,6 +76,30 @@ const routes = [
     },
   },
   {
+    path: '/manpower',
+    component: () => import('@/views/ManpowerPage'),
+    children: [
+      {
+        path: '',
+        name: 'manpower',
+        component: () => import('@/components/manpower/ManpowerList'),
+      },
+      {
+        path: 'create',
+        name: 'manpower-create',
+        component: () => import('@/components/manpower/ManpowerForm'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'manpower-edit',
+        component: () => import('@/components/manpower/ManpowerForm'),
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/spares',
     component: () => import('@/views/SparesPage'),
     children: [

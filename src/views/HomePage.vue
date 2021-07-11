@@ -9,7 +9,7 @@
         :key="item.title"
         class="mx-auto"
         col="12"
-        sm="4"
+        sm="3"
         v-for="item in items"
       >
         <v-card class="shadow" link :to="item.path">
@@ -17,10 +17,10 @@
             :src="item.src"
             class="white--text align-end"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="150px"
+            height="120px"
           >
             <v-card-title
-              class="font-weight-regular pa-2"
+              class="font-weight-regular pa-2 subtitle-1"
               v-text="item.title"
             />
           </v-img>
@@ -62,6 +62,12 @@ export default {
           icon: 'mdi-airplane',
           src: require('@/assets/images/disinfection.jpg'),
           path: '/disinfection',
+        },
+        {
+          title: 'Sick Leave / OT Record',
+          icon: 'mdi-account',
+          src: require('@/assets/images/roster.jpg'),
+          path: '/manpower',
         },
       ],
     };

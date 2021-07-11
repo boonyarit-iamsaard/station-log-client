@@ -6,6 +6,7 @@ import disinfection from '@/store/modules/disinfection';
 import error from '@/store/modules/error';
 import flight from '@/store/modules/flight';
 import handling from '@/store/modules/handling';
+import manpower from '@/store/modules/manpower';
 import spares from '@/store/modules/spares';
 
 Vue.use(Vuex);
@@ -41,6 +42,7 @@ export default new Vuex.Store({
     error,
     flight,
     handling,
+    manpower,
     spares,
   },
 });

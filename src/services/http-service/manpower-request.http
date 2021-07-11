@@ -1,0 +1,56 @@
+DELETE http://localhost:5000/api/manpower/60eabdba12ba0f3690b50e8e
+Content-Type: application/json
+
+###
+PUT http://localhost:5000/api/manpower/60eabdba12ba0f3690b50e8e
+Content-Type: application/json
+
+{
+  "date": "2021-07-11",
+  "sickLeaveRequested": true,
+  "sickLeaveDetails": {
+    "shift": "M4",
+    "name": "Boonyarit",
+    "reason": "FEVER",
+    "receivedBy": "Totsapon"
+  },
+  "overTimeRequired": true,
+  "overTimeDetails": {
+    "shift": "M4",
+    "name": "Thinagon",
+    "remark": "",
+    "requiredBy": "Chanon"
+  }
+}
+
+###
+GET http://localhost:5000/api/manpower/60eabdba12ba0f3690b50e8e
+Accept: application/json
+
+###
+POST http://localhost:5000/api/manpower
+Content-Type: application/json
+
+{
+  "date": "2021-07-11",
+  "sickLeaveRequested": true,
+  "sickLeaveDetails": {
+    "shift": "M4",
+    "name": "Boonyarit",
+    "reason": "FEVER",
+    "receivedBy": "Totsapon"
+  },
+  "overTimeRequired": true,
+  "overTimeDetails": {
+    "shift": "M4",
+    "name": "Thinagon",
+    "remark": "",
+    "requiredBy": "Chanon"
+  }
+}
+
+###
+GET http://localhost:5000/api/manpower
+Accept: application/json
+
+###

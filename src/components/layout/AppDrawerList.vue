@@ -30,13 +30,17 @@ export default {
       items: [
         { title: 'Home', icon: 'mdi-home', path: '/' },
         { title: 'Flights', icon: 'mdi-airplane', path: '/flights' },
-        { title: 'Spares', icon: 'mdi-wrench', path: '/spares' },
+        { title: 'Spares', icon: 'mdi-cogs', path: '/spares' },
         {
           title: 'Disinfection',
-          icon: 'mdi-flask-empty',
+          icon: 'mdi-hospital-box',
           path: '/disinfection',
         },
-        // { title: '3rd Party Handling', icon: 'mdi-cog', path: '/handling' },
+        {
+          title: 'Sick Leave / OT',
+          icon: 'mdi-account',
+          path: '/manpower',
+        },
       ],
     };
   },

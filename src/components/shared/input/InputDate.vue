@@ -8,7 +8,7 @@
   >
     <template v-slot:activator="{ on, attrs }">
       <div>
-        <input-label label="Date" />
+        <input-label :label="label" />
 
         <v-text-field
           :disabled="disabled"
@@ -50,6 +50,10 @@ export default {
     disabled: {
       type: Boolean,
       default: false,
+    },
+    label: {
+      type: String,
+      default: 'Date',
     },
     value: {
       type: String,

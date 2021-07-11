@@ -48,6 +48,8 @@ export default {
           return '/flights/create';
         case '/disinfection':
           return '/disinfection/create';
+        case '/manpower':
+          return '/manpower/create';
         case '/handling':
           return '/handling/create';
         default:
@@ -61,8 +63,9 @@ export default {
       const disinfection =
         this.$route.path === '/disinfection' && this.isMobile;
       const handling = this.$route.path === '/handling' && this.isMobile;
+      const manpower = this.$route.path === '/manpower' && this.isMobile;
 
-      return spares || flights || handling || disinfection;
+      return spares || flights || handling || disinfection || manpower;
     },
   },
 };
