@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 import AppLayout from '@/components/layout/AppLayout';
 
 export default {
@@ -12,9 +14,21 @@ export default {
 
   components: { AppLayout },
 
+  methods: {
+    ...mapActions({
+      setLogoutTimer: 'auth/setLogoutTimer',
+    }),
+  },
+
+  computed: {
+    ...mapGetters({
+      authenticated: 'auth/getIsAuthenticated',
+    }),
+  },
+
   created() {
-    if (this.$store.getters['auth/getIsAuthenticated']) {
-      this.$store.dispatch('auth/setLogoutTimer');
+    if (this.authenticated) {
+      this.setLogoutTimer();
     }
   },
 };
