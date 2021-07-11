@@ -66,7 +66,14 @@
 
               <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">Check: </span>
-                <span>{{ item.check1 }} / {{ item.check2 }}</span>
+
+                <span v-if="item.check2">
+                  {{ item.check1 }} / {{ item.check2 }}
+                </span>
+
+                <span v-else>
+                  {{ item.check1 }}
+                </span>
               </v-col>
             </v-row>
 

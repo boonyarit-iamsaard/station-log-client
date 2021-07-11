@@ -10,5 +10,5 @@ export const defaultValues = {
   acreg: '',
   startAt: '',
   endAt: '',
-  chemicalUsage: '',
+  chemicalUsage: 0,
 };
