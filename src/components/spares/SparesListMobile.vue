@@ -83,7 +83,7 @@
           :total-visible="5"
           circle
           v-model="page"
-        ></v-pagination>
+        />
       </template>
     </v-data-iterator>
 
@@ -138,7 +138,7 @@ export default {
       const defaultLength = 5;
       const calculatedLength = this.spares.length / defaultLength;
 
-      return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
+      return calculatedLength < 1 ? 1 : Math.ceil(calculatedLength);
     },
   },
 };

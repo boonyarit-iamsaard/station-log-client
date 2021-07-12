@@ -138,7 +138,7 @@ export default {
       const defaultLength = 5;
       const calculatedLength = this.manpowerRecords.length / defaultLength;
 
-      return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
+      return calculatedLength < 1 ? 1 : Math.ceil(calculatedLength);
     },
   },
 
