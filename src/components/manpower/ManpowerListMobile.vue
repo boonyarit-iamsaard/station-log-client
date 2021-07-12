@@ -28,14 +28,14 @@
           v-for="item in items"
         >
           <v-card-title class="d-flex align-center justify-space-between">
-            <span class="body-2 font-weight-bold">
+            <span class="body-1 font-weight-bold">
               {{ item.date | dateFormat }}
             </span>
 
             <v-spacer />
           </v-card-title>
 
-          <v-card-text class="pb-2">
+          <v-card-text class="body-2 pb-2">
             <v-row class="ma-0">
               <v-col class="pa-0" cols="6">
                 <span class="font-weight-bold">Sick Leave</span>
@@ -66,7 +66,7 @@
 
             <v-row class="ma-0">
               <v-col class="pa-0" cols="6">
-                <span class="font-weight-bold">OT Required By</span>
+                <span class="font-weight-bold">OT Required by</span>
               </v-col>
 
               <v-col class="pa-0" cols="3" />
@@ -91,7 +91,7 @@
 
     <v-card class="shadow" v-if="manpowerRecords.length === 0">
       <v-card-text>
-        <span> No cabin disinfection record found. </span>
+        <span> No sick leave / OT record found. </span>
       </v-card-text>
     </v-card>
   </div>

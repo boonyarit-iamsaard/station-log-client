@@ -37,7 +37,7 @@ export default {
           path: '/disinfection',
         },
         {
-          title: 'Sick Leave / OT',
+          title: 'Sick Leave / OT ',
           icon: 'mdi-account',
           path: '/manpower',
         },

@@ -27,34 +27,20 @@
 
         <v-card-text>
           <v-row>
-            <v-col cols="12" sm="3">
-              <input-text
-                label="Shift"
-                upper-case
-                v-model="manpowerRecord.sickLeaveDetails.shift"
-              />
-            </v-col>
-
-            <v-col cols="12" sm="3">
-              <input-autocomplete
-                :items="staffs"
-                label="Name"
-                v-model="manpowerRecord.sickLeaveDetails.name"
-              />
-            </v-col>
-
-            <v-col cols="12" sm="3">
-              <input-autocomplete
-                :items="staffs"
-                label="Received by"
-                v-model="manpowerRecord.sickLeaveDetails.receivedBy"
-              />
-            </v-col>
-
-            <v-col cols="12">
-              <input-textarea
-                label="Reason"
-                v-model="manpowerRecord.sickLeaveDetails.reason"
+            <v-col
+              :cols="item.xs"
+              :key="item.name"
+              :sm="item.sm"
+              v-for="item in sickLeaveDetailFields"
+            >
+              <component
+                :hint="item.hint"
+                :is="item.type"
+                :items="item.items"
+                :label="item.label"
+                :rules="item.rules"
+                :upper-case="item.upperCase"
+                v-model="manpowerRecord.sickLeaveDetails[item.name]"
               />
             </v-col>
           </v-row>
@@ -66,34 +52,20 @@
 
         <v-card-text>
           <v-row>
-            <v-col cols="12" sm="3">
-              <input-text
-                label="Shift"
-                upper-case
-                v-model="manpowerRecord.overTimeDetails.shift"
-              />
-            </v-col>
-
-            <v-col cols="12" sm="3">
-              <input-autocomplete
-                :items="staffs"
-                label="Name"
-                v-model="manpowerRecord.overTimeDetails.name"
-              />
-            </v-col>
-
-            <v-col cols="12" sm="3">
-              <input-autocomplete
-                :items="engineers"
-                label="Required by"
-                v-model="manpowerRecord.overTimeDetails.requiredBy"
-              />
-            </v-col>
-
-            <v-col cols="12">
-              <input-textarea
-                label="Remark"
-                v-model="manpowerRecord.overTimeDetails.remark"
+            <v-col
+              :cols="item.xs"
+              :key="item.name"
+              :sm="item.sm"
+              v-for="item in overTimeDetailFields"
+            >
+              <component
+                :hint="item.hint"
+                :is="item.type"
+                :items="item.items"
+                :label="item.label"
+                :rules="item.rules"
+                :upper-case="item.upperCase"
+                v-model="manpowerRecord.overTimeDetails[item.name]"
               />
             </v-col>
           </v-row>
@@ -139,6 +111,10 @@ import InputTextarea from '@/components/shared/input/InputTextarea';
 import { defaultValues } from '@/components/manpower/default-values';
 import { engineers, staffs } from '@/utils/staffs';
 import { mapActions, mapGetters } from 'vuex';
+import {
+  overTimeDetailFields,
+  sickLeaveDetailFields,
+} from '@/components/manpower/manpower-form-fields';
 
 export default {
   name: 'ManpowerForm',
@@ -156,6 +132,8 @@ export default {
     return {
       engineers: engineers(),
       manpowerRecord: cloneDeep(defaultValues),
+      overTimeDetailFields: overTimeDetailFields,
+      sickLeaveDetailFields: sickLeaveDetailFields,
       staffs: staffs(),
     };
   },
@@ -245,14 +223,6 @@ export default {
     ...mapGetters({
       admin: 'auth/getIsAdmin',
     }),
-
-    overTimeRequired() {
-      return this.manpowerRecord.overTimeRequired;
-    },
-
-    sickLeaveRequested() {
-      return this.manpowerRecord.sickLeaveRequested;
-    },
   },
 
   created() {

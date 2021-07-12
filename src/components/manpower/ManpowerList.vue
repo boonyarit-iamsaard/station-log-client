@@ -1,8 +1,14 @@
 <template>
   <div>
-    <p>ManpowerList</p>
+    <manpower-list-mobile
+      :manpowerRecords="manpowerRecords"
+      v-if="!shouldLoading && smallScreen"
+    />
 
-    <manpower-list-mobile :manpowerRecords="manpowerRecords" />
+    <manpower-list-desktop
+      :manpowerRecords="manpowerRecords"
+      v-if="!shouldLoading && !smallScreen"
+    />
   </div>
 </template>
 
@@ -10,11 +16,13 @@
 import { mapActions, mapGetters } from 'vuex';
 
 import ManpowerListMobileVue from '@/components/manpower/ManpowerListMobile.vue';
+import ManpowerListDesktop from '@/components/manpower/ManpowerListDesktop';
 
 export default {
   name: 'ManpowerList',
 
   components: {
+    'manpower-list-desktop': ManpowerListDesktop,
     'manpower-list-mobile': ManpowerListMobileVue,
   },
 

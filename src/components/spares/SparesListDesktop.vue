@@ -28,9 +28,9 @@
       </template>
 
       <template v-slot:item.status="{ item }">
-        <v-icon :color="setSpareStatusHandler(item.type, item.status).color">{{
-          setSpareStatusHandler(item.type, item.status).icon
-        }}</v-icon>
+        <v-icon :color="setSpareStatusHandler(item.type, item.status).color">
+          {{ setSpareStatusHandler(item.type, item.status).icon }}
+        </v-icon>
       </template>
 
       <template v-slot:item.actions="{ item }">

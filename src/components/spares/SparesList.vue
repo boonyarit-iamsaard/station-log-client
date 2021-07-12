@@ -58,7 +58,9 @@ export default {
   },
 
   created() {
-    this.handleFetchSpares();
+    if (this.spares.length === 0) {
+      this.handleFetchSpares();
+    }
   },
 };
 </script>
