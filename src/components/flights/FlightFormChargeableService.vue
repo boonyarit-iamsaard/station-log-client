@@ -60,6 +60,7 @@
               hint="Optional"
               label="Engineer (hours)"
               number
+              v-if="chargeablePerServiceItems.includes(service.service)"
               v-model="service.engineerHours"
             />
           </v-col>
@@ -69,6 +70,7 @@
               hint="Optional"
               label="Mechanic (hours)"
               number
+              v-if="chargeablePerServiceItems.includes(service.service)"
               v-model="service.mechanicHours"
             />
           </v-col>
@@ -112,6 +114,7 @@ import InputText from '@/components/shared/input/InputText';
 import {
   chargeableItems,
   chargeablePerHourItems,
+  chargeablePerServiceItems,
 } from '@/components/flights/chargeable-items';
 
 export default {
@@ -142,6 +145,7 @@ export default {
     return {
       chargeableItems: chargeableItems(),
       chargeablePerHourItems: chargeablePerHourItems(),
+      chargeablePerServiceItems: chargeablePerServiceItems(),
       serviceID: '',
     };
   },
