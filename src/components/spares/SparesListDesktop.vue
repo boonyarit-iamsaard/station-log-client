@@ -6,28 +6,23 @@
 
     <v-data-table
       :headers="headers"
-      :items="items"
+      :items="spares"
+      :search="filters.search"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
       class="shadow"
     >
       <template v-slot:top>
-        <div class="pa-4">
-          <SparesListFilter />
-        </div>
+        <list-desktop-header link="/spares/create" v-model="filters" />
       </template>
 
-      <template v-slot:item.date="{ item }">
-        {{ setDateFormatHandler(item.date) }}
-      </template>
-
-      <template v-slot:item.type="{ item }">
+      <template v-slot:item.displayType="{ item }">
         <v-avatar :color="setSpareTypeColorHandler(item.type)" size="32">
           <span class="white--text">{{ item.type.substr(0, 1) }}</span>
         </v-avatar>
       </template>
 
-      <template v-slot:item.status="{ item }">
+      <template v-slot:item.displayStatus="{ item }">
         <v-icon :color="setSpareStatusHandler(item.type, item.status).color">
           {{ setSpareStatusHandler(item.type, item.status).icon }}
         </v-icon>
@@ -51,15 +46,14 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
-import { mapGetters } from 'vuex';
-
-import SparesListFilter from '@/components/spares/SparesListFilter';
+import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 export default {
   name: 'SparesListDesktop',
 
-  components: { SparesListFilter },
+  components: {
+    'list-desktop-header': ListDesktopHeader,
+  },
 
   props: {
     spares: {
@@ -70,44 +64,77 @@ export default {
 
   data() {
     return {
+      filters: {
+        dateRange: [
+          this.spares[0].date,
+          new Date().toISOString().substr(0, 10),
+        ],
+        fromDate: this.spares[0].date,
+        search: '',
+      },
       headers: [
-        { text: 'Date', value: 'date' },
+        {
+          text: 'Date',
+          value: 'date',
+          width: 120,
+          filter: value => this.dateFilter(value),
+        },
         {
           text: 'Airline',
           value: 'airline',
-          filter: value =>
-            this.onUpdateFiltersHandler(value, this.filters.airline),
         },
-        { text: 'Flt No.', value: 'fltno' },
+        {
+          text: 'Flt No.',
+          value: 'fltno',
+        },
         {
           text: 'Type',
           value: 'type',
-          filter: value =>
-            this.onUpdateFiltersHandler(value, this.filters.type),
+          cellClass: 'd-none',
+          class: 'd-none',
         },
-        { text: 'Part No.', value: 'part' },
-        { text: 'Description', value: 'desc' },
+        {
+          text: 'Type',
+          value: 'displayType',
+        },
+        {
+          text: 'Part No.',
+          value: 'part',
+        },
+        {
+          text: 'Description',
+          value: 'desc',
+        },
         {
           text: 'Store',
           value: 'store',
-          filter: value =>
-            this.onUpdateFiltersHandler(value, this.filters.store),
+        },
+        {
+          text: 'Status',
+          value: 'displayStatus',
         },
         {
           text: 'Status',
           value: 'status',
-          filter: value =>
-            this.onUpdateFiltersHandler(value, this.filters.status),
+          cellClass: 'd-none',
+          class: 'd-none',
         },
-        { text: 'Actions', value: 'actions', sortable: false },
+        {
+          text: 'Actions',
+          value: 'actions',
+          sortable: false,
+        },
       ],
-      items: [],
     };
   },
 
   methods: {
-    setDateFormatHandler(date) {
-      return format(new Date(date), 'dd MMM yy');
+    dateFilter(value) {
+      const fromDate = new Date(this.filters.dateRange[0]);
+      const toDate = new Date(this.filters.dateRange[1]);
+      const valueDate = new Date(value);
+
+      return fromDate <= valueDate && valueDate <= toDate;
     },
 
     setSpareTypeColorHandler(type) {
@@ -119,11 +146,6 @@ export default {
         default:
           return 'secondary';
       }
-    },
-
-    onUpdateFiltersHandler(value, filter) {
-      if (filter === 'ALL') return true;
-      return value === filter;
     },
 
     setSpareStatusHandler(type, status) {
@@ -154,16 +176,6 @@ export default {
           }
       }
     },
-  },
-
-  computed: {
-    ...mapGetters({
-      filters: 'spares/getFilters',
-    }),
-  },
-
-  created() {
-    this.items = this.spares;
   },
 };
 </script>

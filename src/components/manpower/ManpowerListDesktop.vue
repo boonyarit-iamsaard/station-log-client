@@ -7,7 +7,7 @@
     <v-data-table
       :headers="headers"
       :items="manpowerRecords"
-      :search="search"
+      :search="filters.search"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
       class="shadow"
@@ -27,19 +27,7 @@
       </template>
 
       <template v-slot:top>
-        <div class="d-flex pa-4">
-          <input-text
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            v-model="search"
-          />
-
-          <v-spacer />
-
-          <v-btn class="mt-6" color="primary" link to="/manpower/create">
-            Add New Record
-          </v-btn>
-        </div>
+        <list-desktop-header link="/manpower/create" v-model="filters" />
       </template>
 
       <template v-slot:item.date="{ item }">
@@ -64,15 +52,13 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
-
-import InputText from '@/components/shared/input/InputText';
+import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 export default {
   name: 'ManpowerListDesktop',
 
   components: {
-    'input-text': InputText,
+    'list-desktop-header': ListDesktopHeader,
   },
 
   props: {
@@ -84,6 +70,14 @@ export default {
 
   data() {
     return {
+      filters: {
+        dateRange: [
+          this.manpowerRecords[0].date,
+          new Date().toISOString().substr(0, 10),
+        ],
+        fromDate: this.manpowerRecords[0].date,
+        search: '',
+      },
       headers: [
         { text: 'Date', value: 'date' },
         {
@@ -116,14 +110,7 @@ export default {
           sortable: false,
         },
       ],
-      search: '',
     };
-  },
-
-  filters: {
-    dateFormat: function (date) {
-      return format(new Date(date), 'dd MMM yy');
-    },
   },
 };
 </script>

@@ -6,65 +6,68 @@
 
     <v-data-table
       :headers="headers"
-      :items="items"
-      :search="search"
+      :items="flights"
+      :search="filters.search"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
       class="shadow"
     >
       <template v-slot:top>
-        <div class="d-flex pa-4">
-          <input-text
-            label="Search"
-            prepend-inner-icon="mdi-magnify"
-            v-model="search"
-          />
-
-          <v-spacer />
-
-          <v-btn class="mt-6" color="primary" link to="/flights/create">
-            Add New Flight
-          </v-btn>
-        </div>
-      </template>
-
-      <template v-slot:item.date="{ item }">
-        {{ item.date }}
+        <list-desktop-header link="/flights/create" v-model="filters" />
       </template>
 
       <template v-slot:item.fltno="{ item }">
-        <v-chip color="error" v-if="item.assignedDelays.length > 0">
-          <span>{{ item.fltno }}</span>
+        <v-chip
+          class="ml-n2 px-2"
+          color="error"
+          dark
+          v-if="item.assignedDelays.length"
+        >
+          {{ item.fltno }}
         </v-chip>
 
-        <span v-else>{{ item.fltno }}</span>
+        <span v-else>
+          {{ item.fltno }}
+        </span>
+      </template>
+
+      <template v-slot:item.check="{ item }">
+        <span>{{ check(item) }}</span>
       </template>
 
       <template v-slot:item.extraGroundEquipments="{ item }">
-        <v-avatar class="grey lighten-3" size="32">
-          <span class="caption">
-            {{ extraGroundEquipments(item) }}
+        <v-avatar
+          class="secondary"
+          size="32"
+          v-if="item.extraGroundEquipments.length"
+        >
+          <span class="caption white--text">
+            {{ item.extraGroundEquipments.length }}
           </span>
         </v-avatar>
       </template>
 
       <template v-slot:item.tasks="{ item }">
-        <v-avatar class="grey lighten-3" size="32">
-          <span class="caption">
-            {{ tasks(item) }}
+        <v-avatar class="info" size="32" v-if="item.tasks.length">
+          <span class="caption white--text">
+            {{ item.tasks.length }}
           </span>
         </v-avatar>
       </template>
 
       <template v-slot:item.chargeableServices="{ item }">
-        <v-avatar class="grey lighten-3" size="32">
-          <span class="caption">
-            {{ chargeableServices(item) }}
+        <v-avatar
+          class="grey lighten-1"
+          size="32"
+          v-if="item.chargeableServices.length"
+        >
+          <span class="caption white--text">
+            {{ item.chargeableServices.length }}
           </span>
         </v-avatar>
       </template>
 
-      <template v-slot:item.mechanic1="{ item }">
+      <template v-slot:item.mechanic="{ item }">
         {{ mechanic(item) }}
       </template>
 
@@ -86,15 +89,13 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
-
-import InputText from '@/components/shared/input/InputText';
+import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 export default {
   name: 'FlightsListDesktop',
 
   components: {
-    'input-text': InputText,
+    'list-desktop-header': ListDesktopHeader,
   },
 
   props: {
@@ -106,12 +107,21 @@ export default {
 
   data() {
     return {
-      airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
       filters: {
-        airline: 'ALL',
+        dateRange: [
+          this.flights[0].date,
+          new Date().toISOString().substr(0, 10),
+        ],
+        fromDate: this.flights[0].date,
+        search: '',
       },
       headers: [
-        { text: 'Date', value: 'date' },
+        {
+          text: 'Date',
+          value: 'date',
+          width: 120,
+          filter: value => this.dateFilter(value),
+        },
         {
           text: 'Airline',
           value: 'airline',
@@ -129,12 +139,26 @@ export default {
           value: 'bay',
         },
         {
+          text: 'Check',
+          value: 'check',
+        },
+        {
           text: 'Check-1',
           value: 'check1',
+          cellClass: 'd-none',
+          class: 'd-none',
         },
         {
           text: 'Check-2',
           value: 'check2',
+          cellClass: 'd-none',
+          class: 'd-none',
+        },
+        {
+          text: 'Check-3',
+          value: 'check3',
+          cellClass: 'd-none',
+          class: 'd-none',
         },
         {
           text: 'Extra Equipment',
@@ -152,7 +176,19 @@ export default {
         },
         {
           text: 'Mechanic',
+          value: 'mechanic',
+        },
+        {
+          text: 'Mechanic-1',
           value: 'mechanic1',
+          cellClass: 'd-none',
+          class: 'd-none',
+        },
+        {
+          text: 'Mechanic-2',
+          value: 'mechanic2',
+          cellClass: 'd-none',
+          class: 'd-none',
         },
         {
           text: 'Engineer',
@@ -164,43 +200,36 @@ export default {
           sortable: false,
         },
       ],
-      items: [],
-      search: '',
     };
   },
 
   methods: {
-    chargeableServices(item) {
-      return item.chargeableServices.length > 0
-        ? item.chargeableServices.length
-        : 'N/A';
+    check(item) {
+      const { check1, check2, check3 } = item;
+
+      if (!check1) return '';
+
+      if (check1 && check2 && !check3) return `${check1} / ${check2}`;
+
+      if (check1 && check2 && check3)
+        return `${check1} / ${check2} / ${check3}`;
+
+      return check1;
     },
 
-    extraGroundEquipments(item) {
-      return item.extraGroundEquipments.length > 0
-        ? item.extraGroundEquipments.length
-        : 'N/A';
+    dateFilter(value) {
+      const fromDate = new Date(this.filters.dateRange[0]);
+      const toDate = new Date(this.filters.dateRange[1]);
+      const valueDate = new Date(value);
+
+      return fromDate <= valueDate && valueDate <= toDate;
     },
 
     mechanic(item) {
-      return item.mechanic2
-        ? item.mechanic1 + ' / ' + item.mechanic2
-        : item.mechanic1;
-    },
+      const { mechanic1, mechanic2 } = item;
 
-    tasks(item) {
-      return item.tasks.length > 0 ? item.tasks.length : 'N/A';
+      return mechanic2 ? `${mechanic1} / ${mechanic2}` : mechanic1;
     },
-  },
-
-  filters: {
-    dateFormat: function (date) {
-      return format(new Date(date), 'dd MMM yy');
-    },
-  },
-
-  created() {
-    this.items = this.flights;
   },
 };
 </script>
