@@ -1,5 +1,5 @@
 <template>
-  <v-overlay :value="shouldLoading">
+  <v-overlay absolute :value="shouldLoading">
     <v-card class="shadow" light width="300">
       <v-card-text class="d-flex align-center pa-4">
         <v-progress-circular
