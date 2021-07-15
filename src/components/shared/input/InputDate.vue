@@ -12,7 +12,7 @@
 
         <v-text-field
           :disabled="disabled"
-          :value="date | dateFormat"
+          :value="date"
           append-icon="mdi-calendar"
           dense
           filled
@@ -24,7 +24,12 @@
       </div>
     </template>
 
-    <v-date-picker v-model="date" scrollable>
+    <v-date-picker
+      color="primary"
+      v-model="date"
+      scrollable
+      show-adjacent-months
+    >
       <v-spacer />
 
       <v-btn text color="primary" @click="modal = false"> Cancel </v-btn>
@@ -37,14 +42,14 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
-
 import InputLabel from '@/components/shared/input/InputLabel';
 
 export default {
   name: 'InputDate',
 
-  components: { InputLabel },
+  components: {
+    'input-label': InputLabel,
+  },
 
   props: {
     disabled: {
@@ -76,12 +81,6 @@ export default {
       set(date) {
         this.$emit('input', new Date(date).toISOString().substr(0, 10));
       },
-    },
-  },
-
-  filters: {
-    dateFormat: date => {
-      return format(new Date(date), 'dd MMMM yyyy');
     },
   },
 };

@@ -4,6 +4,7 @@
 
     <v-text-field
       :class="upperCase ? 'uppercase' : null"
+      :clearable="clearable"
       :counter="counter"
       :disabled="disabled"
       :hint="hint"
@@ -12,6 +13,7 @@
       :prepend-inner-icon="prependInnerIcon"
       :rules="rules"
       :type="inputType"
+      clear-icon="mdi-close-circle-outline"
       dense
       filled
       outlined
@@ -35,6 +37,10 @@ export default {
   },
 
   props: {
+    clearable: {
+      type: Boolean,
+      default: false,
+    },
     counter: {
       type: Number,
       default: undefined,
