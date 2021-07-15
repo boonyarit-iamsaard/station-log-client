@@ -51,6 +51,7 @@
             <v-row class="ma-0">
               <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">ATA: </span>
+
                 <span>{{ item.ata !== '' ? item.ata : 'N/A' }}</span>
               </v-col>
 
@@ -61,18 +62,15 @@
 
               <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">Bay: </span>
+
                 <span>{{ item.bay }}</span>
               </v-col>
 
               <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">Check: </span>
 
-                <span v-if="item.check2">
-                  {{ item.check1 }} / {{ item.check2 }}
-                </span>
-
-                <span v-else>
-                  {{ item.check1 }}
+                <span>
+                  {{ check(item) }}
                 </span>
               </v-col>
             </v-row>
@@ -95,24 +93,31 @@
                   class="ml-0 my-2 mr-2"
                   color="error"
                   dark
+                  small
                   v-if="item.assignedDelays.length > 0"
                 >
-                  <span class="caption"> delayed </span>
+                  <span class="caption"> Delayed </span>
                 </v-chip>
 
                 <v-chip
                   class="ml-0 my-2 mr-2"
+                  small
                   v-if="item.extraGroundEquipments.length > 0"
                 >
                   <span class="caption"> Extra Equipments </span>
                 </v-chip>
 
-                <v-chip class="ml-0 my-2 mr-2" v-if="item.tasks.length > 0">
-                  <span class="caption"> Completed Tasks </span>
+                <v-chip
+                  class="ml-0 my-2 mr-2"
+                  small
+                  v-if="item.tasks.length > 0"
+                >
+                  <span class="caption">Completed Tasks </span>
                 </v-chip>
 
                 <v-chip
                   class="ml-0 my-2 mr-2"
+                  small
                   v-if="item.chargeableServices.length > 0"
                 >
                   <span class="caption"> Chargeable Services </span>
@@ -163,6 +168,19 @@ export default {
   },
 
   methods: {
+    check(item) {
+      const { check1, check2, check3 } = item;
+
+      if (!check1) return '';
+
+      if (check1 && check2 && !check3) return `${check1} / ${check2}`;
+
+      if (check1 && check2 && check3)
+        return `${check1} / ${check2} / ${check3}`;
+
+      return check1;
+    },
+
     setAvatarColor(airline) {
       switch (airline) {
         case 'CX':
