@@ -16,7 +16,7 @@
 
     <v-spacer />
 
-    <div class="mr-4">
+    <div>
       <input-text
         clearable
         label="Search"
@@ -25,7 +25,18 @@
       />
     </div>
 
-    <v-btn :to="link" class="mt-6" color="primary" link>New</v-btn>
+    <v-btn
+      @click="$emit('onExport')"
+      class="mt-6 ml-4"
+      icon
+      v-if="exportButton"
+    >
+      <v-icon color="primary" large> mdi-microsoft-excel</v-icon>
+    </v-btn>
+
+    <v-btn :to="link" class="ml-4 mt-6" color="primary" link v-if="addButton">
+      New
+    </v-btn>
   </div>
 </template>
 
@@ -37,6 +48,14 @@ export default {
   name: 'ListDesktopHeader',
 
   props: {
+    addButton: {
+      type: Boolean,
+      default: true,
+    },
+    exportButton: {
+      type: Boolean,
+      default: false,
+    },
     link: {
       type: String,
       default: '/',

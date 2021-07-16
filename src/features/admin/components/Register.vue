@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import Progress from 'components/shared/Progress.vue';
+import Progress from '@/components/shared/Progress';
 
 export default {
   components: { Progress },

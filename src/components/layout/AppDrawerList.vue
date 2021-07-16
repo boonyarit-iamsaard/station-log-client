@@ -18,31 +18,70 @@
         </v-list-item-content>
       </v-list-item>
     </v-list-item-group>
+
+    <v-divider class="my-4" v-if="admin" />
+
+    <v-list-item-group v-if="admin">
+      <v-list-item color="primary" exact link to="/admin">
+        <v-list-item-icon>
+          <v-icon> mdi-account </v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title> Admin </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list-item-group>
   </v-list>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   name: 'AppDrawerList',
 
   data() {
     return {
       items: [
-        { title: 'Home', icon: 'mdi-home', path: '/' },
-        { title: 'Flights', icon: 'mdi-airplane', path: '/flights' },
-        { title: 'Spares', icon: 'mdi-cogs', path: '/spares' },
         {
-          title: 'Disinfection',
-          icon: 'mdi-hospital-box',
-          path: '/disinfection',
+          icon: 'mdi-home',
+          path: '/',
+          requireAdminRole: false,
+          title: 'Home',
         },
         {
-          title: 'Sick Leave / OT ',
+          icon: 'mdi-airplane',
+          path: '/flights',
+          requireAdminRole: false,
+          title: 'Flights',
+        },
+        {
+          icon: 'mdi-cogs',
+          path: '/spares',
+          requireAdminRole: false,
+          title: 'Spares',
+        },
+        {
+          icon: 'mdi-hospital-box',
+          path: '/disinfection',
+          requireAdminRole: false,
+          title: 'Disinfection',
+        },
+        {
           icon: 'mdi-account',
           path: '/manpower',
+          requireAdminRole: false,
+          title: 'Sick Leave / OT ',
         },
       ],
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      admin: 'auth/getIsAdmin',
+    }),
   },
 };
 </script>

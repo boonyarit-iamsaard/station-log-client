@@ -21,8 +21,27 @@ const routes = [
     component: () => import('@/views/LoginPage'),
   },
   {
-    path: '/admin/signup',
-    component: () => import('@/views/SignupPage'),
+    path: '/admin',
+    component: () => import('@/features/admin/views/AdminPage'),
+    children: [
+      {
+        path: '',
+        name: 'task',
+        component: () =>
+          import('@/features/admin/components/AdminCompletedTaskList'),
+      },
+      {
+        path: 'chargeable-service',
+        name: 'chargeable-service',
+        component: () =>
+          import('@/features/admin/components/AdminChargeableServiceList'),
+      },
+      {
+        path: 'register',
+        name: 'register',
+        component: () => import('@/features/admin/components/Register'),
+      },
+    ],
     meta: {
       requiresAuth: true,
     },
