@@ -92,6 +92,7 @@ export default {
       }
     },
   },
+
   mutations: {
     ADD_FLIGHT(state, payload) {
       state.flights = state.flights.concat(payload);
