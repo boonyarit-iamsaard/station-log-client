@@ -73,11 +73,8 @@ export default {
   data() {
     return {
       filters: {
-        dateRange: [
-          this.manpowerRecords[0].date,
-          new Date().toISOString().substr(0, 10),
-        ],
-        fromDate: this.manpowerRecords[0].date,
+        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        fromDate: '2021-01-01',
         search: '',
       },
       headers: [
