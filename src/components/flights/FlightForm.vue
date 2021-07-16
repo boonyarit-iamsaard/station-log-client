@@ -212,7 +212,6 @@ export default {
 
   data() {
     return {
-      checks: ['10D', '36H', '72H', 'ETR', 'OCT', 'TR', 'WY'],
       fieldArray: {
         assignedDelays: {
           category: '',
@@ -323,7 +322,9 @@ export default {
       this.flight = cloneDeep(defaultValues);
 
       this.$nextTick(() => {
-        this.$router.replace('/flights');
+        if (window.history.length) {
+          this.$router.go(-1);
+        } else this.$router.replace('/flights');
       });
     },
 
