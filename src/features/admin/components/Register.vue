@@ -56,7 +56,7 @@
           </v-card-text>
 
           <v-card-actions class="pa-4">
-            <v-btn block color="primary" depressed type="submint">Signup</v-btn>
+            <v-btn block color="primary" depressed type="submit">Signup</v-btn>
           </v-card-actions>
         </v-card>
       </v-form>
@@ -65,10 +65,12 @@
 </template>
 
 <script>
-import Progress from '../components/shared/Progress.vue';
+import Progress from 'components/shared/Progress.vue';
+
 export default {
   components: { Progress },
-  name: 'SignupPage',
+
+  name: 'Register',
 
   data() {
     return {
