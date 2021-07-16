@@ -64,7 +64,7 @@ export const flightDetailFields = [
     xs: 12,
   },
   {
-    items: ['10D', '36H', '72H', 'DEP', 'ETR', 'OCT', 'TR', 'WY'],
+    items: ['10D', '36H', '72H', 'DEP', 'ETR', 'OCT', 'RTB', 'TR', 'WY'],
     label: 'Check-1',
     name: 'check1',
     rules: [],
