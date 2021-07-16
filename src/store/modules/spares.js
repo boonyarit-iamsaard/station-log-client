@@ -11,30 +11,22 @@ export default {
 
   state() {
     return {
-      filters: {
-        airline: 'ALL',
-        status: 'ALL',
-        store: 'ALL',
-        type: 'ALL',
-      },
+      mostUsedParts: [],
       spares: [],
     };
   },
 
   getters: {
-    getFilters(state) {
-      return state.filters;
+    getMostUsedParts(state) {
+      return state.mostUsedParts;
     },
+
     getSpares(state) {
       return state.spares;
     },
   },
 
   actions: {
-    setFilters(context, payload) {
-      context.commit('SET_FILTERS', payload);
-    },
-
     async addSpare(context, payload) {
       try {
         const response = await createSpare(payload);
@@ -53,9 +45,10 @@ export default {
     async fetchSpares(context) {
       try {
         const response = await getSpares();
-        const { spares } = response.data;
+        const { partCount, spares } = response.data;
 
         context.commit('SET_SPARES', spares);
+        context.commit('SET_MOST_USED_PARTS', partCount);
 
         return spares;
       } catch (error) {
@@ -115,8 +108,8 @@ export default {
       state.spares = state.spares.filter(spare => spare._id !== payload);
     },
 
-    SET_FILTERS(state, payload) {
-      state.filters = payload;
+    SET_MOST_USED_PARTS(state, payload) {
+      state.mostUsedParts = payload;
     },
 
     SET_SPARES(state, payload) {

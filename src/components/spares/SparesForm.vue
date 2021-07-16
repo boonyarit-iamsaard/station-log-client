@@ -77,7 +77,8 @@
             </v-col>
 
             <v-col cols="12" sm="6">
-              <input-text
+              <input-combo
+                :items="normalizedMostUsedParts"
                 :rules="formRules.part"
                 label="Part No."
                 upper-case
@@ -295,15 +296,16 @@ import { mapActions, mapGetters } from 'vuex';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
+import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
+import InputCheckbox from '@/components/shared/input/InputCheckbox';
+import InputCombo from '@/components/shared/input/InputCombo';
 import InputDate from '@/components/shared/input/InputDate';
 import InputSelect from '@/components/shared/input/InputSelect';
 import InputText from '@/components/shared/input/InputText';
-import InputCheckbox from '@/components/shared/input/InputCheckbox';
 
 import { spareData } from '@/components/spares/default-values';
 import { staffs } from '@/utils/staffs';
 import { sparesFormRules } from '@/components/spares/spares-form-rules';
-import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 
 const currentDate = new Date().toISOString().substr(0, 10);
 
@@ -311,10 +313,11 @@ export default {
   name: 'SparesForm',
 
   components: {
-    InputAutocomplete,
     'confirm-dialog': ConfirmDialog,
     'flight-form-title-wrapper': FlightFormTitleWrapper,
+    'input-autocomplete': InputAutocomplete,
     'input-checkbox': InputCheckbox,
+    'input-combo': InputCombo,
     'input-date': InputDate,
     'input-select': InputSelect,
     'input-text': InputText,
@@ -521,6 +524,7 @@ export default {
   computed: {
     ...mapGetters({
       admin: 'auth/getIsAdmin',
+      mostUsedParts: 'spares/getMostUsedParts',
     }),
 
     issued() {
@@ -529,6 +533,14 @@ export default {
 
     isMobile() {
       return this.$vuetify.breakpoint.xs;
+    },
+
+    normalizedMostUsedParts() {
+      const mostUsedParts = [];
+
+      this.mostUsedParts.forEach(part => mostUsedParts.push(part._id));
+
+      return mostUsedParts;
     },
 
     returnable() {
