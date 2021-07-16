@@ -21,6 +21,10 @@
         />
       </template>
 
+      <template v-slot:item.date="{ item }">
+        {{ item.date | dateFormat }}
+      </template>
+
       <template v-slot:item.service="{ item }">
         <div class="d-flex align-center">
           <span
@@ -88,6 +92,7 @@ import { mapActions, mapGetters } from 'vuex';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { IDGenerator } from '@/utils/id-generator';
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'AdminChargeableServiceList',
@@ -255,6 +260,10 @@ export default {
 
       return normalizedFlights;
     },
+  },
+
+  filters: {
+    dateFormat,
   },
 
   created() {

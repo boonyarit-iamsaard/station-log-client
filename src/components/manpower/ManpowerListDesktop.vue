@@ -31,7 +31,7 @@
       </template>
 
       <template v-slot:item.date="{ item }">
-        {{ item.date }}
+        {{ item.date | dateFormat }}
       </template>
 
       <template v-slot:item.actions="{ item }">
@@ -53,6 +53,8 @@
 
 <script>
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
+
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'ManpowerListDesktop',
@@ -111,6 +113,10 @@ export default {
         },
       ],
     };
+  },
+
+  filters: {
+    dateFormat,
   },
 };
 </script>

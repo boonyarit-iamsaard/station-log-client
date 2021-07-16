@@ -16,6 +16,10 @@
         <list-desktop-header link="/disinfection/create" v-model="filters" />
       </template>
 
+      <template v-slot:item.date="{ item }">
+        <span>{{ item.date | dateFormat }}</span>
+      </template>
+
       <template v-slot:item.actions="{ item }">
         <v-btn
           class="mr-2"
@@ -36,6 +40,8 @@
 <script>
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
+import { dateFormat } from '@/utils/dateFormat';
+
 export default {
   name: 'DisinfectionListDesktop',
 
@@ -53,11 +59,8 @@ export default {
   data() {
     return {
       filters: {
-        dateRange: [
-          this.disinfectionList[0].date,
-          new Date().toISOString().substr(0, 10),
-        ],
-        fromDate: this.disinfectionList[0].date,
+        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        fromDate: '2021-01-01',
         search: '',
       },
       headers: [
@@ -120,6 +123,10 @@ export default {
 
       return fromDate <= valueDate && valueDate <= toDate;
     },
+  },
+
+  filters: {
+    dateFormat,
   },
 };
 </script>

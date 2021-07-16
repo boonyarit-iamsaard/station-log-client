@@ -16,6 +16,10 @@
         <list-desktop-header link="/flights/create" v-model="filters" />
       </template>
 
+      <template v-slot:item.date="{ item }">
+        {{ item.date | dateFormat }}
+      </template>
+
       <template v-slot:item.fltno="{ item }">
         <v-chip
           class="ml-n2 px-2"
@@ -91,6 +95,8 @@
 <script>
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
+import { dateFormat } from '@/utils/dateFormat';
+
 export default {
   name: 'FlightsListDesktop',
 
@@ -108,11 +114,8 @@ export default {
   data() {
     return {
       filters: {
-        dateRange: [
-          this.flights[0].date,
-          new Date().toISOString().substr(0, 10),
-        ],
-        fromDate: this.flights[0].date,
+        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        fromDate: '2021-01-01',
         search: '',
       },
       headers: [
@@ -230,6 +233,10 @@ export default {
 
       return mechanic2 ? `${mechanic1} / ${mechanic2}` : mechanic1;
     },
+  },
+
+  filters: {
+    dateFormat,
   },
 };
 </script>

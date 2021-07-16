@@ -16,6 +16,10 @@
         <list-desktop-header link="/spares/create" v-model="filters" />
       </template>
 
+      <template v-slot:item.date="{ item }">
+        {{ item.date | dateFormat }}
+      </template>
+
       <template v-slot:item.displayType="{ item }">
         <v-avatar :color="setSpareTypeColorHandler(item.type)" size="32">
           <span class="white--text">{{ item.type.substr(0, 1) }}</span>
@@ -48,6 +52,8 @@
 <script>
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
+import { dateFormat } from '@/utils/dateFormat';
+
 export default {
   name: 'SparesListDesktop',
 
@@ -65,11 +71,8 @@ export default {
   data() {
     return {
       filters: {
-        dateRange: [
-          this.spares[0].date,
-          new Date().toISOString().substr(0, 10),
-        ],
-        fromDate: this.spares[0].date,
+        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        fromDate: '2021-01-01',
         search: '',
       },
       headers: [
@@ -176,6 +179,10 @@ export default {
           }
       }
     },
+  },
+
+  filters: {
+    dateFormat,
   },
 };
 </script>

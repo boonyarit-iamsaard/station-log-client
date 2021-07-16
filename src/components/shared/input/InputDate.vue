@@ -12,7 +12,7 @@
 
         <v-text-field
           :disabled="disabled"
-          :value="date"
+          :value="date | dateFormat"
           append-icon="mdi-calendar"
           dense
           filled
@@ -43,6 +43,8 @@
 
 <script>
 import InputLabel from '@/components/shared/input/InputLabel';
+
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'InputDate',
@@ -82,6 +84,10 @@ export default {
         this.$emit('input', new Date(date).toISOString().substr(0, 10));
       },
     },
+  },
+
+  filters: {
+    dateFormat,
   },
 };
 </script>
