@@ -33,6 +33,7 @@
             <input-autocomplete
               :items="chargeableItems"
               :rules="rules.service"
+              @change="handleServiceChange(index)"
               label="Service / Equipment"
               v-model="service.service"
             />
@@ -151,6 +152,12 @@ export default {
   },
 
   methods: {
+    handleServiceChange(index) {
+      this.model[index].engineerHours = 0;
+      this.model[index].mechanicHours = 0;
+      this.model[index].usage = 0;
+    },
+
     deleteChargeableService(id) {
       this.serviceID = id;
       this.$refs.confirmDialog.dialog = true;
