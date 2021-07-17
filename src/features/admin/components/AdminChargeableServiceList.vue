@@ -25,6 +25,10 @@
         {{ item.date | dateFormat }}
       </template>
 
+      <template v-slot:item.airline="{ item }">
+        <airline-avatar-wrapper :airline="item.airline" />
+      </template>
+
       <template v-slot:item.service="{ item }">
         <div class="d-flex align-center">
           <span
@@ -89,6 +93,7 @@
 import XLSX from 'xlsx';
 import { mapActions, mapGetters } from 'vuex';
 
+import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { IDGenerator } from '@/utils/id-generator';
@@ -98,6 +103,7 @@ export default {
   name: 'AdminChargeableServiceList',
 
   components: {
+    'airline-avatar-wrapper': AirlineAvatarWrapper,
     'list-desktop-header': ListDesktopHeader,
   },
 
@@ -124,7 +130,6 @@ export default {
         {
           text: 'Flt No.',
           value: 'fltno',
-          width: 100,
         },
         {
           text: 'A/C Reg.',

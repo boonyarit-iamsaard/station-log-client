@@ -20,18 +20,20 @@
         {{ item.date | dateFormat }}
       </template>
 
+      <template v-slot:item.airline="{ item }">
+        <airline-avatar-wrapper :airline="item.airline" />
+      </template>
+
       <template v-slot:item.fltno="{ item }">
-        <v-chip
-          class="ml-n2 px-2"
-          color="error"
-          dark
+        <span>
+          {{ item.fltno }}
+        </span>
+
+        <span
+          class="caption error--text font-weight-bold"
           v-if="item.assignedDelays.length"
         >
-          {{ item.fltno }}
-        </v-chip>
-
-        <span v-else>
-          {{ item.fltno }}
+          delayed
         </span>
       </template>
 
@@ -93,6 +95,7 @@
 </template>
 
 <script>
+import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { dateFormat } from '@/utils/dateFormat';
@@ -101,6 +104,7 @@ export default {
   name: 'FlightsListDesktop',
 
   components: {
+    'airline-avatar-wrapper': AirlineAvatarWrapper,
     'list-desktop-header': ListDesktopHeader,
   },
 
@@ -128,6 +132,7 @@ export default {
         {
           text: 'Airline',
           value: 'airline',
+          width: 80,
         },
         {
           text: 'Flt No.',
@@ -196,11 +201,13 @@ export default {
         {
           text: 'Engineer',
           value: 'engineer',
+          width: 100,
         },
         {
           text: 'Actions',
           value: 'actions',
           sortable: false,
+          width: 80,
         },
       ],
     };

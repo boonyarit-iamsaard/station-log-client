@@ -29,15 +29,7 @@
         >
           <v-card-title class="d-flex align-center justify-space-between">
             <div>
-              <v-avatar
-                :color="setAvatarColor(item.airline)"
-                class="white--text mr-4"
-                size="32"
-              >
-                <span class="body-2">
-                  {{ item.airline }}
-                </span>
-              </v-avatar>
+              <airline-avatar-wrapper class="mr-4" :airline="item.airline" />
 
               <span class="subtitle-1 mr-4">
                 {{ item.fltno }} / {{ item.acreg }}
@@ -149,8 +141,14 @@
 <script>
 import { format } from 'date-fns';
 
+import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
+
 export default {
   name: 'FlightsListMobile',
+
+  components: {
+    'airline-avatar-wrapper': AirlineAvatarWrapper,
+  },
 
   props: {
     flights: {

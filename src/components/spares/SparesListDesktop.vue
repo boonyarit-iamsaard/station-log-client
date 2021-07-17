@@ -20,9 +20,13 @@
         {{ item.date | dateFormat }}
       </template>
 
+      <template v-slot:item.airline="{ item }">
+        <airline-avatar-wrapper :airline="item.airline" />
+      </template>
+
       <template v-slot:item.displayType="{ item }">
-        <v-avatar :color="setSpareTypeColorHandler(item.type)" size="32">
-          <span class="white--text">{{ item.type.substr(0, 1) }}</span>
+        <v-avatar :class="setSpareTypeColorHandler(item.type)" size="32">
+          <span class="caption white--text">{{ item.type.substr(0, 1) }}</span>
         </v-avatar>
       </template>
 
@@ -50,6 +54,7 @@
 </template>
 
 <script>
+import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { dateFormat } from '@/utils/dateFormat';
@@ -58,6 +63,7 @@ export default {
   name: 'SparesListDesktop',
 
   components: {
+    'airline-avatar-wrapper': AirlineAvatarWrapper,
     'list-desktop-header': ListDesktopHeader,
   },
 
@@ -85,6 +91,7 @@ export default {
         {
           text: 'Airline',
           value: 'airline',
+          width: 80,
         },
         {
           text: 'Flt No.',
@@ -99,6 +106,7 @@ export default {
         {
           text: 'Type',
           value: 'displayType',
+          width: 80,
         },
         {
           text: 'Part No.',
@@ -111,10 +119,12 @@ export default {
         {
           text: 'Store',
           value: 'store',
+          width: 80,
         },
         {
           text: 'Status',
           value: 'displayStatus',
+          width: 80,
         },
         {
           text: 'Status',
@@ -126,6 +136,7 @@ export default {
           text: 'Actions',
           value: 'actions',
           sortable: false,
+          width: 80,
         },
       ],
     };
@@ -143,11 +154,11 @@ export default {
     setSpareTypeColorHandler(type) {
       switch (type) {
         case 'Consumable':
-          return 'primary';
+          return 'indigo darken-3';
         case 'Return':
-          return 'error';
+          return 'orange darken-4';
         default:
-          return 'secondary';
+          return 'grey';
       }
     },
 

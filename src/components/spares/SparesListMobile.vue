@@ -30,13 +30,14 @@
                 class="white--text mr-4"
                 size="32"
               >
-                <span class="body-2">
+                <span class="caption">
                   {{ item.type.substr(0, 1) }}
                 </span>
               </v-avatar>
               <span class="subtitle-1">{{ item.part }} / {{ item.desc }}</span>
             </div>
-            <span class="caption">{{ setDateFormatHandler(item.date) }} </span>
+
+            <span class="caption">{{ item.date | dateFormat }} </span>
           </v-card-title>
 
           <v-card-text>
@@ -96,7 +97,7 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'SparesListMobile',
@@ -117,10 +118,6 @@ export default {
   },
 
   methods: {
-    setDateFormatHandler(date) {
-      return format(new Date(date), 'dd/MM/yy');
-    },
-
     setAvatarColor(type) {
       switch (type) {
         case 'Consumable':
@@ -140,6 +137,10 @@ export default {
 
       return calculatedLength < 1 ? 1 : Math.ceil(calculatedLength);
     },
+  },
+
+  filters: {
+    dateFormat,
   },
 };
 </script>

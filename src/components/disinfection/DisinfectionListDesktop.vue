@@ -20,6 +20,10 @@
         <span>{{ item.date | dateFormat }}</span>
       </template>
 
+      <template v-slot:item.airline="{ item }">
+        <airline-avatar-wrapper :airline="item.airline" />
+      </template>
+
       <template v-slot:item.actions="{ item }">
         <v-btn
           class="mr-2"
@@ -38,6 +42,7 @@
 </template>
 
 <script>
+import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { dateFormat } from '@/utils/dateFormat';
@@ -46,6 +51,7 @@ export default {
   name: 'DisinfectionListDesktop',
 
   components: {
+    'airline-avatar-wrapper': AirlineAvatarWrapper,
     'list-desktop-header': ListDesktopHeader,
   },
 
