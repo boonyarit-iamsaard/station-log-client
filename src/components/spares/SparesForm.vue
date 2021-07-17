@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-0" style="max-width: 959px">
+  <v-container class="pa-0" style="max-width: 960px">
     <v-form ref="form" @submit.prevent="submitForm">
       <confirm-dialog
         :subtitle="'This record would be deleted!'"

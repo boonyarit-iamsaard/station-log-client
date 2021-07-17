@@ -1,5 +1,5 @@
 <template>
-  <v-container class="pa-0" style="max-width: 959px">
+  <v-container class="pa-0" style="max-width: 960px">
     <div class="mb-4">
       <span class="title">Home</span>
     </div>

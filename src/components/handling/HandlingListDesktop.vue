@@ -2,7 +2,7 @@
   <div>
     <v-data-table
       class="mx-auto"
-      style="max-width: 959px"
+      style="max-width: 960px"
       :headers="headers"
       :items="handlingRecords"
       :sort-by="['date']"

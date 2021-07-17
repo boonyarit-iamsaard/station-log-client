@@ -11,7 +11,7 @@
     <AppDrawer ref="sidenav" v-if="user" />
 
     <v-main class="grey lighten-3">
-      <v-container class="pa-4" style="max-width: 1263px">
+      <v-container class="pa-4" style="max-width: 1248px">
         <v-dialog :value="isError" max-width="400">
           <v-alert
             @click="acknowledgeError"

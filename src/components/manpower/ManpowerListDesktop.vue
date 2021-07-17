@@ -1,5 +1,5 @@
 <template>
-  <div class="mx-auto" style="max-width: 1263px">
+  <div class="mx-auto" style="max-width: 1248px">
     <div class="mb-4">
       <span class="title">Sick leave / OT Record</span>
     </div>
