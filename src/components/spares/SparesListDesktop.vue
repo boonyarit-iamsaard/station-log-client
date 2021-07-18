@@ -117,6 +117,11 @@ export default {
           value: 'desc',
         },
         {
+          text: 'Qty.',
+          value: 'qty',
+          width: 80,
+        },
+        {
           text: 'Store',
           value: 'store',
           width: 80,

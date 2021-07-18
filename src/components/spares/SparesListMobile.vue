@@ -65,6 +65,11 @@
               </v-col>
 
               <v-col class="pa-0" cols="6" sm="3">
+                <span class="font-weight-bold">QTY: </span>
+                <span>{{ item.qty }}</span>
+              </v-col>
+
+              <v-col class="pa-0" cols="6" sm="3">
                 <span class="font-weight-bold">STORE: </span>
                 <span>{{ item.store }}</span>
               </v-col>
