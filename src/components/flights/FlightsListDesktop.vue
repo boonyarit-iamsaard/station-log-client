@@ -99,6 +99,7 @@ import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { dateFormat } from '@/utils/dateFormat';
+import { currentDate } from '@/utils/currentDate';
 
 export default {
   name: 'FlightsListDesktop',
@@ -118,7 +119,7 @@ export default {
   data() {
     return {
       filters: {
-        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        dateRange: ['2021-01-01', currentDate()],
         fromDate: '2021-01-01',
         search: '',
       },

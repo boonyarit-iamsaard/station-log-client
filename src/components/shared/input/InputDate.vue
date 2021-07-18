@@ -44,6 +44,7 @@
 <script>
 import InputLabel from '@/components/shared/input/InputLabel';
 
+import { currentDate } from '@/utils/currentDate';
 import { dateFormat } from '@/utils/dateFormat';
 
 export default {
@@ -64,7 +65,7 @@ export default {
     },
     value: {
       type: String,
-      default: () => new Date().toISOString().substr(0, 10),
+      default: currentDate(),
     },
   },
 
@@ -81,7 +82,7 @@ export default {
       },
 
       set(date) {
-        this.$emit('input', new Date(date).toISOString().substr(0, 10));
+        this.$emit('input', date);
       },
     },
   },

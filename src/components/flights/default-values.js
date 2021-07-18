@@ -1,5 +1,7 @@
+import { currentDate } from '@/utils/currentDate';
+
 export const defaultValues = {
-  date: new Date().toISOString().substr(0, 10),
+  date: currentDate(),
   airline: 'CX',
   fltno: '',
   prefix: 'B-',

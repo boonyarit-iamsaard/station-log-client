@@ -291,7 +291,6 @@
 
 <script>
 import { cloneDeep } from 'lodash';
-import { format } from 'date-fns';
 import { mapActions, mapGetters } from 'vuex';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
@@ -303,11 +302,10 @@ import InputDate from '@/components/shared/input/InputDate';
 import InputSelect from '@/components/shared/input/InputSelect';
 import InputText from '@/components/shared/input/InputText';
 
+import { currentDate } from '@/utils/currentDate';
 import { spareData } from '@/components/spares/default-values';
-import { staffs } from '@/utils/staffs';
 import { sparesFormRules } from '@/components/spares/spares-form-rules';
-
-const currentDate = new Date().toISOString().substr(0, 10);
+import { staffs } from '@/utils/staffs';
 
 export default {
   name: 'SparesForm',
@@ -328,18 +326,18 @@ export default {
       airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
       defaultSpareAction: {
         by: '',
-        date: currentDate,
+        date: currentDate(),
         number: '',
         status: false,
       },
       formData: cloneDeep(spareData),
       formRules: {},
-      issuedDate: new Date().toISOString().substr(0, 10),
+      issuedDate: currentDate(),
       modal: false,
-      returnedDate: new Date().toISOString().substr(0, 10),
+      returnedDate: currentDate(),
       staffs: staffs(),
       stores: ['BKK', 'BKK306', 'BKKAHK'],
-      transferredDate: new Date().toISOString().substr(0, 10),
+      transferredDate: currentDate(),
       types: ['Consumable', 'Fluid', 'Return'],
     };
   },
@@ -476,22 +474,22 @@ export default {
       }
 
       if (name === 'issued') {
-        this.issuedDate = currentDate;
+        this.issuedDate = currentDate();
       }
 
       if (name === 'returned') {
-        this.returnedDate = currentDate;
+        this.returnedDate = currentDate();
       }
 
       if (name === 'transferred') {
-        this.transferredDate = currentDate;
+        this.transferredDate = currentDate();
       }
     },
 
     handleSpareTypeChange() {
       if (!this.returnable) {
-        this.returnedDate = currentDate;
-        this.transferredDate = currentDate;
+        this.returnedDate = currentDate();
+        this.transferredDate = currentDate();
 
         this.formData.returned = {
           ...this.formData.returned,
@@ -553,12 +551,6 @@ export default {
 
     transferred() {
       return this.formData.transferred.status;
-    },
-  },
-
-  filters: {
-    formatDate: date => {
-      return format(new Date(date), 'dd MMMM yyyy');
     },
   },
 

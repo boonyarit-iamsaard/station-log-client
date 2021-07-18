@@ -164,6 +164,7 @@
 
 <script>
 import { cloneDeep } from 'lodash';
+import { mapActions, mapGetters } from 'vuex';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
@@ -189,7 +190,6 @@ import { flightFormRules } from '@/components/flights/flight-form-rules';
 import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
 
 import { IDGenerator } from '@/utils/id-generator';
-import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'FlightFormNew',

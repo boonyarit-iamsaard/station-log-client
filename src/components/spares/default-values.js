@@ -1,7 +1,7 @@
-const currentDate = new Date().toISOString().substr(0, 10);
+import { currentDate } from '@/utils/currentDate';
 
 export const spareData = {
-  date: currentDate,
+  date: currentDate(),
   airline: 'CX',
   fltno: '',
   prefix: 'B-',
@@ -18,19 +18,19 @@ export const spareData = {
   status: 'Pending',
   issued: {
     by: '',
-    date: currentDate,
+    date: currentDate(),
     number: '',
     status: false,
   },
   returned: {
     by: '',
-    date: currentDate,
+    date: currentDate(),
     number: '',
     status: false,
   },
   transferred: {
     by: '',
-    date: currentDate,
+    date: currentDate(),
     number: '',
     status: false,
   },

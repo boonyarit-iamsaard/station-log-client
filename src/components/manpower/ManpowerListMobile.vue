@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'manpowerRecordsMobile',
@@ -143,15 +143,7 @@ export default {
   },
 
   filters: {
-    dateFormat(value) {
-      if (!value) return '';
-
-      return format(new Date(value), 'dd MMM yy');
-    },
-  },
-
-  created() {
-    this.items = this.manpowerRecords;
+    dateFormat,
   },
 };
 </script>

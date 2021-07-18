@@ -97,6 +97,7 @@ import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { IDGenerator } from '@/utils/id-generator';
+import { currentDate } from '@/utils/currentDate';
 import { dateFormat } from '@/utils/dateFormat';
 
 export default {
@@ -111,7 +112,7 @@ export default {
     return {
       dialog: false,
       filters: {
-        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        dateRange: ['2021-01-01', currentDate()],
         fromDate: '2021-01-01',
         search: '',
       },
@@ -208,7 +209,6 @@ export default {
     },
 
     onExport() {
-      const currentDate = new Date().toISOString().substr(0, 10);
       const exportData = [];
 
       this.normalizedFlights.forEach(flight => {
@@ -231,7 +231,7 @@ export default {
       const WB = XLSX.utils.book_new();
 
       XLSX.utils.book_append_sheet(WB, WS);
-      XLSX.writeFile(WB, `chargeable-services-${currentDate}.xlsx`);
+      XLSX.writeFile(WB, `chargeable-services-${currentDate()}.xlsx`);
     },
   },
 

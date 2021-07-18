@@ -44,6 +44,8 @@
 import InputText from '@/components/shared/input/InputText';
 import InputDate from '@/components/shared/input/InputDate';
 
+import { currentDate } from '@/utils/currentDate';
+
 export default {
   name: 'ListDesktopHeader',
 
@@ -63,7 +65,7 @@ export default {
     value: {
       type: Object,
       default: () => ({
-        dateRange: ['2021-01-01', new Date().toISOString().substr(0, 10)],
+        dateRange: ['2021-01-01', currentDate()],
         fromDate: ['2021-01-01'],
         search: '',
       }),
@@ -77,10 +79,7 @@ export default {
 
   methods: {
     resetDateRange() {
-      this.model.dateRange = [
-        this.value.fromDate,
-        new Date().toISOString().substr(0, 10),
-      ];
+      this.model.dateRange = [this.value.fromDate, currentDate()];
     },
   },
 

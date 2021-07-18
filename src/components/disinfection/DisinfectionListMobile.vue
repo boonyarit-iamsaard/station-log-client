@@ -91,9 +91,9 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
-
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
+
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'DisinfectionListMobile',
@@ -142,11 +142,7 @@ export default {
   },
 
   filters: {
-    dateFormat(value) {
-      if (!value) return '';
-
-      return format(new Date(value), 'dd MMM yy');
-    },
+    dateFormat,
   },
 
   created() {
