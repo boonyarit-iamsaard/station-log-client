@@ -178,7 +178,7 @@
             </v-col>
 
             <v-col cols="12" sm="3" v-if="issued">
-              <input-date :disabled="returned" v-model="issuedDate" />
+              <input-date :disabled="returned || !admin" v-model="issuedDate" />
             </v-col>
 
             <!-- Returned -->
@@ -257,7 +257,7 @@
             </v-col>
 
             <v-col cols="12" sm="3" v-if="transferred">
-              <input-date v-model="transferredDate" />
+              <input-date :disabled="!admin" v-model="transferredDate" />
             </v-col>
           </v-row>
         </v-card-text>
