@@ -223,6 +223,7 @@ export default {
         case 'PR':
           return 'RP-C';
         case 'KE':
+        case 'OZ':
           return 'HL';
         case 'CX':
         case 'KA':
