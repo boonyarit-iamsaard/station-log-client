@@ -25,6 +25,10 @@
       />
     </div>
 
+    <v-btn :to="link" class="ml-4 mt-6" color="primary" link v-if="addButton">
+      New
+    </v-btn>
+
     <v-btn
       @click="$emit('onExport')"
       class="mt-6 ml-4"
@@ -32,10 +36,6 @@
       v-if="exportButton"
     >
       <v-icon color="primary" large> mdi-microsoft-excel</v-icon>
-    </v-btn>
-
-    <v-btn :to="link" class="ml-4 mt-6" color="primary" link v-if="addButton">
-      New
     </v-btn>
   </div>
 </template>

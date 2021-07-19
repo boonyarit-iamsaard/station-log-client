@@ -13,7 +13,12 @@
       class="shadow"
     >
       <template v-slot:top>
-        <list-desktop-header link="/disinfection/create" v-model="filters" />
+        <list-desktop-header
+          :export-button="admin"
+          @onExport="onExport"
+          link="/disinfection/create"
+          v-model="filters"
+        />
       </template>
 
       <template v-slot:item.date="{ item }">
@@ -42,11 +47,14 @@
 </template>
 
 <script>
+import XLSX from 'xlsx';
+
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
 import { dateFormat } from '@/utils/dateFormat';
 import { currentDate } from '@/utils/currentDate';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'DisinfectionListDesktop',
@@ -130,6 +138,44 @@ export default {
 
       return fromDate <= valueDate && valueDate <= toDate;
     },
+
+    onExport() {
+      const exportData = [];
+
+      this.disinfectionList.forEach(record => {
+        if (this.dateFilter(record.date)) {
+          exportData.push({
+            date: record.date,
+            airline: record.airline,
+            acreg: record.acreg,
+            'aircraft-type': record.aircraftType,
+            start: record.startAt,
+            end: record.endAt,
+            'mechanic-1': record.mechanic1,
+            'mechanic-2': record.mechanic2,
+            used: record.chemicalUsage,
+          });
+        }
+      });
+
+      exportData.forEach(record => {
+        delete record._id;
+      });
+
+      console.table(exportData);
+
+      const WS = XLSX.utils.json_to_sheet(exportData);
+      const WB = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(WB, WS);
+      XLSX.writeFile(WB, `disinfection-records-${currentDate()}.xlsx`);
+    },
+  },
+
+  computed: {
+    ...mapGetters({
+      admin: 'auth/getIsAdmin',
+    }),
   },
 
   filters: {
