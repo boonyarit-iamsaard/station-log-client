@@ -210,19 +210,42 @@ export default {
     onExport() {
       const exportData = [];
 
-      this.normalizedFlights.forEach(flight => {
-        if (this.dateFilter(flight.date)) {
+      this.flights.forEach(flight => {
+        if (this.dateFilter(flight.date) && flight.tasks.length) {
           exportData.push({
             date: flight.date,
             airline: flight.airline,
             fltno: flight.fltno,
             acreg: flight.acreg,
-            taskNo: flight.taskNo,
-            taskDetails: flight.taskDetails,
-            engineerHours: flight.engineerHours,
-            mechanicHours: flight.mechanicHours,
+            check1: flight.check1,
+            check2: flight.check2 || '',
+            check3: flight.check3 || '',
+            taskNo: flight.tasks[0]?.taskNo ?? '',
+            taskDetails: flight.tasks[0]?.taskDetails ?? '',
+            engineerHours: flight.tasks[0]?.engineerHours ?? 0,
+            mechanicHours: flight.tasks[0]?.mechanicHours ?? 0,
             engineer: flight.engineer,
           });
+
+          if (flight.tasks.length > 1) {
+            // Add more row with empty flight details when more than 1 tasks
+            for (let i = 1; i <= flight.tasks.length - 1; i++) {
+              exportData.push({
+                date: '',
+                airline: '',
+                fltno: '',
+                acreg: '',
+                check1: '',
+                check2: '',
+                check3: '',
+                taskNo: flight.tasks[i]?.taskNo ?? '',
+                taskDetails: flight.tasks[i]?.taskDetails ?? '',
+                engineerHours: flight.tasks[i]?.engineerHours ?? 0,
+                mechanicHours: flight.tasks[i]?.mechanicHours ?? 0,
+                engineer: '',
+              });
+            }
+          }
         }
       });
 

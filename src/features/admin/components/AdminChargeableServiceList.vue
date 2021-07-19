@@ -211,21 +211,46 @@ export default {
     onExport() {
       const exportData = [];
 
-      this.normalizedFlights.forEach(flight => {
-        if (this.dateFilter(flight.date)) {
+      this.flights.forEach(flight => {
+        if (this.dateFilter(flight.date) && flight.chargeableServices.length) {
           exportData.push({
             date: flight.date,
             airline: flight.airline,
             fltno: flight.fltno,
             acreg: flight.acreg,
-            service: flight.service,
-            usage: flight.usage,
-            engineerHours: flight.engineerHours,
-            mechanicHours: flight.mechanicHours,
+            check1: flight.check1,
+            check2: flight.check2 || '',
+            check3: flight.check3 || '',
+            service: flight.chargeableServices[0]?.service ?? '',
+            usage: flight.chargeableServices[0]?.usage ?? '',
+            engineerHours: flight.chargeableServices[0]?.engineerHours ?? 0,
+            mechanicHours: flight.chargeableServices[0]?.mechanicHours ?? 0,
             engineer: flight.engineer,
           });
+
+          if (flight.chargeableServices.length > 1) {
+            // Add more row with empty flight details when more than 1 chargeable services
+            for (let i = 1; i <= flight.chargeableServices.length - 1; i++) {
+              exportData.push({
+                date: '',
+                airline: '',
+                fltno: '',
+                acreg: '',
+                check1: '',
+                check2: '',
+                check3: '',
+                service: flight.chargeableServices[i]?.service ?? '',
+                usage: flight.chargeableServices[i]?.usage ?? '',
+                engineerHours: flight.chargeableServices[i]?.engineerHours ?? 0,
+                mechanicHours: flight.chargeableServices[i]?.mechanicHours ?? 0,
+                engineer: '',
+              });
+            }
+          }
         }
       });
+
+      console.table(exportData);
 
       const WS = XLSX.utils.json_to_sheet(exportData);
       const WB = XLSX.utils.book_new();
