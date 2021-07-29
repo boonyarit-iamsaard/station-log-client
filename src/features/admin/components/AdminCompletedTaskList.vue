@@ -211,25 +211,37 @@ export default {
       const exportData = [];
 
       this.flights.forEach(flight => {
-        if (this.dateFilter(flight.date) && flight.tasks.length) {
+        const {
+          acreg,
+          airline,
+          check1,
+          check2,
+          check3,
+          date,
+          engineer,
+          fltno,
+          tasks,
+        } = flight;
+
+        if (this.dateFilter(date) && tasks.length) {
           exportData.push({
-            date: flight.date,
-            airline: flight.airline,
-            fltno: flight.fltno,
-            acreg: flight.acreg,
-            check1: flight.check1,
-            check2: flight.check2 || '',
-            check3: flight.check3 || '',
-            taskNo: flight.tasks[0]?.taskNo ?? '',
-            taskDetails: flight.tasks[0]?.taskDetails ?? '',
-            engineerHours: flight.tasks[0]?.engineerHours ?? 0,
-            mechanicHours: flight.tasks[0]?.mechanicHours ?? 0,
-            engineer: flight.engineer,
+            date,
+            airline,
+            fltno,
+            acreg,
+            check1,
+            check2: check2 ?? '',
+            check3: check3 ?? '',
+            taskNo: tasks[0].taskNo ?? '',
+            taskDetails: tasks[0].taskDetails ?? '',
+            engineerHours: tasks[0].engineerHours ?? 0,
+            mechanicHours: tasks[0].mechanicHours ?? 0,
+            engineer,
           });
 
-          if (flight.tasks.length > 1) {
+          if (tasks.length > 1) {
             // Add more row with empty flight details when more than 1 tasks
-            for (let i = 1; i <= flight.tasks.length - 1; i++) {
+            for (let i = 1; i <= tasks.length - 1; i++) {
               exportData.push({
                 date: '',
                 airline: '',
@@ -238,10 +250,10 @@ export default {
                 check1: '',
                 check2: '',
                 check3: '',
-                taskNo: flight.tasks[i]?.taskNo ?? '',
-                taskDetails: flight.tasks[i]?.taskDetails ?? '',
-                engineerHours: flight.tasks[i]?.engineerHours ?? 0,
-                mechanicHours: flight.tasks[i]?.mechanicHours ?? 0,
+                taskNo: tasks[i].taskNo ?? '',
+                taskDetails: tasks[i].taskDetails ?? '',
+                engineerHours: tasks[i].engineerHours ?? 0,
+                mechanicHours: tasks[i].mechanicHours ?? 0,
                 engineer: '',
               });
             }
@@ -266,20 +278,32 @@ export default {
       const normalizedFlights = [];
 
       this.flights.forEach(flight => {
-        if (flight.tasks.length) {
-          flight.tasks.forEach(task => {
+        const {
+          acreg,
+          airline,
+          date,
+          engineer,
+          fltno,
+          _id: flightID,
+          tasks,
+        } = flight;
+
+        if (tasks.length) {
+          tasks.forEach(task => {
+            const { engineerHours, mechanicHours, taskDetails, taskNo } = task;
+
             normalizedFlights.push({
               _id: IDGenerator(),
-              flightID: flight._id,
-              date: flight.date,
-              airline: flight.airline,
-              fltno: flight.fltno,
-              acreg: flight.acreg,
-              taskNo: task.taskNo,
-              taskDetails: task.taskDetails,
-              engineerHours: task.engineerHours,
-              mechanicHours: task.mechanicHours,
-              engineer: flight.engineer,
+              flightID,
+              date,
+              airline,
+              fltno,
+              acreg,
+              taskNo,
+              taskDetails,
+              engineerHours,
+              mechanicHours,
+              engineer,
             });
           });
         }

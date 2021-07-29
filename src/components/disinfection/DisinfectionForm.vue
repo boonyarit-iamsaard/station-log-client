@@ -71,9 +71,11 @@
 import { cloneDeep } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
+import { InputAutocomplete } from '@/components/shared/input';
+
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
-import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
+// import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 import InputCheckbox from '@/components/shared/input/InputCheckbox';
 import InputCombo from '@/components/shared/input/InputCombo';
 import InputDate from '@/components/shared/input/InputDate';
