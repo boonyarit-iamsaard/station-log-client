@@ -15,8 +15,8 @@
       <template v-slot:top>
         <list-desktop-header
           :add-button="false"
-          :export-button="true"
           @onExport="onExport"
+          export-button
           v-model="filters"
         />
       </template>
