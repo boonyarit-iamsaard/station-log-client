@@ -13,7 +13,12 @@
       class="shadow"
     >
       <template v-slot:top>
-        <list-desktop-header link="/flights/create" v-model="filters" />
+        <list-desktop-header
+          :export-button="admin"
+          @onExport="onExport"
+          link="/flights/create"
+          v-model="filters"
+        />
       </template>
 
       <template v-slot:item.date="{ item }">
@@ -95,6 +100,9 @@
 </template>
 
 <script>
+import XLSX from 'xlsx';
+import { mapGetters } from 'vuex';
+
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
@@ -236,11 +244,111 @@ export default {
       return fromDate <= valueDate && valueDate <= toDate;
     },
 
+    onExport() {
+      const exportData = [];
+
+      this.flights.forEach(flight => {
+        const {
+          date,
+          airline,
+          fltno,
+          prefix,
+          tail,
+          acreg,
+          ata,
+          atd,
+          bay,
+          check1,
+          check2,
+          check3,
+          afac,
+          water,
+          lavatory,
+          remark,
+          engineer,
+          mechanic1,
+          mechanic2,
+          recordBy,
+          tasks,
+        } = flight;
+        const deferrals = {
+          pkg: 0,
+          padd: 0,
+          sadd: 0,
+          add: 0,
+          zadd: 0,
+          cadd: 0,
+          madd: 0,
+          worked: 0,
+        };
+
+        if (tasks.length) {
+          tasks.forEach(task => {
+            if (task.taskNo) {
+              deferrals.pkg += 1;
+            }
+
+            if (task.deferralAction === 'Cleared') {
+              const { deferral } = task;
+
+              Object.keys(deferrals).forEach(key => {
+                if (key === deferral.toLowerCase()) {
+                  deferrals[key] += 1;
+                }
+              });
+            }
+
+            if (task.deferralAction === 'Worked') {
+              deferrals.worked += 1;
+            }
+          });
+        }
+
+        if (this.dateFilter(date)) {
+          exportData.push({
+            date,
+            airline,
+            fltno,
+            prefix,
+            tail,
+            acreg,
+            ata,
+            atd,
+            bay,
+            check1,
+            check2: check2 ?? '',
+            check3: check3 ?? '',
+            afac,
+            water,
+            lavatory,
+            ...deferrals,
+            remark,
+            engineer,
+            mechanic1,
+            mechanic2: mechanic2 ?? '',
+            recordBy,
+          });
+        }
+      });
+
+      const WS = XLSX.utils.json_to_sheet(exportData);
+      const WB = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(WB, WS);
+      XLSX.writeFile(WB, `flights-${currentDate()}.xlsx`);
+    },
+
     mechanic(item) {
       const { mechanic1, mechanic2 } = item;
 
       return mechanic2 ? `${mechanic1} / ${mechanic2}` : mechanic1;
     },
+  },
+
+  computed: {
+    ...mapGetters({
+      admin: 'auth/getIsAdmin',
+    }),
   },
 
   filters: {
