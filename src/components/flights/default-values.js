@@ -12,6 +12,7 @@ export const defaultValues = {
   bay: '',
   check1: '',
   check2: '',
+  check3: '',
   afac: 0,
   water: false,
   lavatory: false,
