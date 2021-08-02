@@ -212,45 +212,55 @@ export default {
       const exportData = [];
 
       this.flights.forEach(flight => {
-        if (this.dateFilter(flight.date) && flight.chargeableServices.length) {
+        const {
+          date,
+          airline,
+          fltno,
+          acreg,
+          check1,
+          check2,
+          check3,
+          chargeableServices,
+          engineer,
+        } = flight;
+
+        if (this.dateFilter(date) && chargeableServices.length) {
           exportData.push({
-            date: flight.date,
-            airline: flight.airline,
-            fltno: flight.fltno,
-            acreg: flight.acreg,
-            check1: flight.check1,
-            check2: flight.check2 || '',
-            check3: flight.check3 || '',
-            service: flight.chargeableServices[0]?.service ?? '',
-            usage: flight.chargeableServices[0]?.usage ?? '',
-            engineerHours: flight.chargeableServices[0]?.engineerHours ?? 0,
-            mechanicHours: flight.chargeableServices[0]?.mechanicHours ?? 0,
-            engineer: flight.engineer,
+            date,
+            airline,
+            fltno,
+            acreg,
+            check1,
+            check2: check2 || '',
+            check3: check3 || '',
+            service: chargeableServices[0]?.service ?? '',
+            usage: chargeableServices[0]?.usage ?? '',
+            engineerHours: chargeableServices[0]?.engineerHours ?? 0,
+            mechanicHours: chargeableServices[0]?.mechanicHours ?? 0,
+            engineer: engineer,
           });
 
-          if (flight.chargeableServices.length > 1) {
+          if (chargeableServices.length > 1) {
             // Add more row with empty flight details when more than 1 chargeable services
-            for (let i = 1; i <= flight.chargeableServices.length - 1; i++) {
+            for (let i = 1; i <= chargeableServices.length - 1; i++) {
               exportData.push({
-                date: '',
-                airline: '',
-                fltno: '',
-                acreg: '',
+                date,
+                airline,
+                fltno,
+                acreg,
                 check1: '',
                 check2: '',
                 check3: '',
-                service: flight.chargeableServices[i]?.service ?? '',
-                usage: flight.chargeableServices[i]?.usage ?? '',
-                engineerHours: flight.chargeableServices[i]?.engineerHours ?? 0,
-                mechanicHours: flight.chargeableServices[i]?.mechanicHours ?? 0,
+                service: chargeableServices[i]?.service ?? '',
+                usage: chargeableServices[i]?.usage ?? '',
+                engineerHours: chargeableServices[i]?.engineerHours ?? 0,
+                mechanicHours: chargeableServices[i]?.mechanicHours ?? 0,
                 engineer: '',
               });
             }
           }
         }
       });
-
-      console.table(exportData);
 
       const WS = XLSX.utils.json_to_sheet(exportData);
       const WB = XLSX.utils.book_new();

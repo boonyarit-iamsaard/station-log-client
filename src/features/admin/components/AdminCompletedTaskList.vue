@@ -243,10 +243,10 @@ export default {
             // Add more row with empty flight details when more than 1 tasks
             for (let i = 1; i <= tasks.length - 1; i++) {
               exportData.push({
-                date: '',
-                airline: '',
-                fltno: '',
-                acreg: '',
+                date,
+                airline,
+                fltno,
+                acreg,
                 check1: '',
                 check2: '',
                 check3: '',

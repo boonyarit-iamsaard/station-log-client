@@ -143,17 +143,31 @@ export default {
       const exportData = [];
 
       this.disinfectionList.forEach(record => {
-        if (this.dateFilter(record.date)) {
+        const {
+          date,
+          airline,
+          fltno,
+          acreg,
+          aircraftType,
+          startAt,
+          endAt,
+          mechanic1,
+          mechanic2,
+          chemicalUsage,
+        } = record;
+
+        if (this.dateFilter(date)) {
           exportData.push({
-            date: record.date,
-            airline: record.airline,
-            acreg: record.acreg,
-            'aircraft-type': record.aircraftType,
-            start: record.startAt,
-            end: record.endAt,
-            'mechanic-1': record.mechanic1,
-            'mechanic-2': record.mechanic2,
-            used: record.chemicalUsage,
+            date,
+            airline,
+            acreg,
+            fltno,
+            type: aircraftType,
+            start: startAt,
+            end: endAt,
+            'mechanic-1': mechanic1,
+            'mechanic-2': mechanic2,
+            used: chemicalUsage,
           });
         }
       });
@@ -161,8 +175,6 @@ export default {
       exportData.forEach(record => {
         delete record._id;
       });
-
-      console.table(exportData);
 
       const WS = XLSX.utils.json_to_sheet(exportData);
       const WB = XLSX.utils.book_new();
