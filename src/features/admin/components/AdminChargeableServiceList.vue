@@ -279,20 +279,32 @@ export default {
       const normalizedFlights = [];
 
       this.flights.forEach(flight => {
-        if (flight.chargeableServices.length) {
-          flight.chargeableServices.forEach(service => {
+        const {
+          _id: flightID,
+          date,
+          airline,
+          fltno,
+          acreg,
+          chargeableServices,
+          engineer,
+        } = flight;
+
+        if (this.dateFilter(date) && chargeableServices.length) {
+          chargeableServices.forEach(record => {
+            const { service, usage, engineerHours, mechanicHours } = record;
+
             normalizedFlights.push({
               _id: IDGenerator(),
-              flightID: flight._id,
-              date: flight.date,
-              airline: flight.airline,
-              fltno: flight.fltno,
-              acreg: flight.acreg,
-              service: service.service,
-              usage: service.usage,
-              engineerHours: service.engineerHours,
-              mechanicHours: service.mechanicHours,
-              engineer: flight.engineer,
+              flightID,
+              date,
+              airline,
+              fltno,
+              acreg,
+              service,
+              usage,
+              engineerHours,
+              mechanicHours,
+              engineer,
             });
           });
         }
