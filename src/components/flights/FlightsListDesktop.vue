@@ -246,6 +246,7 @@ export default {
 
     onExport() {
       const exportData = [];
+      const exportCheckData = [];
 
       this.flights.forEach(flight => {
         const {
@@ -281,6 +282,36 @@ export default {
           madd: 0,
           worked: 0,
         };
+
+        if (check1) {
+          exportCheckData.push({
+            date,
+            airline,
+            fltno,
+            acreg,
+            check: check1,
+          });
+        }
+
+        if (check2) {
+          exportCheckData.push({
+            date,
+            airline,
+            fltno,
+            acreg,
+            check: check2,
+          });
+        }
+
+        if (check3) {
+          exportCheckData.push({
+            date,
+            airline,
+            fltno,
+            acreg,
+            check: check3,
+          });
+        }
 
         if (tasks.length) {
           tasks.forEach(task => {
@@ -331,10 +362,12 @@ export default {
         }
       });
 
+      const WC = XLSX.utils.json_to_sheet(exportCheckData);
       const WS = XLSX.utils.json_to_sheet(exportData);
       const WB = XLSX.utils.book_new();
 
       XLSX.utils.book_append_sheet(WB, WS);
+      XLSX.utils.book_append_sheet(WB, WC);
       XLSX.writeFile(WB, `flights-${currentDate()}.xlsx`);
     },
 
