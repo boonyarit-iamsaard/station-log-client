@@ -134,7 +134,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      getFlights: 'flight/getFlights',
+      flights: 'flight/getFlights',
     }),
 
     calculatePageLength() {
@@ -142,11 +142,11 @@ export default {
       const calculatedLength =
         this.flightRemarkAndHandover.length / defaultLength;
 
-      return calculatedLength < 1 ? 1 : Math.floor(calculatedLength);
+      return calculatedLength < 1 ? 1 : Math.ceil(calculatedLength);
     },
 
     flightRemarkAndHandover() {
-      return this.getFlights.filter(flight => flight.remark !== '');
+      return this.flights.filter(flight => flight.remark !== '');
     },
   },
 
@@ -155,7 +155,7 @@ export default {
   },
 
   created() {
-    if (this.getFlights.length === 0) {
+    if (this.flights.length === 0) {
       this.handleFetchFlights();
     }
   },
