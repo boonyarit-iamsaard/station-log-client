@@ -14,6 +14,10 @@
       </v-btn>
     </div>
 
+    <div class="ml-4" v-if="checkbox">
+      <inpur-checkbox :label="checkboxLabel" v-model="model.checked" />
+    </div>
+
     <v-spacer />
 
     <div>
@@ -41,8 +45,9 @@
 </template>
 
 <script>
-import InputText from '@/components/shared/input/InputText';
+import InputCheckbox from '@/components/shared/input/InputCheckbox.vue';
 import InputDate from '@/components/shared/input/InputDate';
+import InputText from '@/components/shared/input/InputText';
 
 import { currentDate } from '@/utils/currentDate';
 
@@ -53,6 +58,14 @@ export default {
     addButton: {
       type: Boolean,
       default: true,
+    },
+    checkbox: {
+      type: Boolean,
+      default: false,
+    },
+    checkboxLabel: {
+      type: String,
+      default: 'Label',
     },
     exportButton: {
       type: Boolean,
@@ -65,6 +78,7 @@ export default {
     value: {
       type: Object,
       default: () => ({
+        checked: false,
         dateRange: ['2021-01-01', currentDate()],
         fromDate: ['2021-01-01'],
         search: '',
@@ -73,6 +87,7 @@ export default {
   },
 
   components: {
+    'inpur-checkbox': InputCheckbox,
     'input-date': InputDate,
     'input-text': InputText,
   },

@@ -16,6 +16,8 @@
         <list-desktop-header
           :export-button="admin"
           @onExport="onExport"
+          checkbox
+          checkbox-label="Delayed"
           link="/flights/create"
           v-model="filters"
         />
@@ -127,6 +129,7 @@ export default {
   data() {
     return {
       filters: {
+        checked: false,
         dateRange: ['2021-01-01', currentDate()],
         fromDate: '2021-01-01',
         search: '',
@@ -176,6 +179,13 @@ export default {
           value: 'check3',
           cellClass: 'd-none',
           class: 'd-none',
+        },
+        {
+          text: 'Assigned Delays',
+          value: 'assignedDelays',
+          cellClass: 'd-none',
+          class: 'd-none',
+          filter: value => (this.filters.checked ? value.length > 0 : true),
         },
         {
           text: 'Extra Equipment',
