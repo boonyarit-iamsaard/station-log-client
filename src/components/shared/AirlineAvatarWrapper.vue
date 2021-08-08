@@ -24,6 +24,10 @@ export default {
           return 'secondary caption';
         case 'PR':
           return 'error caption white--text';
+        case 'KE':
+          return 'cyan darken-1 caption white--text';
+        case 'OZ':
+          return 'orange darken-1 caption white--text';
         default:
           return 'grey caption lighten-3';
       }
