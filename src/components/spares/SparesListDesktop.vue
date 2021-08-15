@@ -13,7 +13,12 @@
       class="shadow"
     >
       <template v-slot:top>
-        <list-desktop-header link="/spares/create" v-model="filters" />
+        <list-desktop-header
+          :export-button="admin"
+          @onExport="onExport"
+          link="/spares/create"
+          v-model="filters"
+        />
       </template>
 
       <template v-slot:item.date="{ item }">
@@ -54,6 +59,9 @@
 </template>
 
 <script>
+import XLSX from 'xlsx';
+import { mapGetters } from 'vuex';
+
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
@@ -157,6 +165,56 @@ export default {
       return fromDate <= valueDate && valueDate <= toDate;
     },
 
+    onExport() {
+      const exportData = [];
+
+      this.spares.forEach(spare => {
+        const {
+          date,
+          airline,
+          fltno,
+          prefix,
+          tail,
+          acreg,
+          part,
+          desc,
+          serial,
+          grn,
+          qty,
+          type,
+          store,
+          status,
+          usedBy,
+        } = spare;
+
+        if (this.dateFilter(date)) {
+          exportData.push({
+            date,
+            airline,
+            fltno,
+            prefix,
+            tail,
+            acreg,
+            part,
+            desc,
+            serial,
+            grn,
+            qty,
+            type,
+            store,
+            status,
+            usedBy,
+          });
+        }
+      });
+
+      const WS = XLSX.utils.json_to_sheet(exportData);
+      const WB = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(WB, WS);
+      XLSX.writeFile(WB, `spares-${currentDate()}.xlsx`);
+    },
+
     setSpareTypeColorHandler(type) {
       switch (type) {
         case 'Consumable':
@@ -196,6 +254,12 @@ export default {
           }
       }
     },
+  },
+
+  computed: {
+    ...mapGetters({
+      admin: 'auth/getIsAdmin',
+    }),
   },
 
   filters: {
