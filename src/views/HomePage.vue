@@ -28,11 +28,13 @@
       </v-col>
     </v-row>
 
-    <flight-remark-and-hand-over />
+    <flight-remark-and-hand-over v-if="authenticated" />
   </v-container>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import FlightRemarkAndHandover from '@/components/dashboard/FlightRemarkAndHandover';
 
 export default {
@@ -71,6 +73,12 @@ export default {
         },
       ],
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      authenticated: 'auth/getIsAuthenticated',
+    }),
   },
 };
 </script>
