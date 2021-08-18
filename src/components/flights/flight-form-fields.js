@@ -140,4 +140,14 @@ export const flightHandlingByFields = [
     upperCase: true,
     xs: 12,
   },
+  {
+    clearable: true,
+    items: engineers(),
+    label: 'Acknowledged By',
+    name: 'acknowledgedBy',
+    rules: [],
+    sm: 3,
+    type: 'input-autocomplete',
+    xs: 12,
+  },
 ];

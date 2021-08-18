@@ -3,11 +3,13 @@
     <input-label :label="label" />
 
     <v-autocomplete
+      :clearable="clearable"
       :hint="hint"
       :items="items"
       :persistent-hint="!!hint"
       :rules="rules"
       @change="$emit('change')"
+      clear-icon="mdi-close-circle-outline"
       dense
       filled
       outlined
@@ -26,6 +28,10 @@ export default {
   },
 
   props: {
+    clearable: {
+      type: Boolean,
+      default: false,
+    },
     hint: {
       type: String,
       default: '',

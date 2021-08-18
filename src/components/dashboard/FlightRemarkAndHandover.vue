@@ -42,6 +42,16 @@
               <span class="subtitle-1 mr-4">
                 {{ item.fltno }} / {{ item.acreg }}
               </span>
+
+              <span>
+                <v-icon v-if="item.acknowledgedBy" color="primary"
+                  >mdi-account</v-icon
+                >
+
+                <v-icon v-else class="grey-text lighten-3"
+                  >mdi-account-clock</v-icon
+                >
+              </span>
             </div>
 
             <div class="d-flex align-end flex-column">

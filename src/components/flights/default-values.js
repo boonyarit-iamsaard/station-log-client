@@ -25,4 +25,5 @@ export const defaultValues = {
   mechanic1: '',
   mechanic2: '',
   recordBy: '',
+  acknowledgedBy: '',
 };

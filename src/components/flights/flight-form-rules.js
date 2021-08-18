@@ -24,4 +24,9 @@ export const flightFormRules = {
   engineer: [v => !!v || '* Engineer is required.'],
   mechanic1: [v => !!v || '* Mechanic-1 is required.'],
   recordBy: [v => !!v || '* Record By is required.'],
+  remark: [
+    v =>
+      !!v ||
+      '* Flight Remark / Handover is required, input "NIL" when nil flight remark / handover.',
+  ],
 };

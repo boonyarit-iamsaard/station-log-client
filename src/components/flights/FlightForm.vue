@@ -121,6 +121,7 @@
               v-for="item in flightHandlingByFields"
             >
               <component
+                :clearable="item.clearable"
                 :is="item.type"
                 :hint="item.hint"
                 :items="item.items"
@@ -135,7 +136,7 @@
           </v-row>
         </v-card-text>
 
-        <v-card-actions class="pb-4 pt-0 px-4">
+        <v-card-actions class="pa-4">
           <div>
             <v-btn
               :disabled="!admin || !$route.params.id"
@@ -192,7 +193,7 @@ import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.js
 import { IDGenerator } from '@/utils/id-generator';
 
 export default {
-  name: 'FlightFormNew',
+  name: 'FlightForm',
 
   components: {
     'confirm-dialog': ConfirmDialog,
