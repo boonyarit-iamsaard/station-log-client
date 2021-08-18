@@ -65,7 +65,8 @@
             <v-row class="ma-0">
               <v-col class="pa-0" cols="12">
                 <span class="d-block font-weight-bold">Remark / Handover </span>
-                <span>{{ item.remark }}</span>
+
+                <span class="remark">{{ item.remark }}</span>
               </v-col>
             </v-row>
           </v-card-text>
@@ -172,4 +173,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.remark {
+  white-space: pre-wrap;
+}
+</style>
