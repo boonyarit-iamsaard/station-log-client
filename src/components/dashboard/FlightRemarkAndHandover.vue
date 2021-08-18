@@ -15,62 +15,77 @@
       v-if="flightRemarkAndHandover.length > 0"
     >
       <template v-slot:default="{ items }">
-        <v-card
-          :key="item._id"
-          :to="{
-            name: 'flight-edit',
-            params: {
-              id: item._id,
-            },
-          }"
-          class="mb-4 shadow"
-          link
-          v-for="item in items"
-        >
-          <v-card-title class="d-flex align-center justify-space-between pb-2">
-            <div>
-              <v-avatar
-                :color="setAvatarColor(item.airline)"
-                class="white--text mr-4"
-                size="32"
-              >
-                <span class="body-2">
-                  {{ item.airline }}
-                </span>
-              </v-avatar>
+        <v-row class="mx-0 mt-0 mb-4" justify="center">
+          <v-expansion-panels>
+            <v-expansion-panel
+              class="shadow"
+              v-for="item in items"
+              :key="item._id"
+            >
+              <v-expansion-panel-header class="pa-4">
+                <div class="d-flex">
+                  <v-avatar
+                    :color="setAvatarColor(item.airline)"
+                    class="white--text mr-4"
+                    size="32"
+                  >
+                    <span class="body-2">
+                      {{ item.airline }}
+                    </span>
+                  </v-avatar>
 
-              <span class="subtitle-1 mr-4">
-                {{ item.fltno }} / {{ item.acreg }}
-              </span>
+                  <div style="min-width: 150px">
+                    <span class="subtitle-1 mr-4">
+                      {{ item.fltno }} / {{ item.acreg }}
+                    </span>
+                  </div>
 
-              <span>
-                <v-icon v-if="item.acknowledgedBy" color="primary"
-                  >mdi-account</v-icon
-                >
+                  <span>
+                    <v-icon v-if="item.acknowledgedBy" color="primary">
+                      mdi-account
+                    </v-icon>
 
-                <v-icon v-else class="grey-text lighten-3"
-                  >mdi-account-clock</v-icon
-                >
-              </span>
-            </div>
+                    <v-icon v-else class="grey-text lighten-3">
+                      mdi-account-clock
+                    </v-icon>
+                  </span>
+                </div>
 
-            <div class="d-flex align-end flex-column">
-              <span class="caption">{{ item.date | dateFormat }} </span>
+                <div class="d-flex align-end flex-column mr-4">
+                  <span class="caption">{{ item.date | dateFormat }} </span>
 
-              <span class="caption">{{ item.engineer }}</span>
-            </div>
-          </v-card-title>
+                  <span class="caption">{{ item.engineer }}</span>
+                </div>
+              </v-expansion-panel-header>
 
-          <v-card-text class="pb-2">
-            <v-row class="ma-0">
-              <v-col class="pa-0" cols="12">
-                <span class="d-block font-weight-bold">Remark / Handover </span>
+              <v-expansion-panel-content>
+                <v-row class="ma-0">
+                  <v-col class="pa-0" cols="12">
+                    <div class="d-block">
+                      <span class="body-2 font-weight-bold">
+                        Remark / Handover
+                      </span>
 
-                <span class="remark">{{ item.remark }}</span>
-              </v-col>
-            </v-row>
-          </v-card-text>
-        </v-card>
+                      <v-btn
+                        class="mr-2"
+                        icon
+                        link
+                        :to="{
+                          name: 'flight-edit',
+                          params: { id: item._id },
+                        }"
+                      >
+                        <v-icon> mdi-pencil</v-icon>
+                      </v-btn>
+                    </div>
+
+                    <span class="body-2 remark">{{ item.remark }}</span>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-row>
       </template>
 
       <template v-slot:footer>
@@ -174,6 +189,9 @@ export default {
 </script>
 
 <style scoped>
+::v-deep .v-expansion-panel::before {
+  box-shadow: none;
+}
 .remark {
   white-space: pre-wrap;
 }
