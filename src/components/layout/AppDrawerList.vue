@@ -69,10 +69,22 @@ export default {
           title: 'Disinfection',
         },
         {
-          icon: 'mdi-account',
+          icon: 'mdi-account-multiple',
           path: '/manpower',
           requireAdminRole: false,
-          title: 'Sick Leave / OT ',
+          title: 'Sick Leave / OT',
+        },
+        {
+          icon: 'mdi-paperclip',
+          path: '/station-handover',
+          requireAdminRole: false,
+          title: 'Station Handover',
+        },
+        {
+          icon: 'mdi-airplane-off',
+          path: '/aog-handover',
+          requireAdminRole: false,
+          title: 'AOG Handover',
         },
       ],
     };

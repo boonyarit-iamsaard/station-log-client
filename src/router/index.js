@@ -143,6 +143,34 @@ const routes = [
     },
   },
   {
+    path: '/station-handover',
+    component: () =>
+      import('@/features/station-handover/views/StationHandoverPage'),
+    children: [
+      {
+        path: '',
+        name: 'station-handover',
+        component: () =>
+          import('@/features/station-handover/components/StationHandoverList'),
+      },
+      {
+        path: 'create',
+        name: 'station-handover-create',
+        component: () =>
+          import('@/features/station-handover/components/StationHandoverForm'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'station-handover-edit',
+        component: () =>
+          import('@/features/station-handover/components/StationHandoverForm'),
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/handling',
     component: () => import('@/views/HandlingPage'),
     children: [
