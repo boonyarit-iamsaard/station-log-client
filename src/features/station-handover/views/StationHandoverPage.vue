@@ -1,7 +1,5 @@
 <template>
   <div>
-    <p>Station Handover Page</p>
-
     <router-view />
   </div>
 </template>

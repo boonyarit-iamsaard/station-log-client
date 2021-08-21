@@ -3,7 +3,7 @@ import { engineers } from '@/utils/staffs';
 export const stationHandoverFormFields = [
   {
     label: 'Record Date',
-    name: 'date',
+    name: 'recordDate',
     type: 'InputDate',
     sm: 4,
     xs: 12,

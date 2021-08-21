@@ -7,7 +7,7 @@
       title="Do you want to proceed?"
     />
 
-    <v-form ref="form" @submit.prevent="submitForm">
+    <v-form ref="form" @submit.prevent="onSubmitForm">
       <div class="mb-4">
         <span class="title">Station Handover Form</span>
       </div>
@@ -69,7 +69,7 @@
 
 <script>
 // Import modules
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 // Import components
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
@@ -83,6 +83,13 @@ import InputTextarea from '@/components/shared/input/InputTextarea';
 import { stationHandoverFormDefaultValues } from '@/features/station-handover/helpers/station-handover-form-default-values';
 import { stationHandoverFormFields } from '@/features/station-handover/helpers/station-handover-form-fields';
 // import { stationHandoverFormRules } from '@/features/station-handover/helpers/station-handover-form-rules';
+
+// Import store types
+import {
+  addStationHandoverRecord,
+  getStationHandoverRecordByID,
+  updateStationHandoverRecord,
+} from '@/store/modules/stationHandoverRecord/stationHandoverRecordTypes';
 
 // Import utils
 import { currentDate } from '@/utils/currentDate';
@@ -108,6 +115,14 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      addStationHandoverRecord,
+      updateStationHandoverRecord,
+      setErrorMessage: 'error/setErrorMessage',
+      setIsError: 'error/setIsError',
+      setShouldLoading: 'setShouldLoading',
+    }),
+
     currentDate,
 
     onAcknowledgedChange() {
@@ -126,9 +141,64 @@ export default {
     onResetForm() {
       this.stationHandoverFormRules = {};
       this.stationHandoverRecord = { ...stationHandoverFormDefaultValues };
+
+      this.$nextTick(() => {
+        this.$router.replace('/station-handover');
+      });
     },
 
-    onSubmitForm() {},
+    onSubmitForm() {
+      // this.flightRules = { ...flightFormRules };
+
+      // Object.keys(this.flightRules).forEach(key => {
+      //   this.flightDetailFields.forEach(field => {
+      //     if (field.name === key) {
+      //       field.rules = this.flightRules[key];
+      //     }
+      //   });
+
+      //   this.flightHandlingByFields.forEach(field => {
+      //     if (field.name === key) {
+      //       field.rules = this.flightRules[key];
+      //     }
+      //   });
+      // });
+
+      this.$nextTick(async () => {
+        if (this.$refs.form.validate()) {
+          this.setShouldLoading(true);
+
+          // this.flight.prefix = this.prefix;
+          // this.flight.acreg = this.prefix.concat(this.flight.tail);
+
+          let stationHandoverRecord;
+          try {
+            if (this.$route.params.id) {
+              stationHandoverRecord = await this.updateStationHandoverRecord(
+                this.stationHandoverRecord
+              );
+            } else {
+              stationHandoverRecord = await this.addStationHandoverRecord(
+                this.stationHandoverRecord
+              );
+            }
+          } catch (error) {
+            this.setShouldLoading(false);
+
+            this.setIsError();
+            this.setErrorMessage(error.message);
+          }
+
+          if (!stationHandoverRecord) {
+            this.setShouldLoading(false);
+            return;
+          }
+
+          this.setShouldLoading(false);
+          this.onResetForm();
+        }
+      });
+    },
 
     shouldShow(name) {
       if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
@@ -141,11 +211,20 @@ export default {
   computed: {
     ...mapGetters({
       admin: 'auth/getIsAdmin',
+      getStationHandoverRecordByID,
     }),
 
     isAcknowledged() {
       return this.stationHandoverRecord.isAcknowledged;
     },
+  },
+
+  created() {
+    if (this.$route.params.id) {
+      this.stationHandoverRecord = this.getStationHandoverRecordByID(
+        this.$route.params.id
+      );
+    }
   },
 };
 </script>
