@@ -5,6 +5,6 @@ export const stationHandoverFormDefaultValues = {
   recordBy: '',
   details: '',
   isAcknowledged: false,
-  acknowledgedDate: currentDate(),
+  acknowledgedDate: '',
   acknowledgedBy: '',
 };

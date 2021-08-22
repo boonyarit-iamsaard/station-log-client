@@ -81,19 +81,21 @@ import InputDate from '@/components/shared/input/InputDate';
 import InputTextarea from '@/components/shared/input/InputTextarea';
 
 // Import helpers
-import { stationHandoverFormDefaultValues } from '@/features/station-handover/helpers/station-handover-form-default-values';
-import { stationHandoverFormFields } from '@/features/station-handover/helpers/station-handover-form-fields';
-import { stationHandoverFormRules } from '@/features/station-handover/helpers/station-handover-form-rules';
+import { stationHandoverFormDefaultValues } from '@/features/station-handover/helpers/stationHandoverFormDefaultValues';
+import { stationHandoverFormFields } from '@/features/station-handover/helpers/stationHandoverFormFields';
+import { stationHandoverFormRules } from '@/features/station-handover/helpers/stationHandoverFormRules';
 
 // Import store types
 import {
   addStationHandoverRecord,
-  getStationHandoverRecordByID,
   updateStationHandoverRecord,
 } from '@/store/modules/stationHandoverRecord/stationHandoverRecordTypes';
 
 // Import utils
 import { currentDate } from '@/utils/currentDate';
+
+// Import api
+import { fetchStationHandoverRecordByID } from '@/api/stationHandoverApi';
 
 export default {
   name: 'StationHandoverForm',
@@ -126,11 +128,22 @@ export default {
 
     currentDate,
 
+    /**
+     * Reset acknowledgedBy and acknowledgedDate values
+     */
     onAcknowledgedChange() {
       this.stationHandoverRecord.acknowledgedBy = '';
-      this.stationHandoverRecord.acknowledgedDate = this.currentDate();
+
+      if (this.isAcknowledged) {
+        this.stationHandoverRecord.acknowledgedDate = this.currentDate();
+      } else {
+        this.stationHandoverRecord.acknowledgedDate = '';
+      }
     },
 
+    /**
+     * Check field name and invoke related function
+     */
     onChange(name) {
       if (name === 'isAcknowledged') {
         this.onAcknowledgedChange();
@@ -163,6 +176,10 @@ export default {
         if (this.$refs.form.validate()) {
           this.setShouldLoading(true);
 
+          if (!this.isAcknowledged) {
+            this.stationHandoverRecord.acknowledgedDate = '';
+          }
+
           let stationHandoverRecord;
           try {
             if (this.$route.params.id) {
@@ -192,6 +209,25 @@ export default {
       });
     },
 
+    async setStationHandoverRecord(id) {
+      this.setShouldLoading(true);
+
+      try {
+        const response = await fetchStationHandoverRecordByID(id);
+        const { record: stationHandoverRecord } = response.data;
+
+        if (!stationHandoverRecord) return;
+
+        this.stationHandoverRecord = { ...stationHandoverRecord };
+        this.setShouldLoading(false);
+      } catch (error) {
+        this.setShouldLoading(false);
+
+        this.setIsError();
+        this.setErrorMessage(error.message);
+      }
+    },
+
     shouldShow(name) {
       if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
       if (name === 'acknowledgedDate' && !this.isAcknowledged) return false;
@@ -203,7 +239,6 @@ export default {
   computed: {
     ...mapGetters({
       admin: 'auth/getIsAdmin',
-      getStationHandoverRecordByID,
     }),
 
     isAcknowledged() {
@@ -213,9 +248,7 @@ export default {
 
   created() {
     if (this.$route.params.id) {
-      this.stationHandoverRecord = this.getStationHandoverRecordByID(
-        this.$route.params.id
-      );
+      this.setStationHandoverRecord(this.$route.params.id);
     }
   },
 };

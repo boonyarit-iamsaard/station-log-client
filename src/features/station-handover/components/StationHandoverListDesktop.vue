@@ -25,7 +25,19 @@
       </template>
 
       <template v-slot:item.acknowledgedDate="{ item }">
-        <span>{{ item.acknowledgedDate | dateFormat }}</span>
+        <span v-if="item.acknowledgedDate">
+          {{ item.acknowledgedDate | dateFormat }}
+        </span>
+
+        <span v-else>Pending</span>
+      </template>
+
+      <template v-slot:item.acknowledgedBy="{ item }">
+        <span v-if="item.acknowledgedBy">
+          {{ item.acknowledgedBy }}
+        </span>
+
+        <span v-else>Pending</span>
       </template>
 
       <template v-slot:expanded-item="{ headers, item }">
@@ -113,6 +125,7 @@ export default {
           value: 'actions',
           sortable: false,
           width: 200,
+          align: 'end',
         },
       ],
     };

@@ -1,6 +1,5 @@
 // Getters
 export const getStationHandoverRecords = 'getStationHandoverRecords';
-export const getStationHandoverRecordByID = 'getStationHandoverRecordByID';
 
 // Actions
 export const addStationHandoverRecord = 'addStationHandoverRecord';
