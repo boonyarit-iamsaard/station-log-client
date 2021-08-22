@@ -24,6 +24,7 @@
               v-for="item in stationHandoverFormFields"
             >
               <component
+                :clearable="item.clearable"
                 :is="item.type"
                 :hint="item.hint"
                 :items="item.items"
@@ -82,7 +83,7 @@ import InputTextarea from '@/components/shared/input/InputTextarea';
 // Import helpers
 import { stationHandoverFormDefaultValues } from '@/features/station-handover/helpers/station-handover-form-default-values';
 import { stationHandoverFormFields } from '@/features/station-handover/helpers/station-handover-form-fields';
-// import { stationHandoverFormRules } from '@/features/station-handover/helpers/station-handover-form-rules';
+import { stationHandoverFormRules } from '@/features/station-handover/helpers/station-handover-form-rules';
 
 // Import store types
 import {
@@ -148,28 +149,19 @@ export default {
     },
 
     onSubmitForm() {
-      // this.flightRules = { ...flightFormRules };
+      this.stationHandoverFormRules = { ...stationHandoverFormRules };
 
-      // Object.keys(this.flightRules).forEach(key => {
-      //   this.flightDetailFields.forEach(field => {
-      //     if (field.name === key) {
-      //       field.rules = this.flightRules[key];
-      //     }
-      //   });
-
-      //   this.flightHandlingByFields.forEach(field => {
-      //     if (field.name === key) {
-      //       field.rules = this.flightRules[key];
-      //     }
-      //   });
-      // });
+      Object.keys(this.stationHandoverFormRules).forEach(key => {
+        this.stationHandoverFormFields.forEach(field => {
+          if (field.name === key) {
+            field.rules = this.stationHandoverFormRules[key];
+          }
+        });
+      });
 
       this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
           this.setShouldLoading(true);
-
-          // this.flight.prefix = this.prefix;
-          // this.flight.acreg = this.prefix.concat(this.flight.tail);
 
           let stationHandoverRecord;
           try {
