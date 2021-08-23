@@ -9,6 +9,7 @@ import handling from '@/store/modules/handling';
 import manpower from '@/store/modules/manpower';
 import spares from '@/store/modules/spares';
 import stationHandoverRecordModule from '@/store/modules/stationHandoverRecord/stationHandoverRecord';
+import aogHandoverRecord from '@/store/modules/aogHandoverRecord/aogHandoverRecord';
 
 Vue.use(Vuex);
 
@@ -46,5 +47,6 @@ export default new Vuex.Store({
     manpower,
     spares,
     stationHandoverRecord: stationHandoverRecordModule,
+    aogHandoverRecord,
   },
 });
