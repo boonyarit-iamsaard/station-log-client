@@ -1,23 +1,20 @@
-<!--suppress CssUnusedSymbol -->
 <template>
   <div class="mt-4">
     <div class="d-flex align-center justify-space-between">
-      <span class="font-weight-bold mr-4 subtitle-1">
-        Flight Remark / Handover
-      </span>
+      <span class="font-weight-bold mr-4 subtitle-1">Station Handover</span>
 
       <v-checkbox v-model="isPending" label="Pending" />
     </div>
 
     <v-data-iterator
       :items-per-page.sync="itemsPerPage"
-      :items="flightRemarkAndHandover"
+      :items="filteredStationHandoverRecords"
       :page.sync="page"
-      :sort-by="['date', 'createdAt']"
-      :sort-desc="[true, true]"
-      class="mb-4"
+      :sort-by="['isAcknowledged', 'recordDate', 'createdAt']"
+      :sort-desc="[false, true, true]"
+      class="mb-14"
       hide-default-footer
-      v-if="flightRemarkAndHandover.length > 0"
+      v-if="filteredStationHandoverRecords.length > 0"
     >
       <template v-slot:default="{ items }">
         <v-row class="ma-0" justify="center">
@@ -32,41 +29,29 @@
                 class="align-stretch align-sm-center flex-column flex-sm-row px-4 py-2"
               >
                 <div
-                  class="d-flex justify-space-between justify-sm-start align-center"
+                  class="d-flex justify-sm-start justify-space-between align-center"
                 >
-                  <div class="d-flex align-center">
-                    <v-avatar
-                      :color="setAvatarColor(item.airline)"
-                      class="white--text mr-4"
-                      size="32"
-                    >
-                      <span class="body-2">
-                        {{ item.airline }}
-                      </span>
-                    </v-avatar>
-
+                  <div>
                     <span class="subtitle-1 mr-4">
-                      {{ item.fltno }} / {{ item.acreg }}
+                      {{ item.recordDate | dateFormat }}
                     </span>
                   </div>
 
-                  <div>
-                    <v-icon v-if="item.acknowledgedBy" color="primary">
+                  <span>
+                    <v-icon v-if="item.isAcknowledged" color="primary">
                       mdi-check-circle-outline
                     </v-icon>
 
                     <v-icon v-else color="error">
                       mdi-alert-circle-outline
                     </v-icon>
-                  </div>
+                  </span>
                 </div>
 
                 <div
-                  class="d-flex justify-xs-start mt-2 mt-sm-0 mr-sm-4 justify-sm-end"
+                  class="d-flex align-start align-sm-end flex-column mr-0 mt-2 mt-sm-0 mr-sm-4"
                 >
-                  <span class="caption">
-                    {{ item.date | dateFormat }} / {{ item.engineer }}
-                  </span>
+                  <span class="caption">{{ item.recordBy }}</span>
                 </div>
               </v-expansion-panel-header>
 
@@ -75,7 +60,7 @@
                   <v-col class="pa-0" cols="12">
                     <div class="d-block">
                       <span class="body-2 font-weight-bold">
-                        Remark / Handover
+                        Handover Details
                       </span>
 
                       <v-btn
@@ -83,7 +68,7 @@
                         icon
                         link
                         :to="{
-                          name: 'flight-edit',
+                          name: 'station-handover-edit',
                           params: {
                             fromPath: $route.fullPath,
                             id: item._id,
@@ -94,13 +79,14 @@
                       </v-btn>
                     </div>
 
-                    <span class="body-2 remark">{{ item.remark }}</span>
+                    <span class="body-2 remark">{{ item.details }}</span>
 
                     <span
                       class="body-2 d-block mt-2"
                       v-if="item.acknowledgedBy"
                     >
-                      Acknowledged by : {{ item.acknowledgedBy }}
+                      Acknowledged by : {{ item.acknowledgedBy }} on
+                      {{ item.acknowledgedDate | dateFormat }}
                     </span>
                   </v-col>
                 </v-row>
@@ -120,9 +106,9 @@
       </template>
     </v-data-iterator>
 
-    <v-card class="shadow" v-if="flightRemarkAndHandover.length === 0">
+    <v-card class="shadow" v-if="filteredStationHandoverRecords.length === 0">
       <v-card-text>
-        <span> No flight remark / handover found. </span>
+        <span> No pending station handover record found. </span>
       </v-card-text>
     </v-card>
   </div>
@@ -135,8 +121,14 @@ import { mapActions, mapGetters } from 'vuex';
 // Import utils
 import { dateFormat } from '@/utils/dateFormat';
 
+// Import store types
+import {
+  fetchStationHandoverRecords,
+  getStationHandoverRecords,
+} from '@/store/modules/stationHandoverRecord/stationHandoverRecordTypes';
+
 export default {
-  name: 'FlightRemarkAndHandover',
+  name: 'StationHandover',
 
   data() {
     return {
@@ -149,17 +141,17 @@ export default {
 
   methods: {
     ...mapActions({
-      fetchFlights: 'flight/fetchFlights',
+      fetchStationHandoverRecords,
       setErrorMessage: 'error/setErrorMessage',
       setIsError: 'error/setIsError',
       setShouldLoading: 'setShouldLoading',
     }),
 
-    async handleFetchFlights() {
+    async setStationHandoverRecords() {
       this.setShouldLoading(true);
 
       try {
-        await this.fetchFlights().then(() => {
+        await this.fetchStationHandoverRecords().then(() => {
           this.setShouldLoading(false);
         });
       } catch (err) {
@@ -169,38 +161,25 @@ export default {
         await this.setErrorMessage(err.message);
       }
     },
-
-    setAvatarColor(airline) {
-      switch (airline) {
-        case 'CX':
-          return 'primary';
-        case 'LD':
-          return 'error';
-        case 'PR':
-          return 'secondary';
-        default:
-          return 'info';
-      }
-    },
   },
 
   computed: {
     ...mapGetters({
-      flights: 'flight/getFlights',
+      stationHandoverRecords: getStationHandoverRecords,
     }),
 
     calculatePageLength() {
       const defaultLength = 5;
       const calculatedLength =
-        this.flightRemarkAndHandover.length / defaultLength;
+        this.filteredStationHandoverRecords.length / defaultLength;
 
       return calculatedLength < 1 ? 1 : Math.ceil(calculatedLength);
     },
 
-    flightRemarkAndHandover() {
+    filteredStationHandoverRecords() {
       return this.isPending
-        ? this.flights.filter(flight => !flight.acknowledgedBy)
-        : this.flights;
+        ? this.stationHandoverRecords.filter(record => !record.isAcknowledged)
+        : this.stationHandoverRecords;
     },
   },
 
@@ -209,8 +188,12 @@ export default {
   },
 
   created() {
-    if (this.flights.length === 0) {
-      this.handleFetchFlights();
+    if (this.$route.path === '/station-handover') {
+      this.isPending = false;
+    }
+
+    if (this.stationHandoverRecords.length === 0) {
+      this.setStationHandoverRecords();
     }
   },
 };

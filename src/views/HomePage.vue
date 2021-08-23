@@ -4,12 +4,12 @@
       <span class="title">Home</span>
     </div>
 
-    <v-row>
+    <v-row class="ma-n2">
       <v-col
         :key="item.title"
-        class="mx-auto"
+        class="mx-auto pa-2"
         col="12"
-        sm="3"
+        sm="4"
         v-for="item in items"
       >
         <v-card class="shadow" link :to="item.path">
@@ -17,7 +17,7 @@
             :src="item.src"
             class="white--text align-end"
             gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-            height="120px"
+            height="100px"
           >
             <v-card-title
               class="font-weight-regular pa-2 subtitle-1"
@@ -28,7 +28,9 @@
       </v-col>
     </v-row>
 
-    <flight-remark-and-hand-over v-if="authenticated" />
+    <FlightRemarkAndHandover v-if="authenticated" />
+
+    <StationHandover v-if="authenticated" />
   </v-container>
 </template>
 
@@ -36,12 +38,14 @@
 import { mapGetters } from 'vuex';
 
 import FlightRemarkAndHandover from '@/components/dashboard/FlightRemarkAndHandover';
+import StationHandover from '@/components/dashboard/StationHandover.vue';
 
 export default {
   name: 'HomePage',
 
   components: {
-    'flight-remark-and-hand-over': FlightRemarkAndHandover,
+    FlightRemarkAndHandover,
+    StationHandover,
   },
 
   data() {
@@ -49,27 +53,33 @@ export default {
       items: [
         {
           title: 'Flight Movement',
-          icon: 'mdi-airplane',
           src: require('@/assets/images/flight.jpg'),
           path: '/flights',
         },
         {
           title: 'Spare Movement',
-          icon: 'mdi-airplane',
           src: require('@/assets/images/spare.jpg'),
           path: '/spares',
         },
         {
           title: 'Cabin Disinfection',
-          icon: 'mdi-airplane',
           src: require('@/assets/images/disinfection.jpg'),
           path: '/disinfection',
         },
         {
-          title: 'Sick Leave / OT Record',
-          icon: 'mdi-account',
+          title: 'Sick Leave / OT',
           src: require('@/assets/images/roster.jpg'),
           path: '/manpower',
+        },
+        {
+          title: 'Station Handover',
+          src: require('@/assets/images/flight.jpg'),
+          path: '/station-handover',
+        },
+        {
+          title: 'AOG Handover',
+          src: require('@/assets/images/flight.jpg'),
+          path: '/aog-handover',
         },
       ],
     };

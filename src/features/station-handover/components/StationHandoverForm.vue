@@ -3,7 +3,8 @@
     <ConfirmDialog
       @action="onDeleteStationHandoverRecord"
       ref="confirmDialog"
-      subtitle="This station handover record will be deleted."
+      subtitle="This
+    station handover record will be deleted."
       title="Do you want to proceed?"
     />
 
@@ -44,7 +45,7 @@
         <v-card-actions class="pb-4 pt-0 px-4">
           <div>
             <v-btn
-              :disabled="!admin || !$route.params.id"
+              :disabled="!isAdmin || !$route.params.id"
               @click="$refs.confirmDialog.dialog = true"
               class="shadow"
               color="error"
@@ -88,6 +89,7 @@ import { stationHandoverFormRules } from '@/features/station-handover/helpers/st
 // Import store types
 import {
   addStationHandoverRecord,
+  removeStationHandoverRecord,
   updateStationHandoverRecord,
 } from '@/store/modules/stationHandoverRecord/stationHandoverRecordTypes';
 
@@ -120,6 +122,7 @@ export default {
   methods: {
     ...mapActions({
       addStationHandoverRecord,
+      removeStationHandoverRecord,
       updateStationHandoverRecord,
       setErrorMessage: 'error/setErrorMessage',
       setIsError: 'error/setIsError',
@@ -134,11 +137,9 @@ export default {
     onAcknowledgedChange() {
       this.stationHandoverRecord.acknowledgedBy = '';
 
-      if (this.isAcknowledged) {
-        this.stationHandoverRecord.acknowledgedDate = this.currentDate();
-      } else {
-        this.stationHandoverRecord.acknowledgedDate = '';
-      }
+      this.isAcknowledged
+        ? (this.stationHandoverRecord.acknowledgedDate = this.currentDate())
+        : (this.stationHandoverRecord.acknowledgedDate = '');
     },
 
     /**
@@ -150,14 +151,37 @@ export default {
       }
     },
 
-    onDeleteStationHandoverRecord() {},
+    async onDeleteStationHandoverRecord() {
+      this.setShouldLoading(true);
+
+      try {
+        await this.removeStationHandoverRecord(this.$route.params.id);
+
+        this.setShouldLoading(false);
+
+        if (this.$route.params.fromPath) {
+          await this.$router.replace(this.$route.params.fromPath);
+        } else {
+          await this.$router.replace('/station-handover');
+        }
+      } catch (error) {
+        this.setShouldLoading(false);
+
+        this.setIsError();
+        this.setErrorMessage(error.message);
+      }
+    },
 
     onResetForm() {
       this.stationHandoverFormRules = {};
       this.stationHandoverRecord = { ...stationHandoverFormDefaultValues };
 
       this.$nextTick(() => {
-        this.$router.replace('/station-handover');
+        if (this.$route.params.fromPath) {
+          this.$router.replace(this.$route.params.fromPath);
+        } else {
+          this.$router.replace('/station-handover');
+        }
       });
     },
 
@@ -175,10 +199,6 @@ export default {
       this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
           this.setShouldLoading(true);
-
-          if (!this.isAcknowledged) {
-            this.stationHandoverRecord.acknowledgedDate = '';
-          }
 
           let stationHandoverRecord;
           try {
@@ -209,7 +229,7 @@ export default {
       });
     },
 
-    async setStationHandoverRecord(id) {
+    async onSetStationHandoverRecord(id) {
       this.setShouldLoading(true);
 
       try {
@@ -227,28 +247,29 @@ export default {
         this.setErrorMessage(error.message);
       }
     },
-
-    shouldShow(name) {
-      if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
-      if (name === 'acknowledgedDate' && !this.isAcknowledged) return false;
-
-      return true;
-    },
   },
 
   computed: {
     ...mapGetters({
-      admin: 'auth/getIsAdmin',
+      isAdmin: 'auth/getIsAdmin',
     }),
 
     isAcknowledged() {
       return this.stationHandoverRecord.isAcknowledged;
     },
+
+    shouldShow() {
+      return function (name) {
+        if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
+
+        return !(name === 'acknowledgedDate' && !this.isAcknowledged);
+      };
+    },
   },
 
   created() {
     if (this.$route.params.id) {
-      this.setStationHandoverRecord(this.$route.params.id);
+      this.onSetStationHandoverRecord(this.$route.params.id);
     }
   },
 };

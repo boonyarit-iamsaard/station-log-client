@@ -10,18 +10,33 @@
       :items="stationHandoverRecords"
       :search="filters.search"
       :single-expand="true"
-      :sort-by="['date', 'createdAt']"
-      :sort-desc="[true, true]"
+      :sort-by="['isAcknowledged', 'recordDate', 'createdAt']"
+      :sort-desc="[false, true, true]"
       class="shadow"
       item-key="_id"
       show-expand
     >
       <template v-slot:top>
-        <ListDesktopHeader link="/station-handover/create" v-model="filters" />
+        <ListDesktopHeader
+          checkbox
+          checkbox-label="Pending"
+          link="/station-handover/create"
+          v-model="filters"
+        />
       </template>
 
       <template v-slot:item.recordDate="{ item }">
         <span>{{ item.recordDate | dateFormat }}</span>
+      </template>
+
+      <template v-slot:item.isAcknowledged="{ item }">
+        <span>
+          <v-icon v-if="item.isAcknowledged" color="primary">
+            mdi-check-circle-outline
+          </v-icon>
+
+          <v-icon v-else color="error"> mdi-alert-circle-outline </v-icon>
+        </span>
       </template>
 
       <template v-slot:item.acknowledgedDate="{ item }">
@@ -29,7 +44,7 @@
           {{ item.acknowledgedDate | dateFormat }}
         </span>
 
-        <span v-else>Pending</span>
+        <span v-else></span>
       </template>
 
       <template v-slot:item.acknowledgedBy="{ item }">
@@ -37,7 +52,7 @@
           {{ item.acknowledgedBy }}
         </span>
 
-        <span v-else>Pending</span>
+        <span v-else></span>
       </template>
 
       <template v-slot:expanded-item="{ headers, item }">
@@ -53,7 +68,10 @@
           link
           :to="{
             name: 'station-handover-edit',
-            params: { id: item._id },
+            params: {
+              fromPath: $route.fullPath,
+              id: item._id,
+            },
           }"
         >
           <v-icon> mdi-pencil</v-icon>
@@ -89,6 +107,7 @@ export default {
     return {
       expanded: [],
       filters: {
+        checked: false,
         dateRange: ['2021-01-01', currentDate()],
         fromDate: '2021-01-01',
         search: '',
@@ -97,35 +116,41 @@ export default {
         {
           text: 'Date',
           value: 'recordDate',
-          width: 200,
+          width: 120,
           filter: value => this.dateFilter(value),
         },
         {
           text: 'Record By',
           value: 'recordBy',
-          width: 200,
+          width: 120,
+        },
+        {
+          text: 'Status',
+          value: 'isAcknowledged',
+          width: 120,
+          filter: value => (this.filters.checked ? !value : true),
         },
         {
           text: 'Acknowledged Date',
           value: 'acknowledgedDate',
-          width: 200,
+          width: 160,
         },
         {
           text: 'Acknowledged By',
           value: 'acknowledgedBy',
-          width: 200,
+          width: 160,
         },
         {
           text: 'Details',
           value: 'data-table-expand',
-          width: 200,
+          width: 120,
         },
         {
           text: 'Actions',
           value: 'actions',
           sortable: false,
-          width: 200,
           align: 'end',
+          width: 100,
         },
       ],
     };
@@ -148,12 +173,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+//noinspection ALL
 ::v-deep
   .v-data-table
   > .v-data-table__wrapper
   tbody
   tr.v-data-table__expanded__content {
   box-shadow: none;
+}
+
+::v-deep th > span {
+  display: block;
+}
+
+::v-deep th {
+  color: rgba(0, 0, 0, 0.87) !important;
+  font-size: 0.8rem;
+  height: auto !important;
+  padding: 8px 16px !important;
+  vertical-align: top !important;
 }
 
 .expanded-item {

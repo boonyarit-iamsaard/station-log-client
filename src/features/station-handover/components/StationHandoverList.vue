@@ -1,9 +1,7 @@
 <template>
   <div>
-    <StationHandoverListMobile
-      v-if="mobile"
-      :stationHandoverRecords="stationHandoverRecords"
-    />
+    <StationHandover v-if="mobile" />
+
     <StationHandoverListDesktop
       v-else
       :stationHandoverRecords="stationHandoverRecords"
@@ -23,12 +21,12 @@ import {
 
 // Import components
 import StationHandoverListDesktop from '@/features/station-handover/components/StationHandoverListDesktop.vue';
-import StationHandoverListMobile from '@/features/station-handover/components/StationHandoverListMobile.vue';
+import StationHandover from '@/components/dashboard/StationHandover.vue';
 
 export default {
   components: {
     StationHandoverListDesktop,
-    StationHandoverListMobile,
+    StationHandover,
   },
 
   name: 'StationHandoverList',
