@@ -62,6 +62,7 @@
           :to="{
             name: 'flight-edit',
             params: {
+              fromPath: $route.fullPath,
               id: item.flightID,
             },
           }"

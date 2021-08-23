@@ -273,7 +273,11 @@ export default {
 
         this.setShouldLoading(false);
 
-        await this.$router.replace('/flights');
+        if (this.$route.params.fromPath) {
+          this.$router.replace(this.$route.params.fromPath);
+        } else {
+          this.$router.replace('/flights');
+        }
       } catch (error) {
         this.setShouldLoading(false);
 
@@ -323,9 +327,11 @@ export default {
       this.flight = cloneDeep(defaultValues);
 
       this.$nextTick(() => {
-        if (window.history.length) {
-          this.$router.go(-1);
-        } else this.$router.replace('/flights');
+        if (this.$route.params.fromPath) {
+          this.$router.replace(this.$route.params.fromPath);
+        } else {
+          this.$router.replace('/flights');
+        }
       });
     },
 
