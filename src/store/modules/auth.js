@@ -85,9 +85,13 @@ export default {
       const expirationDate = new Date(localStorage.getItem('expirationDate'));
       const expirationTime = expirationDate.getTime() - now.getTime();
 
-      setTimeout(() => {
+      if (expirationTime < 30000) {
         context.dispatch('logout').then(() => router.replace('/login'));
-      }, expirationTime);
+      } else {
+        setTimeout(() => {
+          context.dispatch('logout').then(() => router.replace('/login'));
+        }, expirationTime);
+      }
     },
   },
 
