@@ -40,32 +40,22 @@ export default {
   },
 
   computed: {
+    path() {
+      return this.$route.path;
+    },
+
     plusButtonToPath() {
-      switch (this.$route.path) {
-        case '/spares':
-          return '/spares/create';
-        case '/flights':
-          return '/flights/create';
-        case '/disinfection':
-          return '/disinfection/create';
-        case '/manpower':
-          return '/manpower/create';
-        case '/handling':
-          return '/handling/create';
-        default:
-          return '/';
-      }
+      return this.path !== '/' ? this.path + '/create' : '/';
     },
 
     showSpeedDial() {
-      const spares = this.$route.path === '/spares' && this.isMobile;
-      const flights = this.$route.path === '/flights' && this.isMobile;
-      const disinfection =
-        this.$route.path === '/disinfection' && this.isMobile;
-      const handling = this.$route.path === '/handling' && this.isMobile;
-      const manpower = this.$route.path === '/manpower' && this.isMobile;
-
-      return spares || flights || handling || disinfection || manpower;
+      return (
+        this.path !== '/' &&
+        this.isMobile &&
+        !this.path.includes('admin') &&
+        !this.path.includes('edit') &&
+        !this.path.includes('create')
+      );
     },
   },
 };
