@@ -171,6 +171,33 @@ const routes = [
     },
   },
   {
+    path: '/aog-handover',
+    component: () => import('@/features/aogHandover/views/AogHandoverPage'),
+    children: [
+      {
+        path: '',
+        name: 'aog-handover',
+        component: () =>
+          import('@/features/aogHandover/components/AogHandoverList'),
+      },
+      {
+        path: 'create',
+        name: 'aog-handover-create',
+        component: () =>
+          import('@/features/aogHandover/components/AogHandoverForm'),
+      },
+      {
+        path: 'edit/:id',
+        name: 'aog-handover-edit',
+        component: () =>
+          import('@/features/aogHandover/components/AogHandoverForm'),
+      },
+    ],
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: '/handling',
     component: () => import('@/views/HandlingPage'),
     children: [

@@ -1,0 +1,93 @@
+import { engineers } from '@/utils/staffs';
+
+export const aogHandoverFormFlightDetailsFields = [
+  {
+    label: 'Date',
+    name: 'fltDate',
+    type: 'InputDate',
+    sm: 4,
+    xs: 12,
+  },
+  {
+    items: ['ASL', 'CX', 'KA', 'LD', 'PR'],
+    label: 'Airline',
+    name: 'airline',
+    sm: 2,
+    type: 'InputCombo',
+    upperCase: true,
+    xs: 12,
+  },
+  {
+    label: 'Flt No.',
+    name: 'fltno',
+    rules: [],
+    sm: 3,
+    type: 'InputText',
+    upperCase: true,
+    xs: 12,
+  },
+  {
+    label: 'Reg.',
+    name: 'tail',
+    prefix: true,
+    rules: [],
+    sm: 3,
+    type: 'InputText',
+    upperCase: true,
+    xs: 12,
+  },
+];
+
+export const aogHandoverFormHandoverDetailsFields = [
+  {
+    label: 'Date',
+    name: 'recordDate',
+    type: 'InputDate',
+    sm: 4,
+    xs: 12,
+  },
+  {
+    clearable: true,
+    items: engineers(),
+    label: 'Record By',
+    name: 'recordBy',
+    rules: [],
+    type: 'InputAutocomplete',
+    sm: 4,
+    xs: 12,
+  },
+  {
+    clearable: true,
+    label: 'Details',
+    name: 'details',
+    rules: [],
+    upperCase: true,
+    type: 'InputTextarea',
+    xs: 12,
+  },
+  {
+    label: 'Acknowledged ?',
+    name: 'isAcknowledged',
+    rules: [],
+    type: 'InputCheckbox',
+    sm: 4,
+    xs: 12,
+  },
+  {
+    clearable: true,
+    items: engineers(),
+    label: 'Acknowledged By',
+    name: 'acknowledgedBy',
+    rules: [],
+    sm: 4,
+    type: 'InputAutocomplete',
+    xs: 12,
+  },
+  {
+    label: 'Acknowledged Date',
+    name: 'acknowledgedDate',
+    sm: 4,
+    type: 'InputDate',
+    xs: 12,
+  },
+];

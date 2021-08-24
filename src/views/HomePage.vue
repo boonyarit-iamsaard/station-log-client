@@ -31,14 +31,17 @@
     <FlightRemarkAndHandover v-if="authenticated" />
 
     <StationHandover v-if="authenticated" />
+
+    <AogHandover v-if="authenticated" />
   </v-container>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 
-import FlightRemarkAndHandover from '@/components/dashboard/FlightRemarkAndHandover';
+import FlightRemarkAndHandover from '@/components/dashboard/FlightRemarkAndHandover.vue';
 import StationHandover from '@/components/dashboard/StationHandover.vue';
+import AogHandover from '@/components/dashboard/AogHandover.vue';
 
 export default {
   name: 'HomePage',
@@ -46,6 +49,7 @@ export default {
   components: {
     FlightRemarkAndHandover,
     StationHandover,
+    AogHandover,
   },
 
   data() {
