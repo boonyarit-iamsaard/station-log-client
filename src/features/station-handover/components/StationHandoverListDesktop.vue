@@ -56,8 +56,22 @@
       </template>
 
       <template v-slot:expanded-item="{ headers, item }">
-        <td :colspan="headers.length" class="expanded-item grey lighten-4 pa-4">
-          <span>{{ item.details }}</span>
+        <td :colspan="headers.length" class="expanded-item px-4 pt-4 pb-0">
+          <v-card class="grey lighten-4 pa-4 mb-4" elevation="0">
+            <span class="caption d-block">
+              Record by :
+              {{ item.recordBy }} on
+              {{ item.recordDate | dateFormat }}
+            </span>
+
+            <span class="caption d-block" v-if="item.acknowledgedBy">
+              Acknowledged by :
+              {{ item.acknowledgedBy }} on
+              {{ item.acknowledgedDate | dateFormat }}
+            </span>
+
+            <span class="body-2 mt-2 remark">{{ item.details }} </span>
+          </v-card>
         </td>
       </template>
 
@@ -197,6 +211,10 @@ export default {
 .expanded-item {
   width: 100%;
   border-bottom: thin solid rgba(0, 0, 0, 0.12);
+  white-space: pre-wrap;
+}
+
+.remark {
   white-space: pre-wrap;
 }
 </style>

@@ -12,7 +12,7 @@
       :page.sync="page"
       :sort-by="['isAcknowledged', 'recordDate', 'createdAt']"
       :sort-desc="[false, true, true]"
-      class="mb-14"
+      :class="$route.path === '/' ? 'mb-4' : 'mb-14'"
       hide-default-footer
       v-if="filteredStationHandoverRecords.length > 0"
     >
@@ -79,15 +79,23 @@
                       </v-btn>
                     </div>
 
-                    <span class="body-2 remark">{{ item.details }}</span>
+                    <v-card class="grey lighten-4 pa-4 mb-4" elevation="0">
+                      <span class="caption d-block">
+                        Record by :
+                        {{ item.recordBy }} on
+                        {{ item.recordDate | dateFormat }}
+                      </span>
 
-                    <span
-                      class="body-2 d-block mt-2"
-                      v-if="item.acknowledgedBy"
-                    >
-                      Acknowledged by : {{ item.acknowledgedBy }} on
-                      {{ item.acknowledgedDate | dateFormat }}
-                    </span>
+                      <span class="caption d-block" v-if="item.acknowledgedBy">
+                        Acknowledged by :
+                        {{ item.acknowledgedBy }} on
+                        {{ item.acknowledgedDate | dateFormat }}
+                      </span>
+
+                      <span class="body-2 mt-2 remark"
+                        >{{ item.details }}
+                      </span>
+                    </v-card>
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>
@@ -101,6 +109,7 @@
           :length="calculatePageLength"
           :total-visible="5"
           circle
+          v-if="calculatePageLength > 1"
           v-model="page"
         />
       </template>
@@ -209,7 +218,7 @@ export default {
 }
 
 ::v-deep .v-expansion-panel-content__wrap {
-  padding: 0 1rem 0.5rem;
+  padding: 0 1rem;
 }
 
 .v-expansion-panel--active:not(:first-child),
