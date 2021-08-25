@@ -6,7 +6,11 @@
         Flight Remark / Handover
       </span>
 
-      <v-checkbox v-model="isPending" label="Pending" />
+      <v-checkbox v-model="isPending">
+        <template v-slot:label>
+          <span class="caption">Pending</span>
+        </template>
+      </v-checkbox>
     </div>
 
     <v-data-iterator
@@ -15,7 +19,7 @@
       :page.sync="page"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
-      class="mb-4"
+      :class="$route.path === '/' ? 'mb-4' : 'mb-14'"
       hide-default-footer
       v-if="flightRemarkAndHandover.length > 0"
     >
@@ -51,11 +55,18 @@
                   </div>
 
                   <div>
-                    <v-icon v-if="item.acknowledgedBy" color="primary">
+                    <v-icon v-if="item.isAcknowledged" color="primary">
                       mdi-check-circle-outline
                     </v-icon>
 
-                    <v-icon v-else color="error">
+                    <v-icon v-if="!item.remark" color="grey lighten-2">
+                      mdi-check-circle-outline
+                    </v-icon>
+
+                    <v-icon
+                      v-if="!item.isAcknowledged && item.remark"
+                      color="error"
+                    >
                       mdi-alert-circle-outline
                     </v-icon>
                   </div>
@@ -75,7 +86,7 @@
                   <v-col class="pa-0" cols="12">
                     <div class="d-block">
                       <span class="body-2 font-weight-bold">
-                        Remark / Handover
+                        Remark / Handover Details
                       </span>
 
                       <v-btn
@@ -94,14 +105,21 @@
                       </v-btn>
                     </div>
 
-                    <span class="body-2 remark">{{ item.remark }}</span>
+                    <v-card class="grey lighten-4 pa-4 mb-4" elevation="0">
+                      <span class="caption d-block">
+                        Record by :
+                        {{ item.engineer }} on
+                        {{ item.date | dateFormat }}
+                      </span>
 
-                    <span
-                      class="body-2 d-block mt-2"
-                      v-if="item.acknowledgedBy"
-                    >
-                      Acknowledged by : {{ item.acknowledgedBy }}
-                    </span>
+                      <span class="caption d-block" v-if="item.acknowledgedBy">
+                        Acknowledged by :
+                        {{ item.acknowledgedBy }} on
+                        {{ item.acknowledgedDate | dateFormat }}
+                      </span>
+
+                      <span class="body-2 mt-2 remark">{{ item.remark }}</span>
+                    </v-card>
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>
@@ -115,6 +133,7 @@
           :length="calculatePageLength"
           :total-visible="5"
           circle
+          v-if="calculatePageLength > 1"
           v-model="page"
         />
       </template>
@@ -199,7 +218,7 @@ export default {
 
     flightRemarkAndHandover() {
       return this.isPending
-        ? this.flights.filter(flight => !flight.acknowledgedBy)
+        ? this.flights.filter(flight => !flight.isAcknowledged && flight.remark)
         : this.flights;
     },
   },
@@ -226,7 +245,7 @@ export default {
 }
 
 ::v-deep .v-expansion-panel-content__wrap {
-  padding: 0 1rem 0.5rem;
+  padding: 0 1rem;
 }
 
 .v-expansion-panel--active:not(:first-child),

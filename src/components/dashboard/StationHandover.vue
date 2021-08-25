@@ -3,7 +3,11 @@
     <div class="d-flex align-center justify-space-between">
       <span class="font-weight-bold mr-4 subtitle-1">Station Handover</span>
 
-      <v-checkbox v-model="isPending" label="Pending" />
+      <v-checkbox v-model="isPending">
+        <template v-slot:label>
+          <span class="caption">Pending</span>
+        </template>
+      </v-checkbox>
     </div>
 
     <v-data-iterator
