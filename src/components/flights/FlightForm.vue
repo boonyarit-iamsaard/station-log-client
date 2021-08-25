@@ -130,6 +130,8 @@
                 :rules="item.rules"
                 :time="item.time"
                 :upper-case="item.upperCase"
+                @change="onChange(item.name)"
+                v-if="shouldShow(item.name)"
                 v-model="flight[item.name]"
               />
             </v-col>
@@ -190,7 +192,9 @@ import { flightFormRules } from '@/components/flights/flight-form-rules';
 
 import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
 
+// Import utils
 import { IDGenerator } from '@/utils/id-generator';
+import { currentDate } from '@/utils/currentDate';
 
 export default {
   name: 'FlightForm',
@@ -257,6 +261,8 @@ export default {
       setShouldLoading: 'setShouldLoading',
       updateFlight: 'flight/updateFlight',
     }),
+
+    currentDate,
 
     appendFieldArray(name) {
       this.flight[name].push({
@@ -346,6 +352,11 @@ export default {
     submitForm() {
       this.flightRules = { ...flightFormRules };
 
+      // Remover flight remark validation if not acknowledged
+      if (!this.isAcknowledged) {
+        this.flightRules.remark = [];
+      }
+
       Object.keys(this.flightRules).forEach(key => {
         this.flightDetailFields.forEach(field => {
           if (field.name === key) {
@@ -391,6 +402,35 @@ export default {
         }
       });
     },
+
+    /**
+     * Reset acknowledgedBy and acknowledgedDate values
+     */
+    onAcknowledgedChange() {
+      this.flight.acknowledgedBy = '';
+
+      this.isAcknowledged
+        ? (this.flight.acknowledgedDate = this.currentDate())
+        : (this.flight.acknowledgedDate = '');
+    },
+
+    onRemarkChange() {
+      if (!this.flight.remark) {
+        this.flight.acknowledgedBy = '';
+        this.flight.acknowledgedDate = '';
+        this.flight.isAcknowledged = false;
+        this.flightRules.remark = [];
+      }
+    },
+
+    /**
+     * Check field name and invoke related function
+     */
+    onChange(name) {
+      if (name === 'isAcknowledged') {
+        this.onAcknowledgedChange();
+      }
+    },
   },
 
   computed: {
@@ -411,6 +451,31 @@ export default {
         default:
           return '';
       }
+    },
+
+    isAcknowledged() {
+      return this.flight.isAcknowledged;
+    },
+
+    shouldShow() {
+      return function (name) {
+        if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
+        if (name === 'acknowledgedDate' && !this.isAcknowledged) return false;
+        if (name === 'isAcknowledged' && !this.flight.remark) return false;
+
+        return true;
+      };
+    },
+  },
+
+  watch: {
+    flight: {
+      deep: true,
+      handler(flight) {
+        if (!flight.remark) {
+          this.onRemarkChange();
+        }
+      },
     },
   },
 
