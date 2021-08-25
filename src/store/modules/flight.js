@@ -19,6 +19,13 @@ export default {
     getFlights(state) {
       return state.flights;
     },
+    getPendingFlightHandoverRecords(state) {
+      const pendingFlightHandoverRecords = state.flights.filter(
+        flight => !flight.isAcknowledged && flight.remark
+      );
+
+      return pendingFlightHandoverRecords.length;
+    },
   },
 
   actions: {

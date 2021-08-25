@@ -1,5 +1,6 @@
 // Getters
 export const getAogHandoverRecords = 'getAogHandoverRecords';
+export const getPendingAogHandoverRecords = 'getPendingAogHandoverRecords';
 
 // Actions
 export const addAogHandoverRecord = 'addAogHandoverRecord';
