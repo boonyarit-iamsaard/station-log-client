@@ -409,9 +409,9 @@ export default {
     onAcknowledgedChange() {
       this.flight.acknowledgedBy = '';
 
-      this.isAcknowledged
-        ? (this.flight.acknowledgedDate = this.currentDate())
-        : (this.flight.acknowledgedDate = '');
+      if (!this.isAcknowledged) {
+        this.flight.acknowledgedDate = '';
+      }
     },
 
     onRemarkChange() {
