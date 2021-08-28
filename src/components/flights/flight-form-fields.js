@@ -158,11 +158,4 @@ export const flightHandlingByFields = [
     type: 'input-autocomplete',
     xs: 12,
   },
-  {
-    label: 'Acknowledged Date',
-    name: 'acknowledgedDate',
-    sm: 4,
-    type: 'input-date',
-    xs: 12,
-  },
 ];

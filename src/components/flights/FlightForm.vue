@@ -135,6 +135,15 @@
                 v-model="flight[item.name]"
               />
             </v-col>
+
+            <v-col cols="12" sm="4">
+              <input-date
+                label="Acknowledged Date"
+                name="acknowledgedDate"
+                v-if="isAcknowledged"
+                v-model="acknowledgedDate"
+              />
+            </v-col>
           </v-row>
         </v-card-text>
 
@@ -217,6 +226,7 @@ export default {
 
   data() {
     return {
+      acknowledgedDate: currentDate(),
       fieldArray: {
         assignedDelays: {
           category: '',
@@ -299,6 +309,8 @@ export default {
         const flight = await this.fetchFlightByID(id);
 
         if (!flight) return;
+        if (flight.acknowledgedDate)
+          this.acknowledgedDate = flight.acknowledgedDate;
 
         this.flight = cloneDeep(flight);
         this.setShouldLoading(false);
@@ -375,8 +387,12 @@ export default {
         if (this.$refs.form.validate()) {
           this.setShouldLoading(true);
 
-          this.flight.prefix = this.prefix;
+          if (this.flight.isAcknowledged) {
+            this.flight.acknowledgedDate = this.acknowledgedDate;
+          }
+
           this.flight.acreg = this.prefix.concat(this.flight.tail);
+          this.flight.prefix = this.prefix;
 
           let flight;
           try {
@@ -408,18 +424,19 @@ export default {
      */
     onAcknowledgedChange() {
       this.flight.acknowledgedBy = '';
-
-      if (!this.isAcknowledged) {
-        this.flight.acknowledgedDate = '';
-      }
+      this.flight.acknowledgedDate = '';
+      this.acknowledgedDate = this.currentDate();
     },
 
+    /**
+     * Reset remark related fields
+     */
     onRemarkChange() {
       if (!this.flight.remark) {
+        this.acknowledgedDate = this.currentDate();
         this.flight.acknowledgedBy = '';
         this.flight.acknowledgedDate = '';
         this.flight.isAcknowledged = false;
-        this.flightRules.remark = [];
       }
     },
 
