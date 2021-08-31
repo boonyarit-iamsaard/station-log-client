@@ -28,4 +28,6 @@ export const defaultValues = {
   isAcknowledged: false,
   acknowledgedBy: '',
   acknowledgedDate: '',
+  hasCabinDefect: false,
+  hasTechnicalDefect: false,
 };

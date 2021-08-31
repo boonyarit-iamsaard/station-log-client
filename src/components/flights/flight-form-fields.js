@@ -133,6 +133,22 @@ export const flightHandlingByFields = [
     xs: 12,
   },
   {
+    label: 'Technical defect(s) ?',
+    name: 'hasTechnicalDefect',
+    rules: [],
+    type: 'input-checkbox',
+    sm: 3,
+    xs: 12,
+  },
+  {
+    label: 'Cabin defect(s) ?',
+    name: 'hasCabinDefect',
+    rules: [],
+    type: 'input-checkbox',
+    sm: 3,
+    xs: 12,
+  },
+  {
     label: 'Flight Remark / Handover',
     name: 'remark',
     sm: 12,
@@ -156,6 +172,13 @@ export const flightHandlingByFields = [
     rules: [],
     sm: 4,
     type: 'input-autocomplete',
+    xs: 12,
+  },
+  {
+    label: 'Acknowledged Date',
+    name: 'acknowledgedDate',
+    sm: 4,
+    type: 'input-date',
     xs: 12,
   },
 ];

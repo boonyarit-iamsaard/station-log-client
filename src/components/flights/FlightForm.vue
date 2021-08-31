@@ -135,15 +135,6 @@
                 v-model="flight[item.name]"
               />
             </v-col>
-
-            <v-col cols="12" sm="4">
-              <input-date
-                label="Acknowledged Date"
-                name="acknowledgedDate"
-                v-if="isAcknowledged"
-                v-model="acknowledgedDate"
-              />
-            </v-col>
           </v-row>
         </v-card-text>
 
@@ -175,7 +166,7 @@
 </template>
 
 <script>
-import { cloneDeep } from 'lodash';
+import { cloneDeep, merge } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
@@ -226,7 +217,6 @@ export default {
 
   data() {
     return {
-      acknowledgedDate: currentDate(),
       fieldArray: {
         assignedDelays: {
           category: '',
@@ -309,10 +299,8 @@ export default {
         const flight = await this.fetchFlightByID(id);
 
         if (!flight) return;
-        if (flight.acknowledgedDate)
-          this.acknowledgedDate = flight.acknowledgedDate;
 
-        this.flight = cloneDeep(flight);
+        merge(this.flight, flight);
         this.setShouldLoading(false);
       } catch (error) {
         this.setShouldLoading(false);
@@ -333,6 +321,8 @@ export default {
     },
 
     onAirlineChange() {
+      this.flight.hasCabinDefect = false;
+      this.flight.hasTechnicalDefect = false;
       this.flight.tail = '';
     },
 
@@ -364,11 +354,6 @@ export default {
     submitForm() {
       this.flightRules = { ...flightFormRules };
 
-      // Remover flight remark validation if not acknowledged
-      if (!this.isAcknowledged) {
-        this.flightRules.remark = [];
-      }
-
       Object.keys(this.flightRules).forEach(key => {
         this.flightDetailFields.forEach(field => {
           if (field.name === key) {
@@ -386,10 +371,6 @@ export default {
       this.$nextTick(async () => {
         if (this.$refs.form.validate()) {
           this.setShouldLoading(true);
-
-          if (this.flight.isAcknowledged) {
-            this.flight.acknowledgedDate = this.acknowledgedDate;
-          }
 
           this.flight.acreg = this.prefix.concat(this.flight.tail);
           this.flight.prefix = this.prefix;
@@ -424,8 +405,7 @@ export default {
      */
     onAcknowledgedChange() {
       this.flight.acknowledgedBy = '';
-      this.flight.acknowledgedDate = '';
-      this.acknowledgedDate = this.currentDate();
+      this.flight.acknowledgedDate = this.currentDate();
     },
 
     /**
@@ -435,7 +415,6 @@ export default {
       if (!this.flight.remark) {
         this.acknowledgedDate = this.currentDate();
         this.flight.acknowledgedBy = '';
-        this.flight.acknowledgedDate = '';
         this.flight.isAcknowledged = false;
       }
     },
@@ -479,6 +458,10 @@ export default {
         if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
         if (name === 'acknowledgedDate' && !this.isAcknowledged) return false;
         if (name === 'isAcknowledged' && !this.flight.remark) return false;
+        if (name === 'hasCabinDefect' && this.flight.airline !== 'PR')
+          return false;
+        if (name === 'hasTechnicalDefect' && this.flight.airline !== 'PR')
+          return false;
 
         return true;
       };

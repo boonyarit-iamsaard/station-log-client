@@ -6,21 +6,25 @@
 
     <v-data-table
       :headers="headers"
-      :items="flights"
+      :items="filteredFlights"
       :search="filters.search"
       :sort-by="['date', 'createdAt']"
       :sort-desc="[true, true]"
       class="shadow"
     >
       <template v-slot:top>
-        <list-desktop-header
+        <ListDesktopHeader
           :export-button="admin"
           @onExport="onExport"
           checkbox
           checkbox-label="Delayed"
           link="/flights/create"
           v-model="filters"
-        />
+        >
+          <template v-slot:extra-item>
+            <InputCheckbox label="PR with defect(s)" v-model="hasDefect" />
+          </template>
+        </ListDesktopHeader>
       </template>
 
       <template v-slot:item.date="{ item }">
@@ -28,7 +32,7 @@
       </template>
 
       <template v-slot:item.airline="{ item }">
-        <airline-avatar-wrapper :airline="item.airline" />
+        <AirlineAvatarWrapper :airline="item.airline" />
       </template>
 
       <template v-slot:item.fltno="{ item }">
@@ -107,6 +111,7 @@ import { mapGetters } from 'vuex';
 
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
+import InputCheckbox from '@/components/shared/input/InputCheckbox.vue';
 
 import { dateFormat } from '@/utils/dateFormat';
 import { currentDate } from '@/utils/currentDate';
@@ -115,8 +120,9 @@ export default {
   name: 'FlightsListDesktop',
 
   components: {
-    'airline-avatar-wrapper': AirlineAvatarWrapper,
-    'list-desktop-header': ListDesktopHeader,
+    AirlineAvatarWrapper,
+    InputCheckbox,
+    ListDesktopHeader,
   },
 
   props: {
@@ -128,6 +134,7 @@ export default {
 
   data() {
     return {
+      hasDefect: false,
       filters: {
         checked: false,
         dateRange: ['2021-01-01', currentDate()],
@@ -392,6 +399,16 @@ export default {
     ...mapGetters({
       admin: 'auth/getIsAdmin',
     }),
+
+    filteredFlights() {
+      if (this.hasDefect) {
+        return this.flights.filter(
+          flight => flight.hasCabinDefect || flight.hasTechnicalDefect
+        );
+      }
+
+      return this.flights;
+    },
   },
 
   filters: {
