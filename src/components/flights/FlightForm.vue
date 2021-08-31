@@ -405,7 +405,10 @@ export default {
      */
     onAcknowledgedChange() {
       this.flight.acknowledgedBy = '';
-      this.flight.acknowledgedDate = this.currentDate();
+
+      this.isAcknowledged
+        ? (this.flight.acknowledgedDate = this.currentDate())
+        : (this.flight.acknowledgedDate = '');
     },
 
     /**
