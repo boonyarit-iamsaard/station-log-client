@@ -18,6 +18,10 @@
       <inpur-checkbox :label="checkboxLabel" v-model="model.checked" />
     </div>
 
+    <div class="ml-4">
+      <slot name="extra-item"></slot>
+    </div>
+
     <v-spacer />
 
     <div>
