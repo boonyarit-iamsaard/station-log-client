@@ -166,7 +166,7 @@
 </template>
 
 <script>
-import { cloneDeep, merge } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
@@ -300,7 +300,10 @@ export default {
 
         if (!flight) return;
 
-        merge(this.flight, flight);
+        Object.keys(flight).forEach(key => {
+          this.flight[key] = flight[key];
+        });
+
         this.setShouldLoading(false);
       } catch (error) {
         this.setShouldLoading(false);
