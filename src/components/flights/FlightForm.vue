@@ -175,13 +175,6 @@ import FlightFormAssignedDelay from '@/components/flights/FlightFormAssignedDela
 import FlightFormChargeableService from '@/components/flights/FlightFormChargeableService';
 import FlightFormExtraGroundEquipment from '@/components/flights/FlightFormExtraGroundEquipment';
 import FlightFormCompletedTask from '@/components/flights/FlightFormCompletedTask';
-import InputCheckbox from '@/components/shared/input/InputCheckbox';
-import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
-import InputCombo from '@/components/shared/input/InputCombo';
-import InputDate from '@/components/shared/input/InputDate';
-import InputSelect from '@/components/shared/input/InputSelect';
-import InputText from '@/components/shared/input/InputText';
-import InputTextarea from '@/components/shared/input/InputTextarea';
 
 import { defaultValues } from '@/components/flights/default-values';
 import {
@@ -206,13 +199,6 @@ export default {
     'flight-form-extra-ground-equipment': FlightFormExtraGroundEquipment,
     'flight-form-completed-task': FlightFormCompletedTask,
     'flight-form-title-wrapper': FlightFormTitleWrapper,
-    'input-autocomplete': InputAutocomplete,
-    'input-checkbox': InputCheckbox,
-    'input-combo': InputCombo,
-    'input-date': InputDate,
-    'input-select': InputSelect,
-    'input-text': InputText,
-    'input-textarea': InputTextarea,
   },
 
   data() {
