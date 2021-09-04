@@ -27,9 +27,10 @@
     <v-spacer />
 
     <div class="d-flex align-center" v-if="user">
-      <v-btn text v-if="!isMobile">
-        <v-icon left> mdi-account-circle </v-icon>
-        {{ name }}
+      <v-btn :icon="isMobile" text to="/profile">
+        <v-icon :left="!isMobile">mdi-account-circle</v-icon>
+
+        {{ isMobile ? null : name }}
       </v-btn>
 
       <v-btn text @click="logout">

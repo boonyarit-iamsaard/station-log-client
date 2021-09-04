@@ -198,23 +198,8 @@ const routes = [
     },
   },
   {
-    path: '/handling',
-    component: () => import('@/views/HandlingPage'),
-    children: [
-      {
-        path: '',
-        name: 'handling',
-        component: () => import('@/components/handling/HandlingList'),
-      },
-      {
-        path: 'create',
-        component: () => import('@/components/handling/HandlingForm'),
-      },
-      {
-        path: 'edit/:id',
-        component: () => import('@/components/handling/HandlingForm'),
-      },
-    ],
+    path: '/profile',
+    component: () => import('@/views/ProfilePage'),
     meta: {
       requiresAuth: true,
     },
