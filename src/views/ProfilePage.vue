@@ -7,10 +7,14 @@
 
       <v-card class="shadow">
         <v-card-text class="mb-0">
-          <div>
-            <span class="title">
+          <div class="d-flex align-center justify-space-between">
+            <span class="d-block title">
               {{ user.firstname }} {{ user.lastname }}
             </span>
+
+            <div>
+              <v-btn color="grey" text>Edit Profile</v-btn>
+            </div>
           </div>
 
           <div class="mb-4">
@@ -25,7 +29,9 @@
         </v-card-text>
 
         <v-card-actions class="pa-4">
-          <v-btn color="info" class="shadow">Change Password</v-btn>
+          <v-btn @click="clickChangePassword" color="info" class="shadow">
+            Change Password
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-container>
@@ -36,6 +42,18 @@
 import { mapGetters } from 'vuex';
 export default {
   name: 'ProfilePage',
+
+  data() {
+    return {
+      changePassword: false,
+    };
+  },
+
+  methods: {
+    clickChangePassword() {
+      this.changePassword = !this.changePassword;
+    },
+  },
 
   computed: {
     ...mapGetters('auth', {
