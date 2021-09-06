@@ -50,8 +50,9 @@ export default {
 
     showSpeedDial() {
       return (
-        this.path !== '/' &&
         this.isMobile &&
+        this.path !== '/' &&
+        this.path !== '/profile' &&
         !this.path.includes('admin') &&
         !this.path.includes('edit') &&
         !this.path.includes('create')
