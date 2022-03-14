@@ -197,13 +197,13 @@ const routes = [
       requiresAuth: true,
     },
   },
-  {
-    path: '/profile',
-    component: () => import('@/views/ProfilePage'),
-    meta: {
-      requiresAuth: true,
-    },
-  },
+  // {
+  //   path: '/profile',
+  //   component: () => import('@/views/ProfilePage'),
+  //   meta: {
+  //     requiresAuth: true,
+  //   },
+  // },
 ];
 
 const router = new VueRouter({
