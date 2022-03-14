@@ -9,7 +9,7 @@ export const flightDetailFields = [
     xs: 12,
   },
   {
-    items: ['ASL', 'CX', 'KA', 'LD', 'PR'],
+    items: ['ASL', 'CX', 'KA', 'LD', 'PR', 'UO'],
     label: 'Airline',
     name: 'airline',
     sm: 2,

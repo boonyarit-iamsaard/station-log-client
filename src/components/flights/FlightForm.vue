@@ -435,6 +435,7 @@ export default {
         case 'CX':
         case 'KA':
         case 'LD':
+        case 'UO':
           return 'B-';
         default:
           return '';

@@ -11,7 +11,7 @@ const aircraftTypes = [
   'Other',
 ];
 
-const airlines = ['ASL', 'CX', 'KA', 'LD', 'PR', 'Other'];
+const airlines = ['ASL', 'CX', 'KA', 'LD', 'PR', 'UO', 'Other'];
 
 const checks = ['ETR', 'OCT', 'TR', '36H', '72H', 'WY', '10DY', 'Other'];
 

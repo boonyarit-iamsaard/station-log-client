@@ -9,7 +9,7 @@ export const disinfectionFields = [
     xs: 12,
   },
   {
-    items: ['ASL', 'CX', 'KA', 'KE', 'LD', 'OZ', 'PR'],
+    items: ['ASL', 'CX', 'KA', 'KE', 'LD', 'OZ', 'PR', 'UO'],
     label: 'Airline',
     name: 'airline',
     rules: [],

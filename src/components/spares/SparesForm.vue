@@ -323,7 +323,7 @@ export default {
 
   data() {
     return {
-      airlines: ['ASL', 'CX', 'KA', 'LD', 'PR'],
+      airlines: ['ASL', 'CX', 'KA', 'LD', 'PR', 'UO'],
       defaultSpareAction: {
         by: '',
         date: currentDate(),
@@ -456,12 +456,15 @@ export default {
       switch (this.formData.airline) {
         case 'ASL':
           this.formData.prefix = 'EI-';
+          this.formData.tail = '';
           break;
         case 'PR':
           this.formData.prefix = 'RP-C';
+          this.formData.tail = '';
           break;
         default:
           this.formData.prefix = 'B-';
+          this.formData.tail = '';
       }
     },
 
