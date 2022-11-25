@@ -19,6 +19,22 @@ export const stationHandoverFormFields = [
     xs: 12,
   },
   {
+    label: 'Radio Check ?',
+    name: 'radioCheck',
+    rules: [],
+    type: 'InputCheckbox',
+    sm: 2,
+    xs: 12,
+  },
+  {
+    label: 'Battery Check ?',
+    name: 'batteryCheck',
+    rules: [],
+    type: 'InputCheckbox',
+    sm: 2,
+    xs: 12,
+  },
+  {
     clearable: true,
     label: 'Details',
     name: 'details',

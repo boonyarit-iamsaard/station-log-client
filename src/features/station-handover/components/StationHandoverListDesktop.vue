@@ -64,6 +64,16 @@
               {{ item.recordDate | dateFormat }}
             </span>
 
+            <span class="caption d-block">
+              Radio Check :
+              {{ item.radioCheck ? 'Checked' : 'N/A' }}
+            </span>
+
+            <span class="caption d-block">
+              Battery Check :
+              {{ item.batteryCheck ? 'Checked' : 'N/A' }}
+            </span>
+
             <span class="caption d-block" v-if="item.acknowledgedBy">
               Acknowledged by :
               {{ item.acknowledgedBy }} on

@@ -74,8 +74,8 @@
 import { mapActions, mapGetters } from 'vuex';
 
 // Import components
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import InputAutocomplete from '@/components/shared/input/InputAutocomplete';
 import InputCheckbox from '@/components/shared/input/InputCheckbox';
 import InputDate from '@/components/shared/input/InputDate';
@@ -258,9 +258,18 @@ export default {
       return this.stationHandoverRecord.isAcknowledged;
     },
 
+    recordDate() {
+      return this.stationHandoverRecord.recordDate;
+    },
+
     shouldShow() {
       return function (name) {
         if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
+        // The radio check and battery check available after 25 November 2022
+        if (name === 'radioCheck' && this.recordDate < '2022-11-25')
+          return false;
+        if (name === 'batteryCheck' && this.recordDate < '2022-11-25')
+          return false;
 
         return !(name === 'acknowledgedDate' && !this.isAcknowledged);
       };
