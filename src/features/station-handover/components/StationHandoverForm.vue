@@ -266,9 +266,9 @@ export default {
       return function (name) {
         if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
         // The radio check and battery check available after 25 November 2022
-        if (name === 'radioCheck' && this.recordDate < '2022-11-25')
+        if (name === 'radioCheck' && this.recordDate < '2022-11-26')
           return false;
-        if (name === 'batteryCheck' && this.recordDate < '2022-11-25')
+        if (name === 'batteryCheck' && this.recordDate < '2022-11-26')
           return false;
 
         return !(name === 'acknowledgedDate' && !this.isAcknowledged);
