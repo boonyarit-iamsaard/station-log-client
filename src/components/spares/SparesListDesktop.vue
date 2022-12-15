@@ -59,14 +59,14 @@
 </template>
 
 <script>
-import XLSX from 'xlsx';
 import { mapGetters } from 'vuex';
+import XLSX from 'xlsx';
 
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
 import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
-import { dateFormat } from '@/utils/dateFormat';
 import { currentDate } from '@/utils/currentDate';
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'SparesListDesktop',
@@ -185,6 +185,7 @@ export default {
           store,
           status,
           usedBy,
+          issued,
         } = spare;
 
         if (this.dateFilter(date)) {
@@ -204,6 +205,7 @@ export default {
             store,
             status,
             usedBy,
+            issuedNo: issued.number,
           });
         }
       });
