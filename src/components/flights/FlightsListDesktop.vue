@@ -22,7 +22,7 @@
           v-model="filters"
         >
           <template v-slot:extra-item>
-            <InputCheckbox label="PR with defect(s)" v-model="hasDefect" />
+            <InputCheckbox label="PR/UO with defect(s)" v-model="hasDefect" />
           </template>
         </ListDesktopHeader>
       </template>
@@ -106,15 +106,15 @@
 </template>
 
 <script>
-import XLSX from 'xlsx';
 import { mapGetters } from 'vuex';
+import XLSX from 'xlsx';
 
 import AirlineAvatarWrapper from '@/components/shared/AirlineAvatarWrapper';
-import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 import InputCheckbox from '@/components/shared/input/InputCheckbox.vue';
+import ListDesktopHeader from '@/components/shared/ListDesktopHeader';
 
-import { dateFormat } from '@/utils/dateFormat';
 import { currentDate } from '@/utils/currentDate';
+import { dateFormat } from '@/utils/dateFormat';
 
 export default {
   name: 'FlightsListDesktop',

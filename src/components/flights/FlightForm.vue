@@ -169,12 +169,12 @@
 import { cloneDeep } from 'lodash';
 import { mapActions, mapGetters } from 'vuex';
 
-import ConfirmDialog from '@/components/shared/ConfirmDialog';
-import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
 import FlightFormAssignedDelay from '@/components/flights/FlightFormAssignedDelay';
 import FlightFormChargeableService from '@/components/flights/FlightFormChargeableService';
-import FlightFormExtraGroundEquipment from '@/components/flights/FlightFormExtraGroundEquipment';
 import FlightFormCompletedTask from '@/components/flights/FlightFormCompletedTask';
+import FlightFormExtraGroundEquipment from '@/components/flights/FlightFormExtraGroundEquipment';
+import FlightFormTitleWrapper from '@/components/flights/FlightFormTitleWrapper';
+import ConfirmDialog from '@/components/shared/ConfirmDialog';
 
 import { defaultValues } from '@/components/flights/default-values';
 import {
@@ -186,8 +186,8 @@ import { flightFormRules } from '@/components/flights/flight-form-rules';
 import assignableDelayCodes from '@/assets/static-data/assignable-delay-codes.json';
 
 // Import utils
-import { IDGenerator } from '@/utils/id-generator';
 import { currentDate } from '@/utils/currentDate';
+import { IDGenerator } from '@/utils/id-generator';
 
 export default {
   name: 'FlightForm',
@@ -448,12 +448,15 @@ export default {
 
     shouldShow() {
       return function (name) {
+        const shouldShowHasDefectCheckbox =
+          this.flight.airline === 'PR' || this.flight.airline === 'UO';
+
         if (name === 'acknowledgedBy' && !this.isAcknowledged) return false;
         if (name === 'acknowledgedDate' && !this.isAcknowledged) return false;
         if (name === 'isAcknowledged' && !this.flight.remark) return false;
-        if (name === 'hasCabinDefect' && this.flight.airline !== 'PR')
+        if (name === 'hasCabinDefect' && !shouldShowHasDefectCheckbox)
           return false;
-        if (name === 'hasTechnicalDefect' && this.flight.airline !== 'PR')
+        if (name === 'hasTechnicalDefect' && !shouldShowHasDefectCheckbox)
           return false;
 
         return true;
