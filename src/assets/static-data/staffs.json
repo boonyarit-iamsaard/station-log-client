@@ -114,5 +114,13 @@
   {
     "name": "Sirikorn",
     "position": "Administrator"
+  },
+  {
+    "name": "Nutchanat",
+    "position": "Mechanic"
+  },
+  {
+    "name": "Jiratchaya",
+    "position": "Mechanic"
   }
 ]
